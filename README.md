@@ -1,2 +1,3 @@
-# OpenFAM.github.io
-Coming Soon.
+# OpenFAM Documentation
+
+Coming soon.
