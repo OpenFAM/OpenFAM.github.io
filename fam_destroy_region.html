@@ -88,7 +88,40 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+			<h1 class="code">openfam::fam::fam_destroy_region</h1>
+	<p>Destroy an existing region in FAM.</p>
+	<h2>Synopsis</h2>
+	<p class="code">void fam_destroy_region(Fam_Region_Descriptor *descriptor);</p>
+	<h2>Description</h2>
+	<p>This destroys a region in FAM, and asynchronously frees space
+		allocated to the region.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr><td class="code">Descriptor</td><td>Descriptor of the region to be destroyed.</td></tr>
+		</tbody>
+	</table>
+	<p>&nbsp;</p>
+	<h2>Return Values</h2>
+	<p>None. Throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>the region name is not present in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	</tbody></table>
+	<h2>Notes</h2>
+	<p>If a region is destroyed, all data items in it are also
+		destroyed. If descriptors to the region or the contained data items
+		are subsequently used, the behavior of the library is implementation
+		dependent. Note that this call will trigger a delayed free operation,
+		to permit other PEs currently using the region to finish.</p>
+	<h2>Example</h2>
+	<p>See <a href="fam_create_region.html#e1">fam_create_region</a></p>
 		</article>
 	</section>
 	<footer>

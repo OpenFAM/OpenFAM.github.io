@@ -88,7 +88,76 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+			<h1 class="code">openfam::fam::fam_resize_region</h1>
+	<p>Resize an existing region in FAM</p>
+	<h2>Synopsis</h2>
+	<p class="code">int fam_resize_region(Fam_Region_Descriptor *descriptor,
+		uint64_t nbytes);</p>
+	<h2>Description</h2>
+	<p>This method resizes a region in FAM.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr><td class="code">Descriptor</td><td>Descriptor of the region to be resized.</td></tr>
+			<tr><td class="code">Nbytes</td><td>New requested size of the region.</td></tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>Returns 0 on Success. Throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>the region name is not present in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	</tbody></table>
+	<h2>Notes</h2>
+	<p>Regions may safely be increased in size (subject to system-wide
+		limits). Reducing the region size (although allowed) implies that any
+		data items in the truncated part of the region will be lost. The
+		behavior of the library if those items are accessed later is
+		implementation dependent.</p>
+	<h2>Example</h2>
+<pre>
+#include &lt;stdlib.h>
+#include &lt;stdio.h>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+
+	// .. initialization code here
+	
+	try {
+		// create a 10 GB region with 0777 permissions and RAID5 redundancy
+		Fam_Region_Descriptor *rd =	myFam->fam_create_region("myRegion", (uint64_t)10000000000, 0777, RAID5);
+			
+		// use the created region...
+		printf("fam_create_region successfull\n");
+			
+		// resize the region to 20 GB
+		myFam->fam_resize_region(rd, (uint64_t)20000000000);
+			
+		// use the re-sized region
+		printf("fam_resize_region successfull\n");
+		// ... continuation code here
+			
+		// we are finished. Destroy the region and everything in it
+		myFam->fam_destroy_region(rd);
+		printf("fam_destroy_region successfull\n");
+	} catch (Fam_Allocator_Exception &amp;e) {
+		printf("Create/Destroy region failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+	// ... finalization code here
+}
+</pre>
 		</article>
 	</section>
 	<footer>

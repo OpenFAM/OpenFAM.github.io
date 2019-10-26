@@ -88,7 +88,76 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+			<h1 class="code">openfam::fam::fam_change_permissions</h1>
+	<p>Change permissions associated with a data item or region in FAM.</p>
+	<h2>Synopsis</h2>
+	<p class="code">
+		int fam_change_permissions(Fam_Descriptor *descriptor, mode_t
+		accessPermissions);<br> int
+		fam_change_permissions(Fam_Region_Descriptor *descriptor, mode_t
+		accessPermissions);
+	</p>
+	<h2>Description</h2>
+	<p>This method changes read/write permissions for a data item or
+		region.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr><td class="code">Descriptor</td><td>Descriptor associated with the data item or region.</td></tr>
+			<tr><td class="code">accessPermissions</td><td>New access permissions to be associated with the item.</td></tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>Returns 0 on Success. Throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>the data item name not found in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	</tbody>
+	</table>
+	<h2>Notes</h2>
+	<p>None.</p>
+	<h2>Example</h2>
+<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+
+	// ... Initialization code here
+	try {
+		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		// create 50 element named integer array in FAM with 0600
+		// (read/write by owner) permissions in myRegion
+		Fam_Descriptor *descriptor = myFam->fam_allocate("myItem", 50*sizeof(int), 0600, region);
+			
+		printf("Successfully allocated 50 unnamed integer elements\n");
+		// initialize the allocated space here with meaningful values
+			
+		// make the item read-only (0400) to prevent further change by
+		// subsequent programs
+		myFam->fam_change_permissions(descriptor, 0400);
+		printf("Successully changed permission from 0600 to 0400\n");
+		
+		// free allocated space in FAM
+		myFam->fam_deallocate(descriptor);
+		printf("Successully de-allocated 50 unnamed integer elements\n");
+	} catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+	
+	// ... Finalization code here
+}
+</pre>
 		</article>
 	</section>
 	<footer>
