@@ -88,7 +88,80 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+			<h1 class="code">openfam::fam::fam_quiet</h1>
+	<p>Ensures that all pending operations to FAM
+		issued by the calling PE thread have completed before proceeding</p>
+	<h2>Synopsis</h2>
+	<p class="code">void fam_quiet(void);</p>
+	<h2>Description</h2>
+	<p>This method blocks the calling PE thread until
+		all its pending FAM operations are complete.</p>
+	<h2>Input Arguments</h2>
+	<p>None.</p>
+	<h2>Return Values</h2>
+	<p>None. Throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">Fam_Datapath_Exception</td><td>error occurred during write operation
+		over fabric.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>libfabric error occurred.</td></tr>
+	<tr><td class="code">Fam_Timeout_Exception</td><td>number of libfabric retry count reached the timeout limit.
+	(Only for blocking call)</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	</tbody>
+	</table>
+	
+	<h2>Notes</h2>
+	<p>Note that this method does NOT order or wait
+		for completion of fam_map()-enabled load/store accesses by the
+		processor to FAM.</p>
+	<h2>Example</h2>
+<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+ 
+int main(void) {
+	fam *myFam = new fam();
+	// ... Initialization code here
+	try {
+		// look up the descriptor to a previously allocated data item
+		// (a 50-element integer array)
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		
+		// local data
+		int local[] = {0,1,2,3,4};
+		uint64_t indexes[] = {10, 17, 13, 15, 16};
+		
+		// scatter local data in myItem[10,17,13,15,16] respectively
+		myFam->fam_scatter_nonblocking(local, descriptor, 5, indexes, sizeof(int));
+		
+		// ensure that the scatter operation is complete
+		myFam->fam_quiet();
+		
+		// look up the descriptor to a previously allocated completion flag
+		Fam_Descriptor *flagDescriptor = myFam->fam_lookup("completionFlag", "myRegion");
+		
+		// atomically set the completion flag in FAM
+		myFam->fam_set(flagDescriptor, 0, 1);
+		
+		// ensure that the set operation is complete
+		myFam->fam_quiet();
+		
+		// we now have the correct items in FAM, and the completion flag has been set
+		
+		// ... subsequent code here
+	} catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+		
+	// ... Finalization code follows
+}
+</pre>
 		</article>
 	</section>
 	<footer>

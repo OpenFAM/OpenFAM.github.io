@@ -88,7 +88,74 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+			<h1 class="code">openfam::fam::fam_fence</h1>
+	<p>Ensures that FAM operations issued by the
+		calling PE thread before the fence are completed before FAM operations
+		issued after the fence are dispatched.</p>
+	<h2>Synopsis</h2>
+	<p class="code">void fam_fence(void);</p>
+	<h2>Description</h2>
+	<p>This method orders FAM operations (put,
+		scatter, atomics, copy) issued by the calling PE thread before the
+		fence to be performed before FAM operations issued by the calling PE
+		thread after the fence. This method is non-blocking.</p>
+	<h2>Input Arguments</h2>
+	<p>None.</p>
+	<h2>Return Values</h2>
+	<p>None. Throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">Fam_Datapath_Exception</td><td>error occurred during write operation
+		over fabric.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	</tbody>
+	</table>
+	<h2>Notes</h2>
+	<p>Note that this method does NOT order
+		fam_map()-enabled load/store accesses by the processor to FAM.</p>
+	<h2>Example</h2>
+<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+	// ... Initialization code here
+	try {
+		// look up the descriptor to a previously allocated data item
+		// (a 50-element integer array)
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem","myRegion");
+		
+		// local data
+		int local[] = {0,1,2,3,4};
+		uint64_t indexes[] = {0, 7, 3, 5, 6};
+			
+		// scatter local data in myItem[0,7,3,5,6] respectively
+		myFam->fam_scatter_nonblocking(local, descriptor, 5, indexes, sizeof(int));
+		
+		// ensure that the scatter is performed before subsequent FAM updates
+		myFam->fam_fence();
+		
+		// now update later elements of the array in FAM
+		int newLocal[] = {0,1,2,3,4,5,6,7,8,9};
+		
+		// update elements 11 - 20 in FAM using values in local memory
+		myFam->fam_put_nonblocking(newLocal, descriptor, 10*sizeof(int), sizeof(local));
+		
+		// ... subsequent code here
+	} catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+		
+	// ... Finalization code follows
+}
+</pre>
 		</article>
 	</section>
 	<footer>
