@@ -88,7 +88,124 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+			<h1 class="code">openfam::fam::fam_copy</h1>
+	<p>Create a second copy of a data item in FAM.</p>
+	<h2>Synopsis</h2>
+	<p class="code">void *fam_copy(Fam_Descriptor *src, uint64_t srcOffset,
+		Fam_Descriptor **dest, uint64_t destOffset, uint64_t nbytes);</p>
+	<h2>Description</h2>
+	<p>Creates a second copy of some data item in FAM and returns a
+		pointer to the wait object associated with this copy operation.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr>
+				<th>
+					Name
+				</th>
+				<th>
+					Description
+				</th>
+			</tr>
+			<tr>
+				<td class="code">
+					Src
+				</td>
+				<td>
+					Descriptor associated with the source data item in FAM.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					srcOffset
+				</td>
+				<td>
+					Offset within the source descriptor where copy starts.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					Dest
+				</td>
+				<td>
+					Descriptor associated with the destination data item in FAM.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					destOffset
+				</td>
+				<td>
+					Offset within the destination descriptor where the copy
+						starts.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					Nbytes
+				</td>
+				<td>
+					Number of bytes to copy.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>Returns a pointer to the wait object for the copy operation.
+		This object is used wait for the completion of the copy operation.
+		Throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">Fam_InvalidOption_Exception</td><td>incorrect parameters are passed.</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	</tbody>
+	</table>
+	<h2>Notes</h2>
+	<p>Note that the method is non-blocking: it returns after the copy
+		has been initiated, and does not wait for completion of the transfer.
+		Also note that fam_copy() performs an inconsistent copy, in that the
+		copied data may reflect updates that are performed concurrently with
+		the copy operation, rather than a point-in-time snapshot of the source
+		data item that is consistent as of the beginning of copy operation. If
+		the application desires a consistent copy, it is responsible for
+		coordinating PE activity during the copy.</p>
+	<h2 id="e1">Example</h2>
+<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+	
+int main(void) {
+	fam *myFam = new fam();
+	
+	// ... Initialization code here
+
+	 try {
+		// look up the descriptor to a previously allocated data item
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		
+		// descriptor to new copy myItem in FAM
+		Fam_Descriptor *newCopy;
+	
+		// create a new copy and returns a waitObject to copy operation.
+		void *waitObj = myFam->fam_copy(descriptor, 0, &amp;newCopy, 0, 10*sizeof(int));
+	
+		// Wait for copy operation to complete.
+		myFam->fam_copy_wait(waitObj);
+		printf("Copy to new location in FAM successfull\n");
+	 } catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	 }
+	
+	 // ... subsequent code here
+}
+</pre>
 		</article>
 	</section>
 	<footer>

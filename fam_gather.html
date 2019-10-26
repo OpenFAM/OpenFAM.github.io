@@ -88,7 +88,160 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+			<h1 class="code">openfam::fam::fam_gather</h1>
+	<p>Copy disjoint elements of a data item from FAM to local memory.</p>
+	<h2>Synopsis</h2>
+	<p class="code">int fam_gather_blocking(void *local, Fam_Descriptor *descriptor,
+		uint64_t nElements, uint64_t firstElement, uint64_t stride, uint64_t
+		elementSize);</p>
+	<p class="code">int fam_gather_blocking(void *local, Fam_Descriptor *descriptor,
+		uint64_t nElements, uint64_t *elementIndex, uint64_t elementSize);</p>
+	<p class="code">void fam_gather_nonblocking(void *local, Fam_Descriptor
+		*descriptor, uint64_t nElements, uint64_t firstElement, uint64_t
+		stride, uint64_t elementSize);</p>
+	<p class="code">void fam_gather_nonblocking(void *local, Fam_Descriptor
+		*descriptor, uint64_t nElements, uint64_t *elementIndex, uint64_t
+		elementSize);</p>
+	<h2>Description</h2>
+	<p>Copy elements of a data item from FAM to local memory based on a constant or indexed stride.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr>
+				<th>
+					Name
+				</th>
+				<th>
+					Description
+				</th>
+			</tr>
+			<tr>
+				<td class="code">
+					Local
+				</td>
+				<td>
+					Pointer to appropriately sized area of local memory.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					Descriptor
+				</td>
+				<td>
+					Descriptor associated with the data item in FAM.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					nElements
+				</td>
+				<td>
+					Number of elements to get.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					firstElement
+				</td>
+				<td>
+					Index (in FAM) of the first element within the data item to
+						get.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					elementIndex
+				</td>
+				<td>
+					An array containing element indexes.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					Stride
+				</td>
+				<td>
+					Stride to use when getting elements.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					elementSize
+				</td>
+				<td>
+					Size of each element to gather.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>The non-blocking calls do not return a value on success. The
+		blocking calls return an integer value following normal C convention
+		of 0 for successful completion. At return, the memory pointed to by
+		local contains a copy of the data elements from FAM for the blocking
+		calls. For non-blocking calls, local memory is not guaranteed to
+		contain data until successful completion of a subsequent fam_quiet()
+		call. Both non-blocking and blocking call throws an exception on
+		error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">Fam_InvalidOption_Exception</td><td>incorrect parameters are passed.</td></tr>
+	<tr><td class="code">Fam_Datapath_Exception</td><td>error occurred during write operation
+		over fabric.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>libfabric error occurred.</td></tr>
+	<tr><td class="code">Fam_Timeout_Exception</td><td>number of libfabric retry count reached the timeout limit.
+	(Only for blocking call)</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>the data item name is already present in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	</tbody>
+	</table>
+	<h2>Notes</h2>
+	<p>The local memory pointer must point to an area of memory
+		sufficient to accommodate the incoming data. Insufficient allocation
+		of local memory may cause segmentation violations or corrupted data in
+		local memory. This API assumes that the data item contains uniformly
+		sized elements (e.g, a large array).&nbsp; Currently, the API gathers
+		elements from within a single data item.</p>
+	<h2>Example</h2>
+<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+	
+	// ... Initialization code here
+
+	try {
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+	
+		// allocate a 25-element integer array in local memory
+		int *local = (int *) malloc(25 * sizeof(int));
+	
+		// gather all odd elements from myItem into local memory
+		// first element is myItem[1]; collect 25 elements with stride 2
+		myFam->fam_gather_blocking(local, descriptor, 25, (uint64_t) 1, 2, sizeof(int));
+	
+		// gather myItem[1,7,13,15,16]
+		int *indexedLocal = (int *) malloc(5 * sizeof(int));
+		uint64_t indexes[] = {1, 7, 13, 15, 16};
+		myFam->fam_gather_blocking(indexedLocal, descriptor, 5, indexes, sizeof(int));
+	
+		// ... we now have the correct elements in local memory
+	 } catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	 }
+	 // ... Finalization code follows
+}
+	
+</pre>
 		</article>
 	</section>
 	<footer>

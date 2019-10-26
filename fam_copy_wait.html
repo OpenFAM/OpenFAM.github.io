@@ -88,7 +88,50 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+			<h1 class="code">openfam::fam::fam_copy_wait</h1>
+	<p>Wait for the copy operation to be completed.</p>
+	<h2>Synopsis</h2>
+	<p class="code">void fam_copy_wait(void *waitObj);</p>
+	<h2>Description</h2>
+	<p>Ensure that copy operation associated with the wait object is completed.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr>
+				<th>
+					Name
+				</th>
+				<td>
+					Description
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					waitObj
+				</td>
+				<td>
+					A pointer to the wait object associated with the copy
+						operation
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>None. Throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">Fam_InvalidOption_Exception</td><td>incorrect parameters are passed.</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	</tbody>
+	</table>
+	<h2>Notes</h2>
+	<p>None.</p>
+	<h2>Example</h2>
+	<p>See <a href="fam_copy.html#e1">fam_copy</a></p>
 		</article>
 	</section>
 	<footer>
