@@ -88,7 +88,90 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+			<h1 class="code">openfam::fam::fam_map</h1>
+	<p>Map a data item in FAM to the process virtual address space.</p>
+	<h2>Synopsis</h2>
+	<p class="code">void *fam_map(Fam_Descriptor *descriptor);</p>
+	<h2>Description</h2>
+	<p>This method maps a data item in FAM to the PEâ€™s virtual address
+		space.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr>
+				<th>Name</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td class="code">
+					Descriptor
+				</td>
+				<td>
+					Descriptor associated with the data item or region in FAM.			</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>A pointer in the PE's virtual address space that can be used to
+		directly manipulate contents of FAM. Throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">Fam_InvalidOption_Exception</td><td>incorrect parameters are passed.</td></tr>
+	<tr><td class="code">Fam_Unimplemented_Exception</td><td>API not implemented error. (Only
+		for memory server allocator)</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>the data item name is already present in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	</tbody>
+	</table>
+	<h2>Notes</h2>
+	<p>Note that if multiple PEs simultaneously access a data item in
+		FAM when at least one has mapped it, they are responsible for
+		enforcing concurrency control and for ensuring that processor caches
+		are managed appropriately. The implementation may limit the FAM size
+		(hence the size of data items) that can be mapped into the processor
+		address space at one time.</p>
+	<h2 id="e1">Example</h2>
+<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+
+	// ... Initialization code here
+	try {
+
+		// look up the descriptor to a previously allocated data item
+		// (an integer array with at least 10 elements)
+	
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+
+		// map it into our local address space
+		int *fam_array = (int *) myFam->fam_map(descriptor);
+
+		// now we can directly manipulate the data in FAM
+		for(int i = 0; i &lt; 10; i++){
+			printf("%d\n", fam_array[i]); // print it
+			fam_array[i]++; // increment it
+		}
+
+		// unmap it
+		myFam->fam_unmap(fam_array, descriptor); // we are done...
+	} catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+	// ... Finalization code follows
+}
+</pre>	
+	
+		<a name="_Toc21627088"></a><a name="_Toc21685569"></a>
 		</article>
 	</section>
 	<footer>

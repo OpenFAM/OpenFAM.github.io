@@ -88,7 +88,55 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+			<h1 class="code">openfam::fam::fam_unmap</h1>
+	<p>Unmap a data item in FAM from the process virtual address space.</p>
+	<h2>Synopsis</h2>
+	<p class="code">void fam_unmap(void *local, Fam_Descriptor *descriptor);</p>
+	<h2>Description</h2>
+	<p>This method unmaps a data item in FAM from the process virtual
+		address space.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr>
+				<td class="code">
+					Local
+				</td>
+				<td>
+					Local pointer to be unmapped.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					Descriptor
+				</td>
+				<td>
+					Descriptor associated with the data item in FAM to be
+						unmapped.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>None. Throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">Fam_InvalidOption_Exception</td><td>incorrect parameters are passed.</td></tr>
+	<tr><td class="code">Fam_Unimplemented_Exception</td><td>API not implemented error. (Only
+		for memory server allocator)</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>the data item name is already present in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	</tbody>
+	</table>
+	<h2>Notes</h2>
+	<p>None.</p>
+	<h2>Example</h2>
+	<p>See example under <a href="fam_map.html#e1">fam_map</a></p>
 		</article>
 	</section>
 	<footer>
