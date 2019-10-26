@@ -88,7 +88,35 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+		<h1 class="code">openfam::fam::fam_finalize</h1>
+	<p>Finalize the OpenFAM library.</p>
+	<h2>Synopsis</h2>
+	<p class="code">void fam_finalize(char *groupName);</p>
+	<h2>Description</h2>
+	<p>This method is the final method called when a processing element
+		disconnects from the OpenFAM library. It removes the processing
+		element from the group, and frees underlying PE entries in the group’s
+		OpenFAM library data structures. Normally called by all PEs when a
+		program ends.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr>
+				<td>
+					<p class="code">groupName</p>
+				</td>
+				<td>
+					<p>Name of the group for the program. Should be the same as
+						that provided to fam_initialize().</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>None.</p>
+	<h2>Example</h2>
+	<p>See <a href="fam_initialize.html#e1">fam_initialize</a></p>
 		</article>
 	</section>
 	<footer>

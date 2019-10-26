@@ -106,7 +106,8 @@ developers to build reasonable sized applications using the reference implementa
 <tr><td>Maximum number of data items within a region</td><td>~8 B data Items</td></tr>
 </tbody>
 </table>
-As mentioned in [OpenFAM-Design], the reference implementation uses libfabric
+As mentioned in <cite><a href="https://link.springer.com/chapter/10.1007%2F978-3-030-04918-8_5">The OpenFAM API: A Programming Model for Disaggregated Persistent Memory</a></cite>,
+the reference implementation uses libfabric
 to handle the underlying memory traffic. Libfabric uses 64 bit keys to manage memory regions
 and associated access permissions. Within OpenFAM, every data item requires independent access
 permissions, so we map data items to libfabric regions for access from remote PEs. Rather than
@@ -132,9 +133,9 @@ The implementation supports the complete API with exceptions highlighted in Tabl
 <caption>Table 3: OpenFAM APIs currently not available in the reference implementation</caption>
 <tbody>
 <tr><th>API</th><th>Memory Server</th><th>Shared Memory</th><th>Comment</th></tr>
-<tr><td>fam_map</td><td>NO</td><td>YES</td><td>Libfabric currently does not support mmap APIs</td></tr>
-<tr><td>fam_unmap</td><td>NO</td><td>YES</td><td>Libfabric currently does not support mmap APIs</td></tr>
-<tr><td>fam_fence</td><td>YES (only with sockets provider)</td><td>NO</td><td>Fence operation is not supported by PSM2 libfabric provider.<br/>Support for other providers and Shared Memory model will be added in future</td></tr>
+<tr><td class="code">fam_map</td><td>NO</td><td>YES</td><td>Libfabric currently does not support mmap APIs</td></tr>
+<tr><td class="code">fam_unmap</td><td>NO</td><td>YES</td><td>Libfabric currently does not support mmap APIs</td></tr>
+<tr><td class="code">fam_fence</td><td>YES (only with sockets provider)</td><td>NO</td><td>Fence operation is not supported by PSM2 libfabric provider.<br/>Support for other providers and Shared Memory model will be added in future</td></tr>
 </tbody>
 </table>
 Since the underlying hardware does not support 128-bit compare and swap (CAS) operations, they have been implemented

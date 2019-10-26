@@ -91,7 +91,7 @@
 				<h1 class="code">openfam::fam::fam_initialize</h1>
 	<p>Initialize the OpenFAM library.</p>
 	<h2>Synopsis</h2>
-	<p class="code">int fam_initialize(const char *groupName, Fam_Options *options);</p>
+	<p class="code">void fam_initialize(const char *groupName, Fam_Options *options);</p>
 	<h2>Description</h2>
 	<p>This method is required to be the first method called when a
 		processing element uses the OpenFAM library. It initializes internal
@@ -190,7 +190,7 @@ typedef struct {
 		implementation and should always be set to zero to use the default
 		values.<div class="code"> defaultRegionName, famThreadModel and famContextModel.</div>
 	<h2>Return Values</h2>
-	<p>Returns 0 on Success. Throws an exception on error.</p>
+	<p>None. Throws an exception on error.</p>
 	<h2>Exceptions</h2>
 	<table>
 	<tbody>
@@ -204,7 +204,7 @@ typedef struct {
 	<p>Fields may be specified in options in the future to support
 		parameters or other variables that have traditionally been provided to
 		the runtime via environment variables.</p>
-	<h2>Example</h2>
+	<h2 id="e1">Example</h2>
 <pre>
 	#include &lt;stdlib.h>
 	#include &lt;stdio.h>
@@ -222,9 +222,8 @@ typedef struct {
 	        fm->memoryServer = strdup("0:10.0.0.25");
 	        fm->libfabricProvider = strdup("sockets");
 	        try {
-	               if (myFam->fam_initialize("myApplication", fm) == 0) {
-	                       printf("FAM initialized\n");
-	               }
+	               myFam->fam_initialize("myApplication", fm);
+	               printf("FAM initialized\n");
 	        } catch (Fam_Exception&amp; e) {
 	               printf("FAM Initialization failed: %s\n", e.fam_error_msg());
 	               myFam->fam_abort(-1); // abort the program

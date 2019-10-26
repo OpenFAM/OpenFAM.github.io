@@ -88,7 +88,35 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+		<h1 class="code">openfam::fam::fam_abort</h1>
+			<p>Forcibly terminate the program.</p>
+	<h2>Synopsis</h2>
+	<p class="code">void fam_abort(int status);</p>
+	<h2>Description</h2>
+	<p>This method is used to signal to the OpenFAM library that the PE
+		wishes to abort the program.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr>
+				<td class="code">Status</td>
+				<td>
+					<p>Termination status desired by the PE.</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>None.</p>
+	<h2>Notes</h2>
+	<p>The OpenFAM library asynchronously notifies all other
+		cooperating PEs when fam_abort() is called, and the method returns
+		before other PEs terminate. Since data consistency in FAM cannot be
+		guaranteed by the library, this method should not be used as the
+		normal exit.</p>
+	<h2>Example</h2>
+	<p>See <a href="fam_initialize.html#e1">fam_initialize</a>
 		</article>
 	</section>
 	<footer>
