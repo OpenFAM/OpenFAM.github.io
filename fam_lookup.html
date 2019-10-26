@@ -121,30 +121,32 @@
 	<p>See the <code><a href="fam_create_region.html">fam_create_region()</a></code> and <code><a href="fam_allocate.html">fam_allocate()</a></code> APIs for discussion of regions and data items.</p>
 	<h2>Example</h2>
 <pre>
-	#include &lt;stdlib.h>
-	#include &lt;stdio.h>
-	#include &lt;string.h>
-	#include &lt;fam/fam.h>
-	#include &lt;fam/fam_exception.h>
-	using namespace std;
-	using namespace openfam;
-	 
-	int main(void) {
-	        fam *myFam = new fam();
-	 
-	       // ... initialization code here
-	 
-	        try {
-	               // get a region descriptor from the metadata service
-	               Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
-	 
-	               // Get a descriptor (created by another PE) via the metadata service
-	               Fam_Descriptor *arrayDescriptor = myFam->fam_lookup("myArray", "myOtherRegion");
-	        } catch (Fam_Allocator_Exception &amp;e) {
-	               printf("Look up failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
-	        }
-	        // ... continuation code here
+#include &lt;stdlib.h>
+#include &lt;stdio.h>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+	
+	// ... initialization code here
+	
+	try {
+		// get a region descriptor from the metadata service
+		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		
+		// Get a descriptor (created by another PE) via the metadata service
+		Fam_Descriptor *arrayDescriptor = myFam->fam_lookup("myArray", "myOtherRegion");
+		
+	} catch (Fam_Allocator_Exception &amp;e) {
+		printf("Look up failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
 	}
+		
+	// ... continuation code here
+}
 </pre>
 		</article>
 	</section>
