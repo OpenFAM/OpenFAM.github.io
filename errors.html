@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+			<h1>Error handling</h1>
+			<p>Note that unlike C or C11, C++ provides native support for
+				exceptions. Hence the C++ API adopts the C++ style of handling and
+				reporting errors to its caller, using exceptions. Unlike the normal
+				C convention of returning integer values (0 for success and negative
+				values in case of failure), it uses C++ exceptions to indicate error
+				scenarios. All APIs return the expected output on success (or void
+				if no output is returned), and throw an exception on error. Instead
+				of checking the return value for errors as in C, the caller should
+				use try-catch blocks for handling errors.</p>
+			<p>The implementation defines a set of exception classes, which
+				are derived from C++ standard exception class to categorize various
+				types of failures, like <code>Runtime</code>, <code>Allocator</code>, <code>Data-path</code>, etc. It also
+				defines a list of individual error numbers to identify a specific
+				error. The exception object received by the caller in case of an
+				error will contain a specific error number and an appropriate error
+				message string. The application can retrieve this information using
+				member functions, <code>fam_error()</code> and <code>fam_error_msg()/what()</code> and take
+				any necessary action. The currently defined exceptions (and
+				exception numbers) are defined in Table 1 and Table 2</p>
+			<table>
+				<caption>Table 1: List of OpenFAM exceptions</caption>
+				<tbody>
+					<tr>
+						<th>Fam Exception Class</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<td class="code">Fam_Exception</td>
+						<td>This is the base exception class for all FAM exceptions.</td>
+					</tr>
+					<tr>
+						<td class="code">Fam_InvalidOption_Exception</td>
+						<td>For invalid options or arguments for FAM APIs.</td>
+					</tr>
+					<tr>
+						<td class="code">Fam_Timeout_Exception</td>
+						<td>Retry or Timeout limit for blocking APIs.</td>
+					</tr>
+					<tr>
+						<td class="code">Fam_Datapath_Exception</td>
+						<td>Indicate data path errors.</td>
+					</tr>
+					<tr>
+						<td class="code">Fam_Allocator_Exception</td>
+						<td>Indicate allocator errors.</td>
+					</tr>
+					<tr>
+						<td class="code">Fam_Pmi_Exception</td>
+						<td>Indicate runtime initialization errors.</td>
+					</tr>
+					<tr>
+						<td class="code">Fam_Unimplemented_Exception</td>
+						<td>Calling unimplemented OpenFAM APIs</td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
+			<table>
+				<caption>Table 2: List of OpenFAM error numbers</caption>
+				<tbody>
+					<tr>
+						<th>Fam Error</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_UNKNOWN</td>
+						<td>Unexpected or Unknown errors.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_NOPERM</td>
+						<td>Caller does not have access rights for the desired
+							operation.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_TIMEOUT</td>
+						<td>Blocking APIs reached retry/timeout limit.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_INVALID</td>
+						<td>APIs called with invalid options/arguments.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_LIBFABRIC</td>
+						<td>Libfabric API failure.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_SHM</td>
+						<td>Shared memory allocator error.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_NOTFOUND</td>
+						<td>Data item or region not found in FAM.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_ALREADYEXIST</td>
+						<td>Data item or region already exists in FAM.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_ALLOCATOR</td>
+						<td>Allocator specific error</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_GRPC</td>
+						<td>Error from grpc layer.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_PMI</td>
+						<td>Runtime error.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_OUTOFRANGE</td>
+						<td>Data access out of range.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_UNIMPL</td>
+						<td>Calling unimplemented functions/APIs.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_RESOURCE</td>
+						<td>Resource not available.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_INVALIDOP</td>
+						<td>Invalid operations</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>Note that the library contains both blocking and non-blocking
+				calls for most data path operations. In case of errors, all blocking
+				calls throw exceptions immediately. For example, a call to
+				<code>fam_put_bocking()</code> will either complete successfully, or throw one of
+				the following exceptions - <code>Fam_InvalidOption_Exception</code>,
+				<code>Fam_Allocator_Exception</code>, <code>Fam_Datapath_Exception</code> or
+				<code>Fam_Timeout_Exception</code>. In general, the application should use the
+				normal try-catch block to handle exceptions:</p>
+			<pre>    try {
+    	fam_put_blocking();
+    } catch (Fam_Exception &amp;e) {
+    	// Exception handling code
+    }
+    </pre>
+			<p>However, the non-blocking calls are queued within the library,
+				and may not catch exceptions immediately. Depending on the
+				underlying error, certain exceptions will be thrown immediately,
+				while others may only be thrown during the next fam_quiet() call.
+				Thus the code may look like:</p>
+			<pre>    try {
+    	fam_put_nonblocking();
+    } catch (Fam_Exception &amp;e) { 
+    	// handle (for example)
+    	// Fam_InvalidOption_Exception, Fam_Allocator_Exception, Fam_Datapath_Exception
+    } 
+    // ... Continue rest of the code ...
+    try {
+    	fam_quiet();
+    } catch (Fam_Exception &amp;e) { 
+    	// These exceptions may actually result
+    	// from a previous fam_put_nonblocking() operation
+      // Fam_Timeout_Exception, Fam_Datapath_Exception
+    }
+    </pre>
+			<p>Note that uncaught exceptions will result in the application
+				being terminated.</p>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>
