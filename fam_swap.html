@@ -88,7 +88,84 @@
 			<hr>
 		</nav>
 		<article>
-			<h1>This page is currently under construction</h1>
+		<h1>openfam::fam::fam_swap</h1>
+	<p>Atomically replace a value in FAM with the given value and
+		return the old value.</p>
+	<h2>Synopsis</h2>
+	<p>int32_t fam_swap(Fam_Descriptor *descriptor, uint64_t offset,
+		int32_t value);</p>
+	<p>int64_t fam_swap(Fam_Descriptor *descriptor, uint64_t offset,
+		int64_t value);</p>
+	<p>uint32_t fam_swap(Fam_Descriptor *descriptor, uint64_t offset,
+		uint32_t value);</p>
+	<p>uint64_t fam_swap(Fam_Descriptor *descriptor, uint64_t offset,
+		uint64_t value);</p>
+	<p>float fam_swap(Fam_Descriptor *descriptor, uint64_t offset,
+		float value);</p>
+	<p>double fam_swap(Fam_Descriptor *descriptor, uint64_t offset,
+		double value);</p>
+	<h2>Description</h2>
+	<p>These methods atomically replace a value in FAM with the value
+		given and return the existing value.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr><td class="code">Descriptor</td><td>Descriptor associated with the data item.</td></tr>
+			<tr><td class="code">Offset</td><td>Offset within the data item in FAM where value is located.</td></tr>
+			<tr><td class="code">Value</td><td>Value to be swapped with the existing value at the given location.</td></tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>The old value from FAM. Throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table><tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">Fam_InvalidOption_Exception</td><td>incorrect parameters are passed.</td></tr>
+	<tr><td class="code">Fam_Datapath_Exception</td><td>error occurred during atomic operation over fabric.</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Item not found in the region.</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>if there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	<tr><td class="code">Fam_Timeout_Exception</td><td>number of libfabric retry count reached</td></tr>
+	</tbody></table>
+	<h2>Notes</h2>
+	<p>These methods atomically replace a value in FAM with the given
+		value and return the original value. Note that the offset argument
+		must point to the correct value for the data type. Availability of
+		these methods is dependent on hardware support for the operations.</p>
+	<h2>Example</h2>
+	<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+
+	// ... Initialization code here
+
+	try {
+		// look up the descriptor to a previously allocated data item
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+	
+		// Atomically replace a value of first interger element in the array
+		// with the Bitwise XOR of it and a value of 0x444
+		uint32_t oldValue = myFam->fam_fetch_swap(descriptor, 0, 100);
+
+		// The first integer in FAM is replaced by 100, and the old value is returned
+	
+		// ... subsequent code here
+	} catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+	
+	// ... Finalization code follows
+}
+</pre>
 		</article>
 	</section>
 	<footer>
