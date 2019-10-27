@@ -18,6 +18,7 @@ header {
 nav {
 	float: left;
 	width: 15%;
+	min-width: 200px;
 /*	background: #ccc; */
 	padding: 20px;
 	font-size: 10pt;
