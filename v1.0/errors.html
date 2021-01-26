@@ -30,6 +30,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_size.html">fam_size</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +83,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -219,7 +221,7 @@
 			<p>Note that the library contains both blocking and non-blocking
 				calls for most data path operations. In case of errors, all blocking
 				calls throw exceptions immediately. For example, a call to
-				<code>fam_put_bocking()</code> will either complete successfully, or throw one of
+				<code>fam_put_blocking()</code> will either complete successfully, or throw one of
 				the following exceptions - <code>Fam_InvalidOption_Exception</code>,
 				<code>Fam_Allocator_Exception</code>, <code>Fam_Datapath_Exception</code> or
 				<code>Fam_Timeout_Exception</code>. In general, the application should use the

@@ -16,6 +16,8 @@
 				<li><a href="index.html">Home</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
 			</ul>
 			<hr>
 			Initialization and Finalization
@@ -30,6 +32,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +85,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -89,12 +93,12 @@
 		</nav>
 		<article>
 			<h1 class="code">openfam::fam::fam_copy</h1>
-	<p>Create a second copy of a data item in FAM.</p>
+	<p>Copy data item from one FAM-resident data item to another FAM-resident data item within a different or same region.</p>
 	<h2>Synopsis</h2>
 	<p class="code">void *fam_copy(Fam_Descriptor *src, uint64_t srcOffset,
-		Fam_Descriptor **dest, uint64_t destOffset, uint64_t nbytes);</p>
+		Fam_Descriptor *dest, uint64_t destOffset, uint64_t nbytes);</p>
 	<h2>Description</h2>
-	<p>Creates a second copy of some data item in FAM and returns a
+	<p>Initiates a copy operation of data item from one FAM-resident data item to another FAM-resident data item and returns a
 		pointer to the wait object associated with this copy operation.</p>
 	<h2>Input Arguments</h2>
 	<table>
@@ -109,7 +113,7 @@
 			</tr>
 			<tr>
 				<td class="code">
-					Src
+					src
 				</td>
 				<td>
 					Descriptor associated with the source data item in FAM.
@@ -125,7 +129,7 @@
 			</tr>
 			<tr>
 				<td class="code">
-					Dest
+					dest
 				</td>
 				<td>
 					Descriptor associated with the destination data item in FAM.
@@ -142,7 +146,7 @@
 			</tr>
 			<tr>
 				<td class="code">
-					Nbytes
+					nbytes
 				</td>
 				<td>
 					Number of bytes to copy.
@@ -152,16 +156,21 @@
 	</table>
 	<h2>Return Values</h2>
 	<p>Returns a pointer to the wait object for the copy operation.
-		This object is used wait for the completion of the copy operation.
-		Throws an exception on error.</p>
-	<h2>Exceptions</h2>
+		This object is used to wait for the completion of the copy operation.
+		Throws Fam_Exception on error.</p>
+	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
-	<tr><th>Exception</th><th>Description</th></tr>
-	<tr><td class="code">Fam_InvalidOption_Exception</td><td>incorrect parameters are passed.</td></tr>
+	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
 	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
-	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
-	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	<tr><td class="code">FAM_ERR_OUTOFRANGE</td><td>Data access out of range.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
+	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
+	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
+	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
 	</tbody>
 	</table>
 	<h2>Notes</h2>
@@ -198,7 +207,7 @@ int main(void) {
 	
 		// Wait for copy operation to complete.
 		myFam->fam_copy_wait(waitObj);
-		printf("Copy to new location in FAM successfull\n");
+		printf("Copy to new location in FAM successful\n");
 	 } catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
 	 }
@@ -209,7 +218,7 @@ int main(void) {
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

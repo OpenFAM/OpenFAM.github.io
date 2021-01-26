@@ -30,6 +30,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_size.html">fam_size</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +83,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -156,6 +158,19 @@
 	<p>Note that the system may round up the actual size of the region
 		to align memory boundaries. Currently the maximum size of a region is
 		limited to 16 EiB by the API.</p>
+	<p>Fam_Region_Descriptor provides a method to retrieve an opaque read-only data structure called 
+	Fam_Global_Descriptor which represents both the region and data item in FAM. Fam_Global_Descriptor
+	can be freely copied, and shared across processing nodes by the program, and are portable
+	across operating system and program instances.</p>
+<pre>
+// Fam_Global_Descriptor Fam_Region_Descriptor::get_global_descriptor();
+Fam_Global_Descriptor gDescriptor = regionDescriptor->get_global_descriptor();
+</pre>
+	<p>Fam_Region_Descriptor can be instantiated from Fam_Global_Descriptor using the following constructor.</p>
+<pre>
+// Fam_Region_Descriptor::Fam_Region_Descriptor(Fam_Global_Descriptor gDescriptor);
+Fam_Region_Descriptor *rd = new Fam_Region_Descriptor(gDescriptor);
+</pre>
 	<h2 id="e1">Example</h2>
 <pre>
 #include &lt;stdlib.h>
@@ -177,13 +192,13 @@ int main(void) {
 		Fam_Region_Descriptor *rd = myFam->fam_create_region("myRegion", (uint64_t)10000000000, 0777, RAID5);
 		
 		/ use the created region...
-		printf("fam_create_region successfull\n");
+		printf("fam_create_region successful\n");
 		
 		// ... continuation code here
 		
 		// we are finished. Destroy the region and everything in it
 		myFam->fam_destroy_region(rd);
-		printf("fam_destroy_region successfull\n");
+		printf("fam_destroy_region successful\n");
 	} catch (Fam_Allocator_Exception &amp;e) {
 		printf("Create/Destroy region failed: %d: %s\n", e.fam_error(), e.fam_error_msg()); 
 	}

@@ -92,57 +92,53 @@
 			<hr>
 		</nav>
 		<article>
-			<h1 class="code">openfam::fam::fam_min</h1>
-	<p>Atomically replace a value in FAM with the minimum of it and
-		some given value.</p>
+			<h1 class="code">openfam::fam::fam_stat</h1>
+	<p>Get the size, permissions and name of a region or data item.</p>
 	<h2>Synopsis</h2>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		int32_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		int64_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		uint32_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		uint64_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset, float
-		value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset, double
-		value);</p>
+	<p class="code">void fam_stat(Fam_Descriptor *descriptor, Fam_Stat *famInfo);</p>
+	<p class="code">void fam_stat(Fam_Region_Descriptor *descriptor, Fam_Stat *famInfo);</p>
 	<h2>Description</h2>
-	<p>These methods atomically replace a value in FAM with the minimum
-		of the value given and the existing value.</p>
+	<p>These methods return the size, permissions and name associated with the data item or region descriptor.
+
+	</p>
 	<h2>Input Arguments</h2>
 	<table>
 		<tbody>
 			<tr><th>Name</th><th>Description</th></tr>
-			<tr><td class="code">descriptor</td><td>Descriptor associated with the data item.</td></tr>
-			<tr><td class="code">offset</td><td>Offset within the data item in FAM where value is located.</td></tr>
-			<tr><td class="code">value</td><td>Value to be compared to the existing value at the given location.</td></tr>
+			<tr><td class="code">descriptor</td><td>Descriptor associated with the region or the data item.</td></tr>
+			<tr><td class="code">famInfo</td><td>A pointer to the structure where the information is copied.</td></tr>
 		</tbody>
 	</table>
+	<p>fam_stat() takes a pointer to the Fam_Stat structure as input to copy
+	 the information associated with region or data item descriptor. </p>
+	<pre>
+typedef struct {
+    uint64_t key;
+    uint64_t size;
+    mode_t perm;
+    char *name;
+} Fam_Stat;
+	</pre>
+	
 	<h2>Return Values</h2>
 	<p>None. Throws Fam_Exception on error.</p>
 	<h2>Fam Error Numbers</h2>
-	<table><tbody>
+	<table>
+	<tbody>
 	<tr><th>Error</th><th>Description</th></tr>
 	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
 	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
-	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
-	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Item not found in the region.</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Item or region name was not found by the metadata service.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
 	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
-	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
-	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
-	</tbody></table>
-	<h2>Notes</h2>
-	<p>These methods atomically replace a value in FAM with the smaller
-		of the existing value and the value given in the method. Note that the
-		offset argument must point to the correct value for the data type.
-		Availability of these methods is dependent on hardware support for the
-		operations.</p>
-	<p>A subsequent successful completion of fam_quiet() call ensures the completion of this atomic operation.</p> 
+</tbody>
+	</table>
+	
 	<h2>Example</h2>
 <pre>
+#include &lt;stdlib.h>
+#include &lt;stdio.h>
 #include &lt;string.h>
 #include &lt;fam/fam.h>
 #include &lt;fam/fam_exception.h>
@@ -151,24 +147,30 @@ using namespace openfam;
 
 int main(void) {
 	fam *myFam = new fam();
-	 // ... Initialization code here
-	 try {
-		// look up the descriptor to a previously allocated data item
-		// (an integer array with at least 10 elements)
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
 	
-		//Atomically set the minimum value for the first integer element in the array
-		myFam->fam_min(descriptor, 0, 100);
+	// ... initialization code here
 	
-		// ensure that the min operation is complete
-		myFam->fam_quiet();
-	
-		// The first integer in FAM is now the minimum of its previous value and 100
-	 } catch (Fam_Exception &amp;e) {
-		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
-	 }
-
-	 // ... Finalization code follows
+	try {
+		// get a region descriptor from the metadata service
+		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		
+		// allocate space for Fam_Stat structure.
+		Fam_Stat *info = (Fam_Stat *)calloc(1, sizeof(Fam_Stat));
+		fam_stat(region, info);
+		printf("Region_size: %d\n", info->size);
+		
+		// Get a descriptor (created by another PE) via the metadata service
+		Fam_Descriptor *arrayDescriptor = myFam->fam_lookup("myArray", "myOtherRegion");
+		
+		// Get data item info
+		fam_stat(arrayDescriptor, info);
+		printf("array_size: %d\n", info->size);
+		
+	} catch (Fam_Exception &amp;e) {
+		printf("Fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+		
+	// ... continuation code here
 }
 </pre>
 		</article>

@@ -16,6 +16,8 @@
 				<li><a href="index.html">Home</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
 			</ul>
 			<hr>
 			Initialization and Finalization
@@ -30,6 +32,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +85,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -104,7 +108,7 @@
 			<tr><td class="code">optionName</td><td>Name of the option to be retrieved.</td></tr>
 		</tbody>
 	</table>
-	The following optionNames are available:
+	The following option names are available:
 	<table id="e1">
 		<tbody>
 			<tr><th>Name</th><th>Description</th><th>Return type</th><th>Default Value</th></tr>
@@ -129,16 +133,16 @@
 			</tr>
 			<tr>
 				<td class="code">
-					&quot;MEMORY_SERVER&quot;
+					&quot;CIS_SERVER&quot;
 				</td>
 				<td>
-					Memory server set by the application.
+					Client Interface Server set by the application.
 				</td>
 				<td class="code">
 					char*
 				</td>
 				<td class="code">
-					&quot;0:127.0.0.1&quot;
+					&quot;127.0.0.1&quot;
 				</td>
 			</tr>
 			<tr>
@@ -146,28 +150,13 @@
 					&quot;GRPC_PORT&quot;
 				</td>
 				<td>
-					Grpc port used by memory server allocator.
+					Grpc port used by Client Interface Server.
 				</td>
 				<td class="code">
 					char*
 				</td>
 				<td class="code">
 					&quot;8787&quot;
-				</td>
-			</tr>
-			<tr>
-				<td class="code">
-					&quot;LIBFABRIC_PORT&quot;
-				</td>
-				<td>
-					Port used for libfabric operations in memory server
-						allocator
-				</td>
-				<td class="code">
-					char*
-				</td>
-				<td class="code">
-					&quot;7500&quot;
 				</td>
 			</tr>
 			<tr>
@@ -200,16 +189,16 @@
 			</tr>
 			<tr>
 				<td class="code">
-					&quot;ALLOCATOR&quot;
+					&quot;OPENFAM_MODEL&quot;
 				</td>
 				<td>
-					Allocator type used by the application.
+					OpenFAM allocator model used by the application.
 				</td>
 				<td class="code">
 					char*
 				</td>
 				<td class="code">
-					&quot;grpc&quot;
+					&quot;memory_server&quot;
 				</td>
 			</tr>
 			<tr>
@@ -290,10 +279,15 @@
 		implementation and should not be used. It return the default values.
 		<code>&quot;DEFAULT_REGION_NAME&quot;</code>, <code>&quot;FAM_THREAD_MODEL&quot;</code> and <code>&quot;FAM_CONTEXT_MODEL&quot;</code></p>
 	<h2>Return Values</h2>
-	<p>A pointer to the value of the option. Throws an exception on
+	<p>A pointer to the value of the option. Throws Fam_Exception on
 		error.</p>
-	<h2>Exceptions</h2>
-	<p><code>Fam_InvaidOption_Exception</code> if <code>optionName</code> not found.</p>
+		<h2>Fam Error Numbers</h2>
+	<table>
+	<tbody>
+	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_INVALID</td><td>If <code>optionName</code> not found.</td></tr>
+	</tbody>
+	</table>
 	<h2>Notes</h2>
 	<p>None.</p>
 	<h2>Example</h2>
@@ -328,7 +322,7 @@ int main(void) {
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

@@ -16,6 +16,8 @@
 				<li><a href="index.html">Home</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
 			</ul>
 			<hr>
 			Initialization and Finalization
@@ -30,6 +32,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,12 +85,47 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
 			<hr>
 		</nav>
 		<article>
+		<h1>OpenFAM release notes</h1>
+		<p>We are pleased to announce the release of OpenFAM 2.0 reference implementation. The highlights of the release is summarized below.
+		Please refer NEWS.md for list of features, enhancements and bug fixes that are added to the source tree in all the released versions.
+		Build and installation instructions are listed in README.md file located in the source tree.     </p>
+		OpenFAM version 2.0
+		<ul>
+			<li>Scalability improvements: Support for larger pool of memory by scaling to multiple memory servers. See <a href="services.html">services</a> for more details. </li>
+			<li>Performance improvement of memory management and metadata operations: 
+				<ul>
+					<li>NVMM background worker thread is disabled from memory service.</li>
+					<li>Delayed Free: Zeroing of memory have been moved from allocation path to free path by using delayed free thread.</li>  
+				</ul> 
+			</li>
+			<li>OpenFAM APIs changes: 
+				<ul>
+					<li>fam_size API is replaced with fam_stat API.</li>
+					<li>Modified fam_copy API to copy data between different regions.</li>
+					<li>Changed unused return type from int to void: fam_initialize,
+						fam_resize_region, fam_change_permissions, fam_put_blocking, fam_get_blocking, fam_gather_blocking, fam_scatter_blocking.  
+				</ul>
+			</li>
+			<li>Simplification of exception and error handling: All OpenFAM APIs returns only one exception type on error, i.e, Fam_Exception. </li>
+		</ul>
+		OpenFAM version 1.0
+		<ul>
+				<li>Initial public release of OpenFAM reference implementation</li>
+				<li>Memory allocator models implemented: "Shared memory model" to be used on scale-up platforms and "Memory server model" to be used on scale-out (cluster) platforms.</li>
+				<li>Memory server model uses libfabric and support sockets, verbs and psm providers. </li>
+		</ul>
+		<h1>Documentation update</h1>
+		<ul>
+				<li><a href="v2.0/index.html">OpenFAM version 2.0</a></li>
+				<li><a href="v1.0/index.html">OpenFAM version 1.0</a></li>
+		</ul>
 		<h1>Introduction</h1>
 <p>Recent technology advances in high-density, byte-addressable non-volatile memory (NVM) and low-latency interconnects have enabled building large-scale
 systems with a large disaggregated fabric-attached memory (FAM) pool shared across heterogeneous and decentralized compute nodes. In this model, compute
@@ -149,7 +187,7 @@ of adding “_TYPE” as a suffix to separate out the methods.</p>
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

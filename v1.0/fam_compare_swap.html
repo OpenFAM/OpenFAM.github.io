@@ -30,6 +30,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_size.html">fam_size</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +83,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -93,7 +95,7 @@
 		value and return the old value.</p>
 	<h2>Synopsis</h2>
 	<p class="code">int32_t fam_compare_swap(Fam_Descriptor *descriptor, uint64_t
-		offset, int32_t, oldValue, int32_t newValue);</p>
+		offset, int32_t oldValue, int32_t newValue);</p>
 	<p class="code">int64_t fam_compare_swap(Fam_Descriptor *descriptor, uint64_t
 		offset, int64_t oldValue, int64_t newValue);</p>
 	<p class="code">uint32_t fam_compare_swap(Fam_Descriptor *descriptor, uint64_t

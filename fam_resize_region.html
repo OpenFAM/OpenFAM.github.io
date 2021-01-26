@@ -16,6 +16,8 @@
 				<li><a href="index.html">Home</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
 			</ul>
 			<hr>
 			Initialization and Finalization
@@ -30,6 +32,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +85,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -91,7 +95,7 @@
 			<h1 class="code">openfam::fam::fam_resize_region</h1>
 	<p>Resize an existing region in FAM</p>
 	<h2>Synopsis</h2>
-	<p class="code">int fam_resize_region(Fam_Region_Descriptor *descriptor,
+	<p class="code">void fam_resize_region(Fam_Region_Descriptor *descriptor,
 		uint64_t nbytes);</p>
 	<h2>Description</h2>
 	<p>This method resizes a region in FAM.</p>
@@ -99,20 +103,24 @@
 	<table>
 		<tbody>
 			<tr><th>Name</th><th>Description</th></tr>
-			<tr><td class="code">Descriptor</td><td>Descriptor of the region to be resized.</td></tr>
-			<tr><td class="code">Nbytes</td><td>New requested size of the region.</td></tr>
+			<tr><td class="code">descriptor</td><td>Descriptor of the region to be resized.</td></tr>
+			<tr><td class="code">nbytes</td><td>New requested size of the region.</td></tr>
 		</tbody>
 	</table>
 	<h2>Return Values</h2>
-	<p>Returns 0 on Success. Throws an exception on error.</p>
-	<h2>Exceptions</h2>
+	<p>None. Throws Fam_Exception on error.</p>
+	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
-	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><th>Error</th><th>Description</th></tr>
 	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
-	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>the region name is not present in FAM</td></tr>
-	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
-	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Region name is not present in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
+	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
+	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
+	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
 	</tbody></table>
 	<h2>Notes</h2>
 	<p>Regions may safely be increased in size (subject to system-wide
@@ -140,19 +148,19 @@ int main(void) {
 		Fam_Region_Descriptor *rd =	myFam->fam_create_region("myRegion", (uint64_t)10000000000, 0777, RAID5);
 			
 		// use the created region...
-		printf("fam_create_region successfull\n");
+		printf("fam_create_region successful\n");
 			
 		// resize the region to 20 GB
 		myFam->fam_resize_region(rd, (uint64_t)20000000000);
 			
 		// use the re-sized region
-		printf("fam_resize_region successfull\n");
+		printf("fam_resize_region successful\n");
 		// ... continuation code here
 			
 		// we are finished. Destroy the region and everything in it
 		myFam->fam_destroy_region(rd);
-		printf("fam_destroy_region successfull\n");
-	} catch (Fam_Allocator_Exception &amp;e) {
+		printf("fam_destroy_region successful\n");
+	} catch (Fam_Exception &amp;e) {
 		printf("Create/Destroy region failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
 	}
 	// ... finalization code here
@@ -161,7 +169,7 @@ int main(void) {
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

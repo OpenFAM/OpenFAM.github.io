@@ -92,57 +92,25 @@
 			<hr>
 		</nav>
 		<article>
-			<h1 class="code">openfam::fam::fam_min</h1>
-	<p>Atomically replace a value in FAM with the minimum of it and
-		some given value.</p>
+		<h1 class="code">openfam::fam::fam_barrier_all</h1>
+			<p>Suspends the execution of the calling PE until all other PEs issue a call to this 
+			particular fam_barrier_all() statement.</p>
 	<h2>Synopsis</h2>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		int32_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		int64_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		uint32_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		uint64_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset, float
-		value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset, double
-		value);</p>
+	<p class="code">void fam_barrier_all(void);</p>
 	<h2>Description</h2>
-	<p>These methods atomically replace a value in FAM with the minimum
-		of the value given and the existing value.</p>
+	<p>This method is used to suspend the execution of the calling PE until all other PEs issue
+	 a call to this particular fam_barrier_all() statement.
+	</p>
 	<h2>Input Arguments</h2>
-	<table>
-		<tbody>
-			<tr><th>Name</th><th>Description</th></tr>
-			<tr><td class="code">descriptor</td><td>Descriptor associated with the data item.</td></tr>
-			<tr><td class="code">offset</td><td>Offset within the data item in FAM where value is located.</td></tr>
-			<tr><td class="code">value</td><td>Value to be compared to the existing value at the given location.</td></tr>
-		</tbody>
-	</table>
+	<p>None.</p>
 	<h2>Return Values</h2>
-	<p>None. Throws Fam_Exception on error.</p>
-	<h2>Fam Error Numbers</h2>
-	<table><tbody>
-	<tr><th>Error</th><th>Description</th></tr>
-	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
-	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
-	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
-	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Item not found in the region.</td></tr>
-	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
-	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
-	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
-	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
-	</tbody></table>
+	<p>None.</p>
 	<h2>Notes</h2>
-	<p>These methods atomically replace a value in FAM with the smaller
-		of the existing value and the value given in the method. Note that the
-		offset argument must point to the correct value for the data type.
-		Availability of these methods is dependent on hardware support for the
-		operations.</p>
-	<p>A subsequent successful completion of fam_quiet() call ensures the completion of this atomic operation.</p> 
+	<p>The OpenFAM library suspends the execution of calling PE until all other
+		cooperating PEs issue a call to this function. Since data consistency in FAM cannot be
+		guaranteed by this library function, this method should not be used to synchronize the data for non-blocking APIs.</p>
 	<h2>Example</h2>
-<pre>
+	<pre>
 #include &lt;string.h>
 #include &lt;fam/fam.h>
 #include &lt;fam/fam_exception.h>
@@ -151,24 +119,32 @@ using namespace openfam;
 
 int main(void) {
 	fam *myFam = new fam();
-	 // ... Initialization code here
-	 try {
-		// look up the descriptor to a previously allocated data item
-		// (an integer array with at least 10 elements)
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+	// ... Initialization code here
+
+	try {
+		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		// create 50 element unnamed integer array in FAM with 0600
+		// (read/write by owner) permissions in myRegion
+		Fam_Descriptor *descriptor = myFam->fam_allocate((uint64_t)(50 * sizeof(int)), 0600, region);
+
+		printf("Successully allocated 50 unnamed integer elements\n");
+	} catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
 	
-		//Atomically set the minimum value for the first integer element in the array
-		myFam->fam_min(descriptor, 0, 100);
+	// Wait for all PEs to complete allocation
+	fam_barrier_all();
 	
-		// ensure that the min operation is complete
-		myFam->fam_quiet();
+	// Continue with the application
 	
-		// The first integer in FAM is now the minimum of its previous value and 100
-	 } catch (Fam_Exception &amp;e) {
+	try{
+		// free allocated space in FAM
+		myFam->fam_deallocate(descriptor);
+		printf("Successully de-allocated 50 unnamed integer elements\n");
+	} catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
 	 }
-
-	 // ... Finalization code follows
+	 // ... Finalization code here
 }
 </pre>
 		</article>

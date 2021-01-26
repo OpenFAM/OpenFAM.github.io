@@ -16,6 +16,8 @@
 				<li><a href="index.html">Home</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
 			</ul>
 			<hr>
 			Initialization and Finalization
@@ -30,6 +32,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +85,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -92,8 +96,8 @@
 	<p>Change permissions associated with a data item or region in FAM.</p>
 	<h2>Synopsis</h2>
 	<p class="code">
-		int fam_change_permissions(Fam_Descriptor *descriptor, mode_t
-		accessPermissions);<br> int
+		void fam_change_permissions(Fam_Descriptor *descriptor, mode_t
+		accessPermissions);<br> void
 		fam_change_permissions(Fam_Region_Descriptor *descriptor, mode_t
 		accessPermissions);
 	</p>
@@ -104,20 +108,23 @@
 	<table>
 		<tbody>
 			<tr><th>Name</th><th>Description</th></tr>
-			<tr><td class="code">Descriptor</td><td>Descriptor associated with the data item or region.</td></tr>
+			<tr><td class="code">descriptor</td><td>Descriptor associated with the data item or region.</td></tr>
 			<tr><td class="code">accessPermissions</td><td>New access permissions to be associated with the item.</td></tr>
 		</tbody>
 	</table>
 	<h2>Return Values</h2>
-	<p>Returns 0 on Success. Throws an exception on error.</p>
-	<h2>Exceptions</h2>
+	<p>None. Throws Fam_Exception on error.</p>
+	<h2>Fam error numbers</h2>
 	<table>
 	<tbody>
-	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><th>Error</th><th>Description</th></tr>
 	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
-	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>the data item name not found in FAM</td></tr>
-	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
-	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Data item name not found in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
+	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
+	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
+	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
 	</tbody>
 	</table>
 	<h2>Notes</h2>
@@ -161,7 +168,7 @@ int main(void) {
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

@@ -30,6 +30,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_size.html">fam_size</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +83,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -133,6 +135,19 @@
 		provided during allocation, then the program itself is responsible for
 		saving and tracking the descriptor if required later, since the data
 		in FAM will be unreachable without the descriptor.</p>
+	<p>Fam_Descriptor provides a method to retrieve an opaque read-only data structure called 
+	Fam_Global_Descriptor which represents both the region and data item in FAM. Fam_Global_Descriptor
+	can be freely copied, and shared across processing nodes by the program, and are portable
+	across operating system and program instances.</p>
+<pre>
+// Fam_Global_Descriptor Fam_Descriptor::get_global_descriptor();
+Fam_Global_Descriptor gDescriptor = famDescriptor->get_global_descriptor();
+</pre>
+	<p>Fam_Descriptor can be instantiated from Fam_Global_Descriptor using the following constructor.</p>
+<pre>
+// Fam_Descriptor::Fam_Descriptor(Fam_Global_Descriptor gDescriptor);
+Fam_Descriptor *dataItem = new Fam_Descriptor(gDescriptor);
+</pre>
 	<h2 id="e1">Example</h2>
 <pre>
 #include &lt;string.h>

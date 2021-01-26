@@ -16,8 +16,6 @@
 				<li><a href="index.html">Home</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
-				<li><a href="services.html">Services</a></li>
-				<li><a href="config_files.html">Configuration Files</a></li>
 			</ul>
 			<hr>
 			Initialization and Finalization
@@ -32,7 +30,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
-				<li><a href="fam_stat.html">fam_stat</a></li>
+				<li><a href="fam_size.html">fam_size</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -92,57 +90,40 @@
 			<hr>
 		</nav>
 		<article>
-			<h1 class="code">openfam::fam::fam_min</h1>
-	<p>Atomically replace a value in FAM with the minimum of it and
-		some given value.</p>
+			<h1 class="code">openfam::fam::fam_size</h1>
+	<p>Get the size of a region or data item.</p>
 	<h2>Synopsis</h2>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		int32_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		int64_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		uint32_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset,
-		uint64_t value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset, float
-		value);</p>
-	<p class="code">void fam_min(Fam_Descriptor *descriptor, uint64_t offset, double
-		value);</p>
+	<p class="code">uint64_t fam_size(Fam_Descriptor *descriptor);</p>
+	<p class="code">uint64_t fam_size(Fam_Region_Descriptor *descriptor);</p>
 	<h2>Description</h2>
-	<p>These methods atomically replace a value in FAM with the minimum
-		of the value given and the existing value.</p>
+	<p>These methods return the size associated with the data item or region descriptor.
+
+	</p>
 	<h2>Input Arguments</h2>
 	<table>
 		<tbody>
 			<tr><th>Name</th><th>Description</th></tr>
-			<tr><td class="code">descriptor</td><td>Descriptor associated with the data item.</td></tr>
-			<tr><td class="code">offset</td><td>Offset within the data item in FAM where value is located.</td></tr>
-			<tr><td class="code">value</td><td>Value to be compared to the existing value at the given location.</td></tr>
+			<tr><td class="code">descriptor</td><td>Descriptor associated with the region or the data item.</td></tr>
 		</tbody>
 	</table>
+	
 	<h2>Return Values</h2>
-	<p>None. Throws Fam_Exception on error.</p>
+	<p>Returns the size associated with region or the data item descriptor on success. Throws an exception on error.</p>
 	<h2>Fam Error Numbers</h2>
-	<table><tbody>
+	<table>
+	<tbody>
 	<tr><th>Error</th><th>Description</th></tr>
-	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
-	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
-	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
-	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Item not found in the region.</td></tr>
-	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
-	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
-	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
-	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
-	</tbody></table>
-	<h2>Notes</h2>
-	<p>These methods atomically replace a value in FAM with the smaller
-		of the existing value and the value given in the method. Note that the
-		offset argument must point to the correct value for the data type.
-		Availability of these methods is dependent on hardware support for the
-		operations.</p>
-	<p>A subsequent successful completion of fam_quiet() call ensures the completion of this atomic operation.</p> 
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>the data item name not found in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+</tbody>
+	</table>
+	
 	<h2>Example</h2>
 <pre>
+#include &lt;stdlib.h>
+#include &lt;stdio.h>
 #include &lt;string.h>
 #include &lt;fam/fam.h>
 #include &lt;fam/fam_exception.h>
@@ -151,30 +132,35 @@ using namespace openfam;
 
 int main(void) {
 	fam *myFam = new fam();
-	 // ... Initialization code here
-	 try {
-		// look up the descriptor to a previously allocated data item
-		// (an integer array with at least 10 elements)
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
 	
-		//Atomically set the minimum value for the first integer element in the array
-		myFam->fam_min(descriptor, 0, 100);
+	// ... initialization code here
 	
-		// ensure that the min operation is complete
-		myFam->fam_quiet();
-	
-		// The first integer in FAM is now the minimum of its previous value and 100
-	 } catch (Fam_Exception &amp;e) {
-		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
-	 }
-
-	 // ... Finalization code follows
+	try {
+		// get a region descriptor from the metadata service
+		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		
+		// Get region size
+		uint64_t region_size = fam_size(region);
+		printf("Region_size: %d\n", region_size);
+		
+		// Get a descriptor (created by another PE) via the metadata service
+		Fam_Descriptor *arrayDescriptor = myFam->fam_lookup("myArray", "myOtherRegion");
+		
+		// Get data item size
+		uint64_t data_size = fam_stat(arrayDescriptor);
+		printf("array_size: %d\n", data_size);
+		
+	} catch (Fam_Exception &amp;e) {
+		printf("Fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+		
+	// ... continuation code here
 }
 </pre>
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

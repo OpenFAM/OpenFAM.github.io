@@ -16,6 +16,8 @@
 				<li><a href="index.html">Home</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
 			</ul>
 			<hr>
 			Initialization and Finalization
@@ -30,6 +32,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +85,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -110,12 +114,12 @@
 		<pre>
 typedef struct {
 	char *defaultRegionName;
-	char *memoryServer;
+	char *cisServer;
 	char *grpcPort;
-	char *libfabricPort;
 	char *libfabricProvider;
 	char *famThreadModel;
-	char *allocator;
+	char *cisInterfaceType;
+	char *openFamModel;
 	char *famContextModel;
 	char *numConsumer;
 	char *runtime;
@@ -125,33 +129,33 @@ typedef struct {
 		<tbody>
 			<tr><th>Name</th><th>Description</th><th>Default Value</th></tr>
 			<tr>
-				<td class="code">memoryServer</td><td>Memory Server(s) to be used by OpenFam APIs. The value is
-						given as MemoryServerId:MemoryServerIPaddress. The
-						MemoryServerId should always be zero in current implementation.
-						The default value is taken as "0:127.0.0.1". i.e, localhost as
-						memory server with memory server id as 0.</td>
-				<td>"0:127.0.0.1"</td>
+				<td class="code">cisServer</td><td>Client Interface Server to be used by OpenFam APIs. The value is
+						given as cisServer IPaddress string.</td>
+				<td>"127.0.0.1"</td>
 			</tr>
-			<tr><td class="code">grpcPort</td><td>Port to be used by OpenFam memory allocator operations.</td><td>"8787"</td></tr>
-			<tr><td class="code">libfabricPort</td><td>Port to be used for libfabric operations.</td><td>"7500"</td></tr>
+			<tr><td class="code">grpcPort</td><td>Port to be used by OpenFam client interface service operations.</td><td>"8787"</td></tr>
 			<tr><td class="code">libfabricProvider</td><td>Libfabric provider to be used by OpenFam libfabric datapath
-						operations. The supported options are "sockets" and "psm2".</td>
+						operations. The supported options are "sockets", "verbs;ofi_rxm" and "psm2".</td>
 				<td>"sockets"</td>
+			</tr>
+			<tr><td class="code">cisInterfaceType</td><td>Communication interface type to be used between processing element and Client interface service. 
+						Supported types are "rpc" and "direct".</td>
+				<td>"rpc"</td>
 			</tr>
 			<tr>
 				<td class="code">
-					allocator
+					openFamModel
 				</td>
 				<td>
-					Type of allocator implementation used by OpenFAM API.
+					Type of OpenFAM memory allocator model implementation used by OpenFAM API.
 					Supported allocator implementations are:
-					"grpc" – Memory Server implementation that can be used in a
+					"memory_server" – Memory Server implementation that can be used in a
 						standard cluster.
-					"nvmm" – Shared Memory implementation that is usable in
+					"shared_memory" – Shared Memory implementation that is usable in
 						large shared memory scale-up machines.
 				</td>
 				<td>
-					"grpc"
+					"memory_server"
 				</td>
 			</tr>
 			<tr>
@@ -171,11 +175,11 @@ typedef struct {
 					runtime
 				</td>
 				<td>
-					FAM runtime environment used. Supported values are "pmix",
-						"pmi2", "none".
+					FAM runtime environment used. Supported values are "PMIX",
+						"PMI2", "NONE".
 				</td>
 				<td>
-					"pmix"
+					"PMIX"
 				</td>
 			</tr>
 		</tbody>
@@ -186,24 +190,27 @@ typedef struct {
 	<p class="code">Fam_Options *fm = (Fam_Options*)malloc(sizeof(Fam_Options));</p>
 	<p class="code">memset((void *)fm, 0, sizeof(Fam_Options));</p>
 	<p>&nbsp;</p>
-	<p>Note: The following options are not supported in current
-		implementation and should always be set to zero to use the default
-		values.<div class="code"> defaultRegionName, famThreadModel and famContextModel.</div>
 	<h2>Return Values</h2>
-	<p>None. Throws an exception on error.</p>
-	<h2>Exceptions</h2>
+	<p>None. Throws Fam_Exception on error.</p>
+	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
-	<tr><th>Exception</th><th>Description</th></tr>
-	<tr><td class="code">Fam_InvalidOption_Exception</td><td>If invalid option values are specified</td></tr>
-	<tr><td class="code">Fam_Datapath_Exception</td><td>libfabric initialization failure</td></tr>
-	<tr><td class="code">Fam_Allocator_Exception</td><td>allocator initialization failure</td></tr>
-	<tr><td class="code">Fam_Pmi_Exception</td><td>runtime initialization failure</td></tr>
+	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
+	<tr><td class="code">FAM_ERR_MEMSERV_LIST_EMPTY</td><td>Memory service not initialized.</td></tr>
 	</tbody></table>
 	<h3>Notes</h3>
 	<p>Fields may be specified in options in the future to support
 		parameters or other variables that have traditionally been provided to
 		the runtime via environment variables.</p>
+	<p>The following options are not supported in current
+		implementation and should always be set to zero to use the default
+		values.<div class="code"> defaultRegionName, famThreadModel and famContextModel.</div>
+	<p>Alternatively, application can pass these options using configuration files. See <a href="config_files.html">Configuration Files</a> for details.
+		However, fam_initialize() routine will give precedence to the options passed as Fam_Options argument over the options present in configuration files. </p>
 	<h2 id="e1">Example</h2>
 <pre>
 #include &lt;stdlib.h>
@@ -219,7 +226,7 @@ int main(void) {
 	Fam_Options *fm = (Fam_Options*)malloc(sizeof(Fam_Options));
 	memset((void *)fm, 0, sizeof(Fam_Options));
 	// Set specific options that are needed by the implementation
-	fm->memoryServer = strdup("0:10.0.0.25");
+	fm->cisServer = strdup("10.0.0.25");
 	fm->libfabricProvider = strdup("sockets");
 	try {
 		myFam->fam_initialize("myApplication", fm);
@@ -239,7 +246,7 @@ int main(void) {
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

@@ -16,6 +16,8 @@
 				<li><a href="index.html">Home</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
 			</ul>
 			<hr>
 			Initialization and Finalization
@@ -30,6 +32,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +85,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -98,16 +102,16 @@
 				if no output is returned), and throw an exception on error. Instead
 				of checking the return value for errors as in C, the caller should
 				use try-catch blocks for handling errors.</p>
-			<p>The implementation defines a set of exception classes, which
-				are derived from C++ standard exception class to categorize various
-				types of failures, like <code>Runtime</code>, <code>Allocator</code>, <code>Data-path</code>, etc. It also
-				defines a list of individual error numbers to identify a specific
-				error. The exception object received by the caller in case of an
+			<p>The OpenFAM 2.0 implementation define a fam exception class, which
+				is derived from C++ standard exception class. It also defines a list of individual error
+				numbers to categorize various types of failures, like <code>Runtime</code>, <code>Allocator</code>,
+				<code>Data-path</code>, etc. Individual error number identifies a specific
+				error condition. The fam exception object received by the caller in case of an
 				error will contain a specific error number and an appropriate error
 				message string. The application can retrieve this information using
 				member functions, <code>fam_error()</code> and <code>fam_error_msg()/what()</code> and take
-				any necessary action. The currently defined exceptions (and
-				exception numbers) are defined in Table 1 and Table 2</p>
+				any necessary action. The currently defined exception and
+				error numbers are defined in Table 1 and Table 2</p>
 			<table>
 				<caption>Table 1: List of OpenFAM exceptions</caption>
 				<tbody>
@@ -117,32 +121,9 @@
 					</tr>
 					<tr>
 						<td class="code">Fam_Exception</td>
-						<td>This is the base exception class for all FAM exceptions.</td>
-					</tr>
-					<tr>
-						<td class="code">Fam_InvalidOption_Exception</td>
-						<td>For invalid options or arguments for FAM APIs.</td>
-					</tr>
-					<tr>
-						<td class="code">Fam_Timeout_Exception</td>
-						<td>Retry or Timeout limit for blocking APIs.</td>
-					</tr>
-					<tr>
-						<td class="code">Fam_Datapath_Exception</td>
-						<td>Indicate data path errors.</td>
-					</tr>
-					<tr>
-						<td class="code">Fam_Allocator_Exception</td>
-						<td>Indicate allocator errors.</td>
-					</tr>
-					<tr>
-						<td class="code">Fam_Pmi_Exception</td>
-						<td>Indicate runtime initialization errors.</td>
-					</tr>
-					<tr>
-						<td class="code">Fam_Unimplemented_Exception</td>
-						<td>Calling unimplemented OpenFAM APIs</td>
-					</tr>
+						<td>This exception class object is returned for all the error conditions.
+						    It will contain specific error number. </td>
+					
 				</tbody>
 			</table>
 			<br>
@@ -179,6 +160,10 @@
 						<td>Shared memory allocator error.</td>
 					</tr>
 					<tr>
+						<td class="code">FAM_ERR_NOT_CREATED</td>
+						<td>Data item or region creation in FAM failed.</td>
+					</tr>
+					<tr>
 						<td class="code">FAM_ERR_NOTFOUND</td>
 						<td>Data item or region not found in FAM.</td>
 					</tr>
@@ -191,7 +176,7 @@
 						<td>Allocator specific error</td>
 					</tr>
 					<tr>
-						<td class="code">FAM_ERR_GRPC</td>
+						<td class="code">FAM_ERR_RPC</td>
 						<td>Error from grpc layer.</td>
 					</tr>
 					<tr>
@@ -201,6 +186,10 @@
 					<tr>
 						<td class="code">FAM_ERR_OUTOFRANGE</td>
 						<td>Data access out of range.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_NULLPTR</td>
+						<td>Null pointer access error.</td>
 					</tr>
 					<tr>
 						<td class="code">FAM_ERR_UNIMPL</td>
@@ -214,15 +203,51 @@
 						<td class="code">FAM_ERR_INVALIDOP</td>
 						<td>Invalid operations</td>
 					</tr>
+					<tr>
+						<td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td>
+						<td>RPC service not available.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_MEMSERV_LIST_EMPTY</td>
+						<td>Memory service not initialized.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_METADATA</td>
+						<td>Metadata service error.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_MEMORY</td>
+						<td>Memory service error.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_NAME_TOO_LONG</td>
+						<td>Region or Data item name too long.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_ATL_QUEUE_FULL</td>
+						<td>Atomic large transfer APIs queue full.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_ATL_QUEUE_INSERT</td>
+						<td>Atomic large transfer APIs queue insert error.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_ATL_NOT_ENABLED</td>
+						<td>Atomic large transfer APIs not enabled.</td>
+					</tr>
+					<tr>
+						<td class="code">FAM_ERR_ATL</td>
+						<td>Atomic large transfer API error.</td>
+					</tr>
 				</tbody>
 			</table>
 			<p>Note that the library contains both blocking and non-blocking
 				calls for most data path operations. In case of errors, all blocking
 				calls throw exceptions immediately. For example, a call to
-				<code>fam_put_bocking()</code> will either complete successfully, or throw one of
-				the following exceptions - <code>Fam_InvalidOption_Exception</code>,
-				<code>Fam_Allocator_Exception</code>, <code>Fam_Datapath_Exception</code> or
-				<code>Fam_Timeout_Exception</code>. In general, the application should use the
+				<code>fam_put_blocking()</code> will either complete successfully, or throw Fam_Exception object 
+				containing one of the following error numbers - <code>FAM_ERR_INVALID</code>,
+				<code>FAM_ERR_OUTOFRANGE</code>, <code>FAM_ERR_NOTFOUND</code> or
+				<code>FAM_ERR_TIMEOUT</code>. In general, the application should use the
 				normal try-catch block to handle exceptions:</p>
 			<pre>    try {
     	fam_put_blocking();
@@ -232,22 +257,22 @@
     </pre>
 			<p>However, the non-blocking calls are queued within the library,
 				and may not catch exceptions immediately. Depending on the
-				underlying error, certain exceptions will be thrown immediately,
+				underlying error, a fam exception will be thrown immediately with specific error number,
 				while others may only be thrown during the next fam_quiet() call.
 				Thus the code may look like:</p>
 			<pre>    try {
     	fam_put_nonblocking();
     } catch (Fam_Exception &amp;e) { 
-    	// handle (for example)
-    	// Fam_InvalidOption_Exception, Fam_Allocator_Exception, Fam_Datapath_Exception
+    	// handle error numbers(for example)
+    	// FAM_ERR_INVALID, FAM_ERR_NOTFOUND, FAM_ERR_OUTOFRANGE, FAM_ERR_NOPERM
     } 
     // ... Continue rest of the code ...
     try {
     	fam_quiet();
     } catch (Fam_Exception &amp;e) { 
-    	// These exceptions may actually result
-    	// from a previous fam_put_nonblocking() operation
-      // Fam_Timeout_Exception, Fam_Datapath_Exception
+    	// This exception may actually result from a previous 
+    	// fam_put_nonblocking() operation with following error number
+        // FAM_ERR_TIMEOUT, FAM_ERR_OUTOFRANGE, FAM_ERR_NOPERM
     }
     </pre>
 			<p>Note that uncaught exceptions will result in the application
@@ -255,7 +280,7 @@
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

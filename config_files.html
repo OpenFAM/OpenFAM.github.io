@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+		<h1>Configuration Files</h1>
+<p>Starting up of memory server is starting up of 3 different services. We have defined configuration files for all three services
+ and for PE. These are:
+ <ol>
+ <li>fam_client_interface_config.yaml</li>
+ <li>fam_memoryserver_config.yaml</li>
+ <li>fam_metadata_config.yaml</li>
+ <li>fam_pe_config.yaml</li>
+ </ol>
+These configuration files contain configuration options like: memory server address, port number,
+connection type (rpc or direct), libfabric provider etc.
+<p>1. fam_client_interface_config.yaml
+<table>
+<tbody>
+	<tr><th>Configuration Name</th><th>Description</th></tr>
+	<tr><td class="code">memsrv_interface_type</td>
+		<td>Memory Server Interface type used by OpenFAM. Default value is "direct". Other option is "rpc".
+		</td>
+	</tr>
+	<tr><td class="code">metadata_interface_type</td>
+		<td>Metadata Server Interface type used by OpenFAM. Default value is "direct". Other option is "rpc".
+		</td>
+	</tr>
+	<tr><td class="code">memsrv_list</td>
+		<td>List of memory servers. Applicable only if memsrv_interface_type is rpc. Each list entry is given
+		in this format:<p> &lt;memsrv_id>:&lt;host_address>:&lt;port_no>
+		</td>
+	</tr>
+	<tr><td class="code">metadata_list</td>
+		<td>List of metadata servers. Applicable only if metadata_interface_type is rpc. Each list entry is given
+		in this format:<p> &lt;metadataserver_id>:&lt;host_address>:&lt;port_no>
+		</td>
+	</tr>
+</tbody>
+</table>
+<p>2. fam_memoryserver_config.yaml
+<table>
+<tbody>
+	<tr><th>Configuration Name</th><th>Description</th></tr>
+	<tr><td class="code">provider</td>
+		<td>Libfabric provider to be used by OpenFAM libfabric data path operations. Default value is "sockets".
+		Other supported options are "psm2" and "verbs".
+		</td>
+	</tr>
+	<tr><td class="code">libfabric_port</td>
+		<td>Libfabric port to be used for data path operations.
+		</td>
+	</tr>
+	<tr><td class="code">delayed_free_threads</td>
+		<td>Number of threads used for delayed free.
+		</td>
+	</tr>
+	<tr><td class="code">ATL_threads</td>
+		<td> Atomic library threads count. Default value is 0, which indicates ATL is disabled.
+		</td>
+	</tr>
+	<tr><td class="code">ATL_queue_size</td>
+		<td> ATL queue size. Number of elements in each queue. Default value is 1000.
+		</td>
+	</tr>
+	<tr><td class="code">ATL_data_size</td>
+		<td> ATL data size per thread(MiB). This is used to allocate buffers and other queue related data structures.
+		Default data size is 1024.		
+		</td>
+	</tr>
+	<tr><td class="code">fam_path</td>
+		<td> Absolute path to the NVMM data files used by the memory server.
+		Default value is an empty string.		
+		</td>
+	</tr>
+</tbody>
+</table>
+<p>3. fam_metadata_config.yaml
+<table>
+<tbody>
+	<tr><th>Configuration Name</th><th>Description</th></tr>
+	<tr><td class="code">metadata_manager</td>
+		<td> Metadata manager type used by metadata server. Default is radixtree. Currently radixtree is the only supported KVS.		
+		</td>
+	</tr>
+	<tr><td class="code">metadata_path</td>
+		<td> Absoulte path where metadata info is stored. By default, it will be placed in /dev/shm/&lt;metadata_manager>.
+		Example: If metadata manager is radixtree, then metadata info would be placed under /dev/shm/radixtree folder.
+		</td>
+	</tr>
+	<tr><td class="code">enable_region_spanning</td>
+		<td> Flag to enable or disable region spanning. By default, it is set to true.
+		</td>
+	</tr>
+	<tr><td class="code">region_span_size_per_memoryserver</td>
+		<td> Region size per memory server (Bytes). Used only if region spanning is enabled.
+		Default value is 1073741824.
+		</td>
+	</tr>
+</tbody>
+</table>
+<p>4. fam_pe_config.yaml
+<table>
+<tbody>
+	<tr><th>Configuration Name</th><th>Description</th></tr>
+	<tr><td class="code">FamThreadModel</td>
+		<td> Fam thread model used by OpenFAM. Default value is "single". Currently OpenFAM supports only single-threaded model.		
+		</td>
+	</tr>
+	<tr><td class="code">provider</td>
+		<td> Libfabric provider to be used by OpenFAM libfabric data path operations. Default value is "sockets".
+		Other supported options are "psm2" and "verbs".
+		</td>
+	</tr>
+	<tr><td class="code">runtime</td>
+		<td> Runtime option used for OpenFAM. Default value is "PMIX". Other supported options are "PMI2" and "NONE"
+		</td>
+	</tr>
+	<tr><td class="code">client_interface_type</td>
+		<td> Client interface type used by OpenFAM. Default value is "direct". Other option is "rpc"
+		</td>
+	</tr>
+	<tr><td class="code">fam_client_interface_service_address</td>
+		<td> Address of Client Interface Service. Value is specified in this format: &lt;ip_address>:&lt;port_no>.
+		Applicable only if client_interface_type is rpc. Default value is "127.0.0.1:8787"
+		</td>
+	</tr>
+</tbody>
+</table>
+<p>Sample configuration files are provided in the source under <code>openfam_parent_directory/config</code>.</p>
+<h1>Startup of Services</h1>
+<p> All the services and the PE read the respective configuration file from "config" directory placed at the path mentioned
+by <code>OPENFAM_ROOT</code> environment variable or <code>/opt/OpenFAM</code>.</p>
+<p>Alternatively, most of these configuration options can be passed to services as command line arguments.
+The details of available command line options can be found using <code>-h</code> option of each of the service executable.
+For Example:</p>
+<pre>#./memory_server -h
+Usage :
+        ./memory_server &lt;options>
+
+Options :
+        -a/--address        : Address of the memory server (default value is localhost)
+
+        -r/--rpcport        : RPC port (default value is 8789)
+
+        -l/--libfabricport  : Libfabric port (default value is 7500)
+
+        -p/--provider       : Libfabric provider (default value is sockets)
+
+        -f/--fam_path       : Location of FAM (default value is /dev/shm/&lt;username>)
+
+        -v/--version        : Display memory server version
+
+        -i/--init           : Initialize the root shelf
+</pre>
+<p>The configuration options passed to the services using command line arguments take precedence over
+the options present in the respective configuration files.</p>
+<p>Similarly, for PE, configuration options passed using <code>Fam_Options</code> argument of <a href="fam_initialize.html">fam_initialize</a> API take precedence
+over the options present in fam_pe_config.yaml configuration file. </article>
+	</section>
+	<footer>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>
