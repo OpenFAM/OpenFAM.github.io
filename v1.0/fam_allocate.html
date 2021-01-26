@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+			<h1 class="code">openfam::fam::fam_allocate</h1>
+	<p>Allocate a data item in a region of FAM.</p>
+	<h2>Synopsis</h2>
+	<p class="code">
+		Fam_Descriptor *fam_allocate(char *name, uint64_t nbytes, mode_t
+		accessPermissions, Fam_Region_Descriptor *region);<br>
+		Fam_Descriptor *fam_allocate(uint64_t nbytes, mode_t
+		accessPermissions, Fam_Region_Descriptor *region);
+	</p>
+	<h2>Description</h2>
+	<p>These methods allocate space for a data item in some region of
+		FAM.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr><td class="code">name</td><td>Name of the data item for subsequent references.</td></tr>
+			<tr><td class="code">nbytes</td><td>Requested size of the data item in bytes.</td></tr>
+			<tr><td class="code">accessPermissions</td><td>Access permissions for this data item.</td></tr>
+			<tr><td class="code">region</td><td>
+					Descriptor for the region where the data item is being
+						created. If null, the default specified during fam_initialize() is
+						used.</td></tr>
+		</tbody>
+	</table>
+	<p>&nbsp;</p>
+	<h2>Return Values</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>the data item name is already present in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	</tbody>
+	</table>
+	<h2>Notes</h2>
+	<p>Note that these methods may allocate space greater than the
+		requested size to maintain an implementation dependent byte alignment.
+		The allocated space is zeroed out during allocation. If a name is
+		provided during allocation, it can be used within subsequent calls to
+		fam_lookup() to retrieve the associated descriptor. If a name is not
+		provided during allocation, then the program itself is responsible for
+		saving and tracking the descriptor if required later, since the data
+		in FAM will be unreachable without the descriptor.</p>
+	<h2 id="e1">Example</h2>
+<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+	// ... Initialization code here
+
+	try {
+		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		// create 50 element unnamed integer array in FAM with 0600
+		// (read/write by owner) permissions in myRegion
+		Fam_Descriptor *descriptor = myFam->fam_allocate((uint64_t)(50 * sizeof(int)), 0600, region);
+
+		printf("Successully allocated 50 unnamed integer elements\n");
+
+		// free allocated space in FAM
+		myFam->fam_deallocate(descriptor);
+		printf("Successully de-allocated 50 unnamed integer elements\n");
+	} catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	 }
+	 // ... Finalization code here
+}
+</pre>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+			<h1 class="code">openfam::fam::fam_put</h1>
+	</p>
+	<p>Copy a segment of memory from local memory to FAM.</p>
+	<h2>Synopsis</h2>
+	<p class="code">
+		int fam_put_blocking(void *local, Fam_Descriptor *descriptor, uint64_t
+		offset, uint64_t nbytes);<br> 
+		void fam_put_nonblocking(void *local, Fam_Descriptor *descriptor, uint64_t
+		offset, uint64_t nbytes);
+	</p>
+	<h2>Description</h2>
+	<p>Copy (part of) some data item from local memory to FAM.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr>
+				<th>
+					Name
+				</th>
+				<th>
+					Description
+				</th>
+			</tr>
+			<tr>
+				<td class="code">
+					Local
+				</td>
+				<td>
+					Appropriately sized area of local memory to use as source.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					Descriptor
+				</td>
+				<td>
+					Descriptor associated with the data item in FAM for the
+						destination.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					Offset
+				</td>
+				<td>
+					Byte offset from the start of the data item in FAM.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					Nbytes
+				</td>
+				<td>
+					Number of bytes to copy.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>The non-blocking call does not return a value on success; the
+		blocking call returns an integer value following normal C convention
+		of 0 for successful completion. Both non-blocking and blocking call
+		throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">Fam_InvalidOption_Exception</td><td>incorrect parameters are passed.</td></tr>
+	<tr><td class="code">Fam_Datapath_Exception</td><td>error occurred during write operation
+		over fabric.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>libfabric error occurred.</td></tr>
+	<tr><td class="code">Fam_Timeout_Exception</td><td>number of libfabric retry count reached the timeout limit.
+	(Only for blocking call)</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>the data item name is already present in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	</tbody>
+	</table>
+	<h2>Notes</h2>
+	<p>See notes for <a href="fam_get.html#e1">fam_get</a>.</p>
+	<h2>Example</h2>
+<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+	// ... Initialization code here
+	try {
+		// look up the descriptor to a previously allocated data item
+		// (a 50 element integer array)
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		
+		// allocate an integer array and initialize it
+		int local[] = {0,1,2,3,4,5,6,7,8,9};
+		
+		// replace elements 6-15 of the data item in FAM with values in local memory
+
+		myFam->fam_put_blocking(local, descriptor, 6*sizeof(int), 10*sizeof(int));
+
+		// ... we now have completed a copy from local memory to FAM
+		printf("Completed a copy from local memory to FAM\n");
+	 } catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	 }
+	 // ... Finalization code follows
+}
+</pre>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>

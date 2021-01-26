@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+				<h1 class="code">openfam::fam::fam_initialize</h1>
+	<p>Initialize the OpenFAM library.</p>
+	<h2>Synopsis</h2>
+	<p class="code">void fam_initialize(const char *groupName, Fam_Options *options);</p>
+	<h2>Description</h2>
+	<p>This method is required to be the first method called when a
+		processing element uses the OpenFAM library. It initializes internal
+		data structures within the library that allow the processing element
+		to participate in the application. Normally, called by all PEs at the
+		start of the program.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr><td>groupName</td><td>Name that defines an application group. All cooperating PEsmust provide the same group name.</td></tr>
+			<tr><td>options</td><td>Pre-defined options that a processing element provides to the OpenFAM library.</td></tr>
+		</tbody>
+	</table>
+	<p>fam_initialize() takes a defined object of type Fam_Options as input</p>
+		<pre>
+typedef struct {
+	char *defaultRegionName;
+	char *memoryServer;
+	char *grpcPort;
+	char *libfabricPort;
+	char *libfabricProvider;
+	char *famThreadModel;
+	char *allocator;
+	char *famContextModel;
+	char *numConsumer;
+	char *runtime;
+} Fam_Options;
+	</pre>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th><th>Default Value</th></tr>
+			<tr>
+				<td class="code">memoryServer</td><td>Memory Server(s) to be used by OpenFam APIs. The value is
+						given as MemoryServerId:MemoryServerIPaddress. The
+						MemoryServerId should always be zero in current implementation.
+						The default value is taken as "0:127.0.0.1". i.e, localhost as
+						memory server with memory server id as 0.</td>
+				<td>"0:127.0.0.1"</td>
+			</tr>
+			<tr><td class="code">grpcPort</td><td>Port to be used by OpenFam memory allocator operations.</td><td>"8787"</td></tr>
+			<tr><td class="code">libfabricPort</td><td>Port to be used for libfabric operations.</td><td>"7500"</td></tr>
+			<tr><td class="code">libfabricProvider</td><td>Libfabric provider to be used by OpenFam libfabric datapath
+						operations. The supported options are "sockets" and "psm2".</td>
+				<td>"sockets"</td>
+			</tr>
+			<tr>
+				<td class="code">
+					allocator
+				</td>
+				<td>
+					Type of allocator implementation used by OpenFAM API.
+					Supported allocator implementations are:
+					"grpc" – Memory Server implementation that can be used in a
+						standard cluster.
+					"nvmm" – Shared Memory implementation that is usable in
+						large shared memory scale-up machines.
+				</td>
+				<td>
+					"grpc"
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					numConsumer
+				</td>
+				<td>
+					Number of consumer threads for shared memory model – "nvmm"
+						allocator.
+				</td>
+				<td>
+					"1"
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					runtime
+				</td>
+				<td>
+					FAM runtime environment used. Supported values are "pmix",
+						"pmi2", "none".
+				</td>
+				<td>
+					"pmix"
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p>&nbsp;</p>
+	<p>Application should set the options value to zero to use the
+		default option values.</p>
+	<p class="code">Fam_Options *fm = (Fam_Options*)malloc(sizeof(Fam_Options));</p>
+	<p class="code">memset((void *)fm, 0, sizeof(Fam_Options));</p>
+	<p>&nbsp;</p>
+	<p>Note: The following options are not supported in current
+		implementation and should always be set to zero to use the default
+		values.<div class="code"> defaultRegionName, famThreadModel and famContextModel.</div>
+	<h2>Return Values</h2>
+	<p>None. Throws an exception on error.</p>
+	<h2>Exceptions</h2>
+	<table>
+	<tbody>
+	<tr><th>Exception</th><th>Description</th></tr>
+	<tr><td class="code">Fam_InvalidOption_Exception</td><td>If invalid option values are specified</td></tr>
+	<tr><td class="code">Fam_Datapath_Exception</td><td>libfabric initialization failure</td></tr>
+	<tr><td class="code">Fam_Allocator_Exception</td><td>allocator initialization failure</td></tr>
+	<tr><td class="code">Fam_Pmi_Exception</td><td>runtime initialization failure</td></tr>
+	</tbody></table>
+	<h3>Notes</h3>
+	<p>Fields may be specified in options in the future to support
+		parameters or other variables that have traditionally been provided to
+		the runtime via environment variables.</p>
+	<h2 id="e1">Example</h2>
+<pre>
+#include &lt;stdlib.h>
+#include &lt;stdio.h>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+	Fam_Options *fm = (Fam_Options*)malloc(sizeof(Fam_Options));
+	memset((void *)fm, 0, sizeof(Fam_Options));
+	// Set specific options that are needed by the implementation
+	fm->memoryServer = strdup("0:10.0.0.25");
+	fm->libfabricProvider = strdup("sockets");
+	try {
+		myFam->fam_initialize("myApplication", fm);
+		printf("FAM initialized\n");
+	} catch (Fam_Exception&amp; e) {
+		printf("FAM Initialization failed: %s\n", e.fam_error_msg());
+		myFam->fam_abort(-1); // abort the program
+		// note that fam_abort currently returns after signaling
+		// so we must terminate with the same value
+		return -1;
+	}
+	myFam->fam_finalize("myApplication");
+	printf("FAM finalized\n");
+	return 0;
+}
+</pre>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>

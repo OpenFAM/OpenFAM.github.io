@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+		<h1>Introduction</h1>
+<p>Recent technology advances in high-density, byte-addressable non-volatile memory (NVM) and low-latency interconnects have enabled building large-scale
+systems with a large disaggregated fabric-attached memory (FAM) pool shared across heterogeneous and decentralized compute nodes. In this model, compute
+nodes are decoupled from FAM, which allows separate evolution and scaling of processing and memory. Thus, the compute-to-memory ratio can be tailored
+to the specific needs of the workload. Compute nodes fail independently of FAM, and these separate fault domains provide a partial failure model that
+avoids a complete system shutdown in the event of a component failure. When a compute node fails, updates propagated to FAM remain visible to other
+compute nodes.</p>
+<p>The traditional shared-nothing model of distributed computing partitions data between compute nodes. Each compute node &quot;owns&quot; its local data
+and relies on heavyweight two-sided message passing and data copying to coordinate with other nodes. Data owners mediate access to their data, performing
+work on behalf of the requester. This model suffers mediation overheads and doesn't sufficiently leverage the data sharing potential of FAM systems.</p>
+<p>In contrast, the large capacity of the FAM pool means that large working sets can be maintained as in-memory data structures. The fact that all compute
+nodes share a common view of memory means that data sharing and communication may be done efficiently through shared memory, without requiring explicit
+messages to be sent over heavyweight network protocol stacks. Additionally, data sets no longer need to be partitioned between compute nodes, as is
+typically done in clustered environments and avoid message-based coordination overheads. Any compute node can operate on any data item, which enables
+more dynamic and flexible load balancing. More generally, sharing permits new approaches to cooperation.</p>
+<p><b>OpenFAM</b> is an application programming interface (API) for use in systems that contain FAM. The API is close to and is patterned after APIs provided by
+one-sided partitioned global address space (PGAS) libraries such as <cite><a href="www.openshmem.org/">OpenSHMEM</a></cite>. This maintains ease of use
+for application writers already familiar
+with those libraries. The primary distinctions between this API and those provided by other PGAS libraries are:</p>
+<ol>
+<li>FAM is no longer associated with a specific PE, and can be addressed directly from any PE without the cooperation and/or involvement of any other PE.</li>
+<li>Because state in FAM can survive program termination, additional interfaces are present to manage FAM data beyond the lifetime of a single program.</li>
+<li>The independence of state maintained in FAM provides additional capability for managing application availability in the presence of component failure.</li>
+</ol>
+<figure>
+<img src="images/system.png" width="850px">
+<figcaption>Figure 1: System view assumed in OpenFAM</figcaption>
+</figure>
+<p>Figure 1 shows the system model assumed in OpenFAM. The system provides a multi-OS environment where each compute node runs a separate operating system
+instance, with locally attached memory that is &quot;private&quot; to the OS instance. In addition, the system provides fabric attached memory that is
+also directly addressable (as memory) in a Global Address Space (GAS). Programmable data movers support efficient high-speed movement of data between
+local memory and fabric attached memory at a hardware level. To distinguish references to the two types of memory, we use the term FAM to refer to fabric
+attached memory and local memory to refer to the DRAM (or persistent memory) attached locally to a processing node. We also assume
+in the API that FAM is persistent to enable data to be shared not only within a running program, but also across program instances in larger
+computational workflows.</p>
+<p>The application spans compute nodes, and is composed of a group of processing elements (PEs) that cooperate with one another.
+Each processing element represents a thread of execution that uses both local memory and FAM to perform its tasks. FAM acts as a shared persistent
+space where PEs may place and access data. As in other PGAS programming models, we assume that the application is responsible for coordination of
+accesses between PEs to any shared data and manage data consistency in FAM.</p>
+<p>The implementation manages FAM in a two level hierarchy. At the coarser level programs can create FAM regions, which are large blocks of memory.
+Regions may have non-functional properties (e.g., resilience and security properties) associated with them. Regions have names and identifiers associated
+with them that can be used by the programmer to get handles (descriptors) to them. At the more granular level, memory managers can allocate data items
+within the regions. Data items inherit the non-functional characteristics of the regions within which they are allocated.</p>
+<p>FAM is addressed by descriptors, which are opaque read-only data structures within applications, and contain sufficient information in them to uniquely
+locate the corresponding region or data item in FAM. Descriptors can be freely copied, and shared across processing nodes by the program, and are portable
+across operating system (and program) instances. In addition to FAM addresses, descriptors also include access permissions for the underlying regions and
+data items. Currently, the API supports UNIX®-like permissions for access control to any data item that is long-lived. It leaves open the possibility
+of using secret authentication tokens, key pairs, or even PKI-based certificates for access control based on security needs to the implementation.
+A name service is used to maintain mappings from user-friendly names to descriptors that locate data in FAM. Currently, the API leaves the structure
+of names open. In line with the two-level memory hierarchy represented by regions and data items, we currently assume that all regions within FAM
+have unique names, and data items within a given region are also named uniquely. If a hierarchical name space is desirable, it can be accommodated
+within the name service implementation with no modifications of the API.</p>
+<p>While the OpenFAM API can be implemented in different languages, the reference implementation uses C++ bindings. Extensions to other languages are 
+straightforward and can be provided in the future. Variable and method names in the API use underscore separated lower-case words.
+Data types start with initial upper case letters, while method names and method arguments start with lower case, as do fields within data types.
+To maintain separation from other programs, all type and method names have the prefix “Fam_” or “fam_” depending on whether the name represents
+a data type or a method name. Where multiple methods have the same functionality, and the method signature is also identical, we use the C convention
+of adding “_TYPE” as a suffix to separate out the methods.</p>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>
