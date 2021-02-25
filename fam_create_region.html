@@ -14,6 +14,7 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
 				<li><a href="services.html">Services</a></li>
@@ -146,7 +147,7 @@
 	</table>
 	<p>&nbsp;</p>
 	<h2>Return Values</h2>
-	<p>Descriptor to the created region. Throws Fam_Exception on error.</p>
+	<p>Descriptor to the created region. Throws <code>Fam_Exception</code> on error.</p>
 	<h2>Fam error numbers</h2>
 	<table>
 	<tbody>
@@ -166,8 +167,8 @@
 		to align memory boundaries. Currently the maximum size of a region is
 		limited to 16 EiB by the API.</p>
 	<p>Fam_Region_Descriptor provides a method to retrieve an opaque read-only data structure called 
-	Fam_Global_Descriptor which represents both the region and data item in FAM. Fam_Global_Descriptor
-	can be freely copied, and shared across processing nodes by the program, and are portable
+	<code>Fam_Global_Descriptor</code> which represents the region in FAM. <code>Fam_Global_Descriptor</code>
+	can be freely copied, and shared across processing nodes by the program, and is portable
 	across operating system and program instances.</p>
 <pre>
 // Fam_Global_Descriptor Fam_Region_Descriptor::get_global_descriptor();

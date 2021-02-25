@@ -14,6 +14,7 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
 				<li><a href="services.html">Services</a></li>
@@ -106,11 +107,11 @@
 	<table>
 		<tbody>
 			<tr><th>Name</th><th>Description</th></tr>
-			<tr><td>groupName</td><td>Name that defines an application group. All cooperating PEsmust provide the same group name.</td></tr>
+			<tr><td>groupName</td><td>Name that defines an application group. All cooperating PEs must provide the same group name.</td></tr>
 			<tr><td>options</td><td>Pre-defined options that a processing element provides to the OpenFAM library.</td></tr>
 		</tbody>
 	</table>
-	<p>fam_initialize() takes a defined object of type Fam_Options as input</p>
+	<p><code>fam_initialize()</code> takes a defined object of type <code>Fam_Options</code> as input</p>
 		<pre>
 typedef struct {
 	char *defaultRegionName;
@@ -149,10 +150,10 @@ typedef struct {
 				<td>
 					Type of OpenFAM memory allocator model implementation used by OpenFAM API.
 					Supported allocator implementations are:
-					"memory_server" – Memory Server implementation that can be used in a
-						standard cluster.
-					"shared_memory" – Shared Memory implementation that is usable in
-						large shared memory scale-up machines.
+					<ul><li>"memory_server" – Memory Server implementation that can be used in a
+						standard cluster.</li>
+					<li>"shared_memory" – Shared Memory implementation that is usable in
+						large shared memory scale-up machines.</li></ul>
 				</td>
 				<td>
 					"memory_server"
@@ -163,8 +164,7 @@ typedef struct {
 					numConsumer
 				</td>
 				<td>
-					Number of consumer threads for shared memory model – "nvmm"
-						allocator.
+					Number of consumer threads for shared memory model using the nvmm allocator.
 				</td>
 				<td>
 					"1"
@@ -185,13 +185,13 @@ typedef struct {
 		</tbody>
 	</table>
 	<p>&nbsp;</p>
-	<p>Application should set the options value to zero to use the
+	<p>The application should set the options value to zero to use the
 		default option values.</p>
 	<p class="code">Fam_Options *fm = (Fam_Options*)malloc(sizeof(Fam_Options));</p>
 	<p class="code">memset((void *)fm, 0, sizeof(Fam_Options));</p>
 	<p>&nbsp;</p>
 	<h2>Return Values</h2>
-	<p>None. Throws Fam_Exception on error.</p>
+	<p>None. Throws <code>Fam_Exception</code> on error.</p>
 	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
@@ -203,14 +203,14 @@ typedef struct {
 	<tr><td class="code">FAM_ERR_MEMSERV_LIST_EMPTY</td><td>Memory service not initialized.</td></tr>
 	</tbody></table>
 	<h3>Notes</h3>
-	<p>Fields may be specified in options in the future to support
+	<p>Additional fields may be specified in options in the future to support
 		parameters or other variables that have traditionally been provided to
 		the runtime via environment variables.</p>
 	<p>The following options are not supported in current
 		implementation and should always be set to zero to use the default
-		values.<div class="code"> defaultRegionName, famThreadModel and famContextModel.</div>
-	<p>Alternatively, application can pass these options using configuration files. See <a href="config_files.html">Configuration Files</a> for details.
-		However, fam_initialize() routine will give precedence to the options passed as Fam_Options argument over the options present in configuration files. </p>
+		values.<div class="code"> defaultRegionName, famThreadModel and famContextModel</div>.
+	<p>Alternatively, the application can pass these options using configuration files. See <a href="config_files.html">Configuration Files</a> for details.
+		However, <code>fam_initialize()</code> routine will give precedence to the options passed as <code>Fam_Options</code> argument over the options present in configuration files. </p>
 	<h2 id="e1">Example</h2>
 <pre>
 #include &lt;stdlib.h>

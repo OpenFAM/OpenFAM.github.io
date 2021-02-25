@@ -14,6 +14,7 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
 				<li><a href="services.html">Services</a></li>
@@ -94,56 +95,30 @@
 		<article>
 		<h1>OpenFAM 2.0 Services</h1>
 <p> The initial reference implementation of OpenFAM was built using a single memory server.
- As expected, the memory server becomes a bottleneck even for a small number of concurrent PEs.
-For OpenFAM version 2.0, we have made significant changes to the design of the memory server,
-with these high level requirements.
-
+OpenFAM version 2.0 contains significant design changes to the memory server.
 <ul>
-<li>Support for larger pool of memory by scaling to multiple memory servers.
-Support larger region sizes that exceed the size of a single node thereby making large pool of
-memory accessible to the application.</li>
-<li>Because regions are intended to be large containers for data items, to improve data path performance,
-we need to allow the same region to encompass multiple memory nodes. This would reduce both network bottlenecks
-at the network interfaces, as well as performance bottlenecks due to limited compute capacity at a given memory server.</li>
-<li>We need to consider dynamic addition of memory servers when additional memory is required, without
-disturbing previously allocated memory.</li>
+<li>The design supports a larger pool of memory by supporting multiple memory servers.</li>
+<li>Regions can now span multiple memory servers, thus reducing performance bottlenecks.</li>
+<li>Memory servers can be addeded to the pool as needed without disturbing previously allocated memory.</li>
+<li>Metadata services have been separated from the memory server, enabling scalability.</li>
 </ul>
 <figure>
 <img src="images/openfam2.0memoryserver.png" width="450px">
 <figcaption>Figure 1: OpenFAM 2.0 Memory server components</figcaption>
 </figure>
-<p> There are three main components in the design.
+<p> Figure 1 shows the new design. There are three main components in the design.
 <ol>
-<li>The client interface service (CIS): All the PE’s talk to the CIS for memory server operations.</li>
-<li>The metadata management service: Region and data item metadata will be hosted in the metadata management service.
-The service could either run in same node as a CIS or a memory server, or it can run in dedicated metadata management nodes.</li>
-<li>The memory management service: The actual memory will be served from memory servers.
-For data path (get,put and atomic) operations PEs will talk to the memory servers directly.
-For memory management and metadata operations, like allocate, lookup, create_region, etc.,
-the CIS will communicate with memory servers via an RPC service or via direct functions calls.</li>
+<li>The client interface service (CIS): All PEs talk to the CIS for memory server operations.</li>
+<li>The metadata management service: Region and data item metadata is hosted by the metadata management service.
+The service can be co-located in the same node as a CIS server or a memory server, or it can be run in dedicated metadata management nodes.</li>
+<li>The memory management service: The actual memory is served from memory servers.
+For data path (get,put and atomic) operations PEs talk to the memory servers directly.
+For memory management and metadata operations, e.g., allocate, lookup, create_region, etc.,
+the CIS communicates with memory servers via an RPC service or via direct functions calls.</li>
 </ol>
-We have defined an RPC path and a direct path for all the three components – CIS, memory management service and metadata management service.
-Yaml based configuration parameters are available to decide how these services are running.  If the components are running as separate services,
-a grpc call is made to the service. If the services are running within other component (direct path), a function call is made.
-<p> Now let us look at some of the possible combinations.
-<ol>
-<li>All services running separately:
-If all the components are running as separate services, a grpc call will be made to the services.
-As shown in Figure 1, PE will make an RPC call to CIS, in-turn CIS will make an RPC call to metadata
-management service and memory management service for all memory management and metadata operations.
-</li>
-<li>CIS running as separate service with other services contained within CIS.
-In this case PE will make a grpc call to CIS and CIS makes direct  function call to
-other services. Figure 2, shows one such configuration where CIS and metadata running as a single service,
-with multiple memory servers connected to it. For memory management and metadata operations all the PE’s
-will make call to CIS, and for data path operations PE’s will communicate directly with memory servers.
-</li>
-</ol>
- <figure>
-<img src="images/openfam2.0exampleconfiguration.png" width="450px">
-<figcaption>Figure 2: A possible configuration with metadata running as part of CIS</figcaption>
-</figure>
-<p>See configuration and startup of OpenFAM 2.0 services in this section. <a href="config_files.html">Configuration Files</a></p>
+The services communicate with one another using grpc calls. However, as an optimization, if the components are compiled into the same executable, they bypass grpc and use direct function calls for communication.
+Yaml-based configuration files determine how the services are configured.  
+<p>See configuration and startup of OpenFAM 2.0 services in the <a href="config_files.html">Configuration Files</a> section.</p>
 		</article>
 	</section>
 	<footer>

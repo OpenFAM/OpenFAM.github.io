@@ -14,6 +14,7 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
 				<li><a href="services.html">Services</a></li>
@@ -92,40 +93,6 @@
 			<hr>
 		</nav>
 		<article>
-		<h1>OpenFAM release notes</h1>
-		<p>We are pleased to announce the release of OpenFAM 2.0 reference implementation. The highlights of the release is summarized below.
-		Please refer NEWS.md for list of features, enhancements and bug fixes that are added to the source tree in all the released versions.
-		Build and installation instructions are listed in README.md file located in the source tree.     </p>
-		OpenFAM version 2.0
-		<ul>
-			<li>Scalability improvements: Support for larger pool of memory by scaling to multiple memory servers. See <a href="services.html">services</a> for more details. </li>
-			<li>Performance improvement of memory management and metadata operations: 
-				<ul>
-					<li>NVMM background worker thread is disabled from memory service.</li>
-					<li>Delayed Free: Zeroing of memory have been moved from allocation path to free path by using delayed free thread.</li>  
-				</ul> 
-			</li>
-			<li>OpenFAM APIs changes: 
-				<ul>
-					<li>fam_size API is replaced with fam_stat API.</li>
-					<li>Modified fam_copy API to copy data between different regions.</li>
-					<li>Changed unused return type from int to void: fam_initialize,
-						fam_resize_region, fam_change_permissions, fam_put_blocking, fam_get_blocking, fam_gather_blocking, fam_scatter_blocking.  
-				</ul>
-			</li>
-			<li>Simplification of exception and error handling: All OpenFAM APIs returns only one exception type on error, i.e, Fam_Exception. </li>
-		</ul>
-		OpenFAM version 1.0
-		<ul>
-				<li>Initial public release of OpenFAM reference implementation</li>
-				<li>Memory allocator models implemented: "Shared memory model" to be used on scale-up platforms and "Memory server model" to be used on scale-out (cluster) platforms.</li>
-				<li>Memory server model uses libfabric and support sockets, verbs and psm providers. </li>
-		</ul>
-		<h1>Documentation update</h1>
-		<ul>
-				<li><a href="v2.0/index.html">OpenFAM version 2.0</a></li>
-				<li><a href="v1.0/index.html">OpenFAM version 1.0</a></li>
-		</ul>
 		<h1>Introduction</h1>
 <p>Recent technology advances in high-density, byte-addressable non-volatile memory (NVM) and low-latency interconnects have enabled building large-scale
 systems with a large disaggregated fabric-attached memory (FAM) pool shared across heterogeneous and decentralized compute nodes. In this model, compute
@@ -155,10 +122,10 @@ with those libraries. The primary distinctions between this API and those provid
 <figcaption>Figure 1: System view assumed in OpenFAM</figcaption>
 </figure>
 <p>Figure 1 shows the system model assumed in OpenFAM. The system provides a multi-OS environment where each compute node runs a separate operating system
-instance, with locally attached memory that is &quot;private&quot; to the OS instance. In addition, the system provides fabric attached memory that is
+instance, with locally attached memory that is &quot;private&quot; to the OS instance. In addition, the system provides fabric-attached memory that may be
 also directly addressable (as memory) in a Global Address Space (GAS). Programmable data movers support efficient high-speed movement of data between
-local memory and fabric attached memory at a hardware level. To distinguish references to the two types of memory, we use the term FAM to refer to fabric
-attached memory and local memory to refer to the DRAM (or persistent memory) attached locally to a processing node. We also assume
+local memory and fabric-attached memory at a hardware level. To distinguish references to the two types of memory, we use the term FAM to refer to
+fabric-attached memory and local memory to refer to the DRAM (or persistent memory) attached locally to a processing node. We also assume
 in the API that FAM is persistent to enable data to be shared not only within a running program, but also across program instances in larger
 computational workflows.</p>
 <p>The application spans compute nodes, and is composed of a group of processing elements (PEs) that cooperate with one another.
@@ -166,7 +133,7 @@ Each processing element represents a thread of execution that uses both local me
 space where PEs may place and access data. As in other PGAS programming models, we assume that the application is responsible for coordination of
 accesses between PEs to any shared data and manage data consistency in FAM.</p>
 <p>The implementation manages FAM in a two level hierarchy. At the coarser level programs can create FAM regions, which are large blocks of memory.
-Regions may have non-functional properties (e.g., resilience and security properties) associated with them. Regions have names and identifiers associated
+Regions may have non-functional properties (e.g., resilience or security properties) associated with them. Regions have names and identifiers associated
 with them that can be used by the programmer to get handles (descriptors) to them. At the more granular level, memory managers can allocate data items
 within the regions. Data items inherit the non-functional characteristics of the regions within which they are allocated.</p>
 <p>FAM is addressed by descriptors, which are opaque read-only data structures within applications, and contain sufficient information in them to uniquely
@@ -175,7 +142,7 @@ across operating system (and program) instances. In addition to FAM addresses, d
 data items. Currently, the API supports UNIX®-like permissions for access control to any data item that is long-lived. It leaves open the possibility
 of using secret authentication tokens, key pairs, or even PKI-based certificates for access control based on security needs to the implementation.
 A name service is used to maintain mappings from user-friendly names to descriptors that locate data in FAM. Currently, the API leaves the structure
-of names open. In line with the two-level memory hierarchy represented by regions and data items, we currently assume that all regions within FAM
+of names open. In line with the two-level memory hierarchy represented by regions and data items, the implementation assumes that all regions within FAM
 have unique names, and data items within a given region are also named uniquely. If a hierarchical name space is desirable, it can be accommodated
 within the name service implementation with no modifications of the API.</p>
 <p>While the OpenFAM API can be implemented in different languages, the reference implementation uses C++ bindings. Extensions to other languages are 

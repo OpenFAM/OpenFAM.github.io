@@ -14,6 +14,7 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
 				<li><a href="services.html">Services</a></li>
@@ -93,16 +94,14 @@
 		</nav>
 		<article>
 		<h1>Configuration Files</h1>
-<p>Starting up of memory server is starting up of 3 different services. We have defined configuration files for all three services
- and for PE. These are:
+<p>The OpenFAM environment uses four separate configuration files, three for the memory and metadata services, and one for the OpenFAM client.
  <ol>
  <li>fam_client_interface_config.yaml</li>
  <li>fam_memoryserver_config.yaml</li>
  <li>fam_metadata_config.yaml</li>
  <li>fam_pe_config.yaml</li>
  </ol>
-These configuration files contain configuration options like: memory server address, port number,
-connection type (rpc or direct), libfabric provider etc.
+These configuration files contain the following options.
 <p>1. fam_client_interface_config.yaml
 <table>
 <tbody>

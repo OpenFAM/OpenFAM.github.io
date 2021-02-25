@@ -14,6 +14,7 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
 				<li><a href="services.html">Services</a></li>
@@ -102,12 +103,12 @@
 				if no output is returned), and throw an exception on error. Instead
 				of checking the return value for errors as in C, the caller should
 				use try-catch blocks for handling errors.</p>
-			<p>The OpenFAM 2.0 implementation define a fam exception class, which
+			<p>The OpenFAM 2.0 implementation defines a <code>fam exception</code> class, which
 				is derived from C++ standard exception class. It also defines a list of individual error
-				numbers to categorize various types of failures, like <code>Runtime</code>, <code>Allocator</code>,
-				<code>Data-path</code>, etc. Individual error number identifies a specific
-				error condition. The fam exception object received by the caller in case of an
-				error will contain a specific error number and an appropriate error
+				numbers to categorize various types of failures, such as <code>Runtime</code>, <code>Allocator</code>,
+				<code>Data-path</code>, etc. Individual error numbers identify specific
+				error conditions. The <code>fam exception</code> object received by the caller in case of an
+				error contains a specific error number and an appropriate error
 				message string. The application can retrieve this information using
 				member functions, <code>fam_error()</code> and <code>fam_error_msg()/what()</code> and take
 				any necessary action. The currently defined exception and
@@ -244,7 +245,7 @@
 			<p>Note that the library contains both blocking and non-blocking
 				calls for most data path operations. In case of errors, all blocking
 				calls throw exceptions immediately. For example, a call to
-				<code>fam_put_blocking()</code> will either complete successfully, or throw Fam_Exception object 
+				<code>fam_put_blocking()</code> will either complete successfully, or throw <code>Fam_Exception</code> object 
 				containing one of the following error numbers - <code>FAM_ERR_INVALID</code>,
 				<code>FAM_ERR_OUTOFRANGE</code>, <code>FAM_ERR_NOTFOUND</code> or
 				<code>FAM_ERR_TIMEOUT</code>. In general, the application should use the

@@ -114,8 +114,8 @@ As mentioned in <cite><a href="https://link.springer.com/chapter/10.1007%2F978-3
 the reference implementation uses libfabric
 to handle the underlying memory traffic. Libfabric uses 64 bit keys to manage memory regions
 and associated access permissions. Within OpenFAM, every data item requires independent access
-permissions, so we map data items to libfabric regions for access from remote PEs. Rather than
-assigning random keys for data items within libfabric, we explicitly construct access keys using
+permissions, so OpenFAM data items are mapped to libfabric regions for access from remote PEs. Rather than
+assigning random keys for data items within libfabric, access keys are explicitly constructed using
 a combination of OpenFAM region Id, the data item id and OpenFAM permissions using the
 sequence Key = &lt;Region Id >&lt;DataItem Id>&lt;R|RW>. This enables the library to
 dynamically construct the required libfabric keys from data structures maintained 
@@ -142,7 +142,7 @@ The implementation supports the complete API with exceptions highlighted in Tabl
 <tr><td class="code">fam_fence</td><td>YES (only with sockets provider)</td><td>NO</td><td>Fence operation is not supported by PSM2 and Verbs libfabric provider.<br/>Support for other providers and Shared Memory model will be added in future</td></tr>
 </tbody>
 </table>
-Since the underlying hardware does not support 128-bit compare and swap (CAS) operations, they have been implemented
+Since the underlying libfabric providers do not support 128-bit compare and swap (CAS) operations, CAS operations have been implemented
 in software.
 		</article>
 	</section>
