@@ -151,7 +151,7 @@
 		</tbody>
 	</table>
 	<h2>Return Values</h2>
-	<p>None. Throws Fam_Exception on error.</p>
+	<p>None. Throws <code>Fam_Exception</code> on error.</p>
 	<h2>Fam Error Numbers</h2>
 	<table><tbody>
 	<tr><th>Error</th><th>Description</th></tr>
@@ -166,11 +166,11 @@
 	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
 	</tbody></table>
 	<h2>Notes</h2>
-	<p>These methods atomically set a value in FAM. Note that the
-		offset argument must point to the correct value for the data type.
-		Availability of these methods is dependent on hardware support for the
-		operations.</p>
-	<p>A subsequent successful completion of fam_quiet() call ensures the completion of this atomic operation.</p> 
+	<p>These methods atomically set a value to an existing value in
+		FAM, and return before the operation is complete. Note that the offset argument must point to the correct value for
+		the data type. Availability of these methods is dependent on hardware
+		support for the operations.</p>
+	<p>Successful completion of a subsequent <code>fam_quiet()</code> call ensures the completion of this atomic operation.</p> 
 	<h2>Example</h2>
 <pre>
 #include &lt;string.h>

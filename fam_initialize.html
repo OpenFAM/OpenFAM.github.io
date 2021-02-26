@@ -130,6 +130,10 @@ typedef struct {
 		<tbody>
 			<tr><th>Name</th><th>Description</th><th>Default Value</th></tr>
 			<tr>
+				<td class="code">defaultRegionName</td><td>Default region name. Currently ignored by the implementation.</td>
+				<td>"default"</td>
+			</tr>
+			<tr>
 				<td class="code">cisServer</td><td>Client Interface Server to be used by OpenFam APIs. The value is
 						given as cisServer IPaddress string.</td>
 				<td>"127.0.0.1"</td>
@@ -138,6 +142,9 @@ typedef struct {
 			<tr><td class="code">libfabricProvider</td><td>Libfabric provider to be used by OpenFam libfabric datapath
 						operations. The supported options are "sockets", "verbs;ofi_rxm" and "psm2".</td>
 				<td>"sockets"</td>
+			</tr>
+			<tr><td class="code">famThreadModel</td><td>Threading model used. Currently ignored by the implementation.</td>
+				<td>"FAM_THREAD_SERIALIZE"</td>
 			</tr>
 			<tr><td class="code">cisInterfaceType</td><td>Communication interface type to be used between processing element and Client interface service. 
 						Supported types are "rpc" and "direct".</td>
@@ -158,6 +165,9 @@ typedef struct {
 				<td>
 					"memory_server"
 				</td>
+			</tr>
+			<tr><td class="code">famContextModel</td><td>Context model used. Currently ignored by the implementation.</td>
+				<td>"FAM_CONTEXT_DEFAULT"</td>
 			</tr>
 			<tr>
 				<td class="code">

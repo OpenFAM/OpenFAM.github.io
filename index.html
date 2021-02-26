@@ -106,7 +106,7 @@ work on behalf of the requester. This model suffers mediation overheads and does
 <p>In contrast, the large capacity of the FAM pool means that large working sets can be maintained as in-memory data structures. The fact that all compute
 nodes share a common view of memory means that data sharing and communication may be done efficiently through shared memory, without requiring explicit
 messages to be sent over heavyweight network protocol stacks. Additionally, data sets no longer need to be partitioned between compute nodes, as is
-typically done in clustered environments and avoid message-based coordination overheads. Any compute node can operate on any data item, which enables
+typically done in clustered environments and avoid message-based coordination overheads. Any compute node can operate on any part of data, which enables
 more dynamic and flexible load balancing. More generally, sharing permits new approaches to cooperation.</p>
 <p><b>OpenFAM</b> is an application programming interface (API) for use in systems that contain FAM. The API is close to and is patterned after APIs provided by
 one-sided partitioned global address space (PGAS) libraries such as <cite><a href="www.openshmem.org/">OpenSHMEM</a></cite>. This maintains ease of use
@@ -122,23 +122,21 @@ with those libraries. The primary distinctions between this API and those provid
 <figcaption>Figure 1: System view assumed in OpenFAM</figcaption>
 </figure>
 <p>Figure 1 shows the system model assumed in OpenFAM. The system provides a multi-OS environment where each compute node runs a separate operating system
-instance, with locally attached memory that is &quot;private&quot; to the OS instance. In addition, the system provides fabric-attached memory that may be
-also directly addressable (as memory) in a Global Address Space (GAS). Programmable data movers support efficient high-speed movement of data between
-local memory and fabric-attached memory at a hardware level. To distinguish references to the two types of memory, we use the term FAM to refer to
+instance, with locally attached memory that is &quot;private&quot; to the OS instance. Programmable data movers support efficient high-speed movement of data between
+local memory and FAM at a hardware level, as well as atomic operations on FAM. To distinguish references to the two types of memory, we use the term FAM to refer to
 fabric-attached memory and local memory to refer to the DRAM (or persistent memory) attached locally to a processing node. We also assume
-in the API that FAM is persistent to enable data to be shared not only within a running program, but also across program instances in larger
+in the API that FAM may be persistent to enable data to be shared not only within a running program, but also across program instances in larger
 computational workflows.</p>
 <p>The application spans compute nodes, and is composed of a group of processing elements (PEs) that cooperate with one another.
 Each processing element represents a thread of execution that uses both local memory and FAM to perform its tasks. FAM acts as a shared persistent
 space where PEs may place and access data. As in other PGAS programming models, we assume that the application is responsible for coordination of
-accesses between PEs to any shared data and manage data consistency in FAM.</p>
+accesses between PEs to any shared data and for managing data consistency in FAM.</p>
 <p>The implementation manages FAM in a two level hierarchy. At the coarser level programs can create FAM regions, which are large blocks of memory.
-Regions may have non-functional properties (e.g., resilience or security properties) associated with them. Regions have names and identifiers associated
-with them that can be used by the programmer to get handles (descriptors) to them. At the more granular level, memory managers can allocate data items
+Regions may have non-functional properties (e.g., resilience or security properties) associated with them. Regions have names, which can be used by the programmer
+to get handles (descriptors) to them. At the more granular level, memory managers can allocate data items
 within the regions. Data items inherit the non-functional characteristics of the regions within which they are allocated.</p>
 <p>FAM is addressed by descriptors, which are opaque read-only data structures within applications, and contain sufficient information in them to uniquely
-locate the corresponding region or data item in FAM. Descriptors can be freely copied, and shared across processing nodes by the program, and are portable
-across operating system (and program) instances. In addition to FAM addresses, descriptors also include access permissions for the underlying regions and
+locate the corresponding region or data item in FAM. In addition to FAM addresses, descriptors also include access permissions for the underlying regions and
 data items. Currently, the API supports UNIX®-like permissions for access control to any data item that is long-lived. It leaves open the possibility
 of using secret authentication tokens, key pairs, or even PKI-based certificates for access control based on security needs to the implementation.
 A name service is used to maintain mappings from user-friendly names to descriptors that locate data in FAM. Currently, the API leaves the structure

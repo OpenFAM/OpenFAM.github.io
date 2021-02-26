@@ -100,14 +100,14 @@
 	<h2>Synopsis</h2>
 	<p class="code">void fam_fence(void);</p>
 	<h2>Description</h2>
-	<p>This method orders FAM operations (put,
-		scatter, atomics, copy) issued by the calling PE thread before the
+	<p>This method orders FAM operations (<code>put</code>,
+		<code>scatter</code>, <code>atomics</code>, <code>copy</code>) issued by the calling PE thread before the
 		fence to be performed before FAM operations issued by the calling PE
 		thread after the fence. This method is non-blocking.</p>
 	<h2>Input Arguments</h2>
 	<p>None.</p>
 	<h2>Return Values</h2>
-	<p>None. Throws Fam_Exception on error.</p>
+	<p>None. Throws <code>Fam_Exception</code> on error.</p>
 	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
@@ -119,7 +119,7 @@
 	</table>
 	<h2>Notes</h2>
 	<p>Note that this method does NOT order
-		fam_map()-enabled load/store accesses by the processor to FAM.</p>
+		<code>fam_map()</code>-enabled load/store accesses by the processor to FAM.</p>
 	<h2>Example</h2>
 <pre>
 #include &lt;string.h>

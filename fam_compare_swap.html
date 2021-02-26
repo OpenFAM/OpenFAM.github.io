@@ -169,7 +169,7 @@ TYPE cas(TYPE *p, TYPE oldValue, TYPE newValue){
 		</tbody>
 	</table>
 	<h2>Return Values</h2>
-	<p>The old value from FAM. Throws Fam_Exception on
+	<p>The old value from FAM. Throws <code>Fam_Exception</code> on
 		error.</p>
 	<h2>Fam error numbers</h2>
 	<table><tbody>
@@ -191,8 +191,8 @@ TYPE cas(TYPE *p, TYPE oldValue, TYPE newValue){
 		expected value, swap a new value. The old value is returned. Note that
 		the offset argument must point to the correct value for the data type.
 		Availability of these methods is dependent on hardware support for the
-		operations. GCC currently does not define int128_t; it is defined in
-		fam.h.</p>
+		operations. GCC currently does not define <code>int128_t</code>; it is defined in
+		<code>fam.h</code>.</p>
 	<h2>Example</h2>
 <pre>
 #include &lt;string.h>

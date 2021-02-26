@@ -182,11 +182,11 @@
 		</tbody>
 	</table>
 	<h2>Return Values</h2>
-	<p>These calls do not return a value on success. At return, FAM contains a copy of the
+	<p>These calls do not return a value on success. Upon return, FAM contains a copy of the
 		data elements for the blocking calls. Data in FAM is not guaranteed
-		until successful completion of a subsequent fam_quiet() call for the
-		non-blocking calls. Both non-blocking and blocking call throws 
-		Fam_Exception on error.</p>
+		until successful completion of a subsequent <code>fam_quiet()</code> call for the
+		non-blocking calls. Both non-blocking and blocking calls throw
+		<code>Fam_Exception</code> on error.</p>
 	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>

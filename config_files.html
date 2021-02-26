@@ -96,10 +96,10 @@
 		<h1>Configuration Files</h1>
 <p>The OpenFAM environment uses four separate configuration files, three for the memory and metadata services, and one for the OpenFAM client.
  <ol>
- <li>fam_client_interface_config.yaml</li>
- <li>fam_memoryserver_config.yaml</li>
- <li>fam_metadata_config.yaml</li>
- <li>fam_pe_config.yaml</li>
+ <li><b>fam_client_interface_config.yaml</b>: Configures the client interface service.</li>
+ <li><b>fam_memoryserver_config.yaml</b>: Configures the memory servers.</li>
+ <li><b>fam_metadata_config.yaml</b>: Configures the metadata management service.</li>
+ <li><b>fam_pe_config.yaml</b>: Configures the OpenFAM clients.</li>
  </ol>
 These configuration files contain the following options.
 <p>1. fam_client_interface_config.yaml
@@ -216,7 +216,7 @@ These configuration files contain the following options.
 </tbody>
 </table>
 <p>Sample configuration files are provided in the source under <code>openfam_parent_directory/config</code>.</p>
-<h1>Startup of Services</h1>
+<h1>Starting Services</h1>
 <p> All the services and the PE read the respective configuration file from "config" directory placed at the path mentioned
 by <code>OPENFAM_ROOT</code> environment variable or <code>/opt/OpenFAM</code>.</p>
 <p>Alternatively, most of these configuration options can be passed to services as command line arguments.
@@ -243,7 +243,7 @@ Options :
 </pre>
 <p>The configuration options passed to the services using command line arguments take precedence over
 the options present in the respective configuration files.</p>
-<p>Similarly, for PE, configuration options passed using <code>Fam_Options</code> argument of <a href="fam_initialize.html">fam_initialize</a> API take precedence
+<p>Similarly, for the PE, configuration options passed using <code>Fam_Options</code> argument of <a href="fam_initialize.html">fam_initialize</a> API take precedence
 over the options present in fam_pe_config.yaml configuration file. </article>
 	</section>
 	<footer>

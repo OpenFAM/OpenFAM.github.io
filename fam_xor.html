@@ -112,7 +112,7 @@
 			<tr><td class="code">value</td><td>Value to be combined with the existing value at the given location.</td></tr>
 	</tbody></table>
 	<h2>Return Values</h2>
-	<p>None. Throws Fam_Exception on error.</p>
+	<p>None. Throws <code>Fam_Exception</code> on error.</p>
 	<h2>Fam Error Numbers</h2>
 	<table><tbody>
 	<tr><th>Error</th><th>Description</th></tr>
@@ -127,11 +127,11 @@
 	</tbody></table>
 	<h2>Notes</h2>
 	<p>These methods atomically replace a value in FAM with the Bitwise
-		XOR of the existing value and the value given in the method. Note that
+		XOR of the existing value and the value given in the method, and return before the operation is complete. Note that
 		the offset argument must point to the correct value for the data type.
 		Availability of these methods is dependent on hardware support for the
 		operations.</p>
-	<p>A subsequent successful completion of fam_quiet() call ensures the completion of this atomic operation.</p> 
+	<p>Successful completion of a subsequent <code>fam_quiet()</code> call ensures the completion of this atomic operation.</p> 
 	<h2>Example</h2>
 <pre>
 #include &lt;string.h>

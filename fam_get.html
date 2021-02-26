@@ -141,8 +141,8 @@
 		</tbody>
 	</table>
 	<h2>Return Values</h2>
-	<p>These calls does not return a value on success. Both non-blocking and blocking call
-		throw Fam_Exception on error.</p>
+	<p>These calls do not return a value on success. Both non-blocking and blocking calls
+		throw <code>Fam_Exception</code> on error.</p>
 	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
@@ -161,14 +161,14 @@
 	</table>
 	<h2 id="e1">Notes</h2>
 	<p>The local memory pointer must point to an area of memory
-		sufficient to accommodate the incoming data (nbytes). Insufficient
+		sufficient to accommodate the incoming data (<code>nbytes</code>). Insufficient
 		allocation of local memory may cause segmentation violations or
 		corrupted data in local memory.</p>
-	<p>At return, the memory pointed to by local contains a copy of the
+	<p>Upon return, the memory pointed to by local contains a copy of the
 		data in FAM for the blocking call. For the non-blocking call, the
 		memory pointed to by the local pointer is not guaranteed to contain a
-		copy of the data in FAM until after a successful completion of a
-		fam_quiet() call.</p>
+		copy of the data in FAM until after a successful completion of a subsequent 
+		<code>fam_quiet()</code> call.</p>
 	<h2>Examples</h2>
 <pre>
 // Example of blocking get

@@ -100,7 +100,7 @@
 	<p class="code">void fam_barrier_all(void);</p>
 	<h2>Description</h2>
 	<p>This method is used to suspend the execution of the calling PE until all other PEs issue
-	 a call to this particular fam_barrier_all() statement.
+	 a call to a corresponding <code>fam_barrier_all()</code> statement.
 	</p>
 	<h2>Input Arguments</h2>
 	<p>None.</p>
@@ -108,8 +108,7 @@
 	<p>None.</p>
 	<h2>Notes</h2>
 	<p>The OpenFAM library suspends the execution of calling PE until all other
-		cooperating PEs issue a call to this function. Since data consistency in FAM cannot be
-		guaranteed by this library function, this method should not be used to synchronize the data for non-blocking APIs.</p>
+		cooperating PEs issue a call to this function. This call should be preceded by a <code>fam_quiet()</code> if non-blocking calls are pending since it does not wait for pending non-blocking calls to complete.</p>
 	<h2>Example</h2>
 	<pre>
 #include &lt;string.h>

@@ -78,6 +78,10 @@ pre {
 	font-family: courier-new, courier, monospace;
 }
 
+dt {
+	font-weight: bold;
+}
+
 code {
 	font-family: courier-new, courier, monospace;
 }
