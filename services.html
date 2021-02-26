@@ -112,7 +112,7 @@ OpenFAM version 2.0 contains significant design changes to the memory server.
 <dt>The metadata management service:</dt><dd>Region and data item metadata is hosted by the metadata management service.
 The service can be co-located in the same node as a CIS server or a memory server, or it can be run in dedicated metadata management nodes.</dd>
 <dt>The memory management service:</dt><dd> The actual memory is served from memory servers.
-For data path (get,put and atomic) operations PEs talk to the memory servers directly.
+For data path (<code>get</code>, <code>put</code> and <code>atomic</code>) operations PEs talk to the memory servers directly.
 For memory management and metadata operations, e.g., <code>allocate</code>, <code>lookup</code>, <code>create_region</code>, etc.,
 the CIS communicates with memory servers via an RPC service or via direct functions calls.</dd>
 </dl>

@@ -115,12 +115,12 @@
 			<tr><td class="code">region</td><td>
 					Descriptor for the region where the data item is being
 						created. If null, the default specified during fam_initialize() is
-						used.</td></tr>
+						used.<span style="color:red;font-weight:bold">Is this true? <code>fam_initialize</code> says that default region name is not used. Do we still have a default region?</span></td></tr>
 		</tbody>
 	</table>
 	<p>&nbsp;</p>
 	<h2>Return Values</h2>
-	<p>Descriptor to the allocated data item. Throws Fam_Exception on error.</p>
+	<p>Descriptor to the allocated data item. Throws <code>Fam_Exception</code> on error.</p>
 	<h2>Fam Error numbers</h2>
 	<table>
 	<tbody>
@@ -144,15 +144,15 @@
 		provided during allocation, then the program itself is responsible for
 		saving and tracking the descriptor if required later, since the data
 		in FAM will be unreachable without the descriptor.</p>
-	<p>Fam_Descriptor provides a method to retrieve an opaque read-only data structure called 
-	Fam_Global_Descriptor which represents both the region and data item in FAM. Fam_Global_Descriptor
-	can be freely copied, and shared across processing nodes by the program, and are portable
+	<p><code>Fam_Descriptor</code> provides a method to retrieve an opaque read-only data structure called 
+	<code>Fam_Global_Descriptor</code> which represents both the region and data item in FAM. <code>Fam_Global_Descriptor</code>
+	can be freely copied, and shared across processing nodes by the program, and is portable
 	across operating system and program instances.</p>
 <pre>
 // Fam_Global_Descriptor Fam_Descriptor::get_global_descriptor();
 Fam_Global_Descriptor gDescriptor = famDescriptor->get_global_descriptor();
 </pre>
-	<p>Fam_Descriptor can be instantiated from Fam_Global_Descriptor using the following constructor.</p>
+	<p>Fam_Descriptor can be instantiated from <code>Fam_Global_Descriptor</code> using the following constructor.</p>
 <pre>
 // Fam_Descriptor::Fam_Descriptor(Fam_Global_Descriptor gDescriptor);
 Fam_Descriptor *dataItem = new Fam_Descriptor(gDescriptor);

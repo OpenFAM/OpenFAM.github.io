@@ -118,7 +118,7 @@
 	</table>
 	<h2>Return Values</h2>
 	<p>A pointer in the PE's virtual address space that can be used to
-		directly manipulate contents of FAM. Throws Fam_Exception on error.</p>
+		directly manipulate contents of FAM. Throws <code>Fam_Exception</code> on error.</p>
 	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
@@ -141,7 +141,7 @@
 		are managed appropriately. The implementation may limit the FAM size
 		(hence the size of data items) that can be mapped into the processor
 		address space at one time.</p>
-	<p><code>fam_map()</code> and <code>fam_unmap()</code>are currently only supported in the scale-up configuration of the OpenFAM reference implementation.</p>
+	<p><code>fam_map()</code> and <code>fam_unmap()</code>are currently only supported in the scale-up (shared memory) configuration of the OpenFAM reference implementation.</p>
 	<h2 id="e1">Example</h2>
 <pre>
 #include &lt;string.h>
