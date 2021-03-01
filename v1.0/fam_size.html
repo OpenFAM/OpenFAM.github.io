@@ -140,14 +140,14 @@ int main(void) {
 		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
 		
 		// Get region size
-		uint64_t region_size = fam_size(region);
+		uint64_t region_size = myFam->fam_size(region);
 		printf("Region_size: %d\n", region_size);
 		
 		// Get a descriptor (created by another PE) via the metadata service
 		Fam_Descriptor *arrayDescriptor = myFam->fam_lookup("myArray", "myOtherRegion");
 		
 		// Get data item size
-		uint64_t data_size = fam_stat(arrayDescriptor);
+		uint64_t data_size = myFam->fam_size(arrayDescriptor);
 		printf("array_size: %d\n", data_size);
 		
 	} catch (Fam_Exception &amp;e) {

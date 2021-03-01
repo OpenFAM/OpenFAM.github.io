@@ -125,10 +125,9 @@
 	</table>
 	<h2>Notes</h2>
 	<p>Note that if a descriptor is used to access deallocated space,
-		behavior of the library is implementation dependent. <span style="color:red;font-weight:bold">The
+		behavior of the library is implementation dependent. The
 		implementation may reclaim space some indeterminate amount of time
-		after the method is called, to permit other PEs currently using the
-		data item to finish.</span></p>
+		after the method is called, to perform memset operation to zero deallocated memory space.</p>
 	<h2>Example</h2>
 	<p>See <a href="fam_allocate.html#e1">fam_allocate</a></p>
 		</article>

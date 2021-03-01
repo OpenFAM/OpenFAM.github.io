@@ -124,7 +124,7 @@ typedef struct {
 		<tbody>
 			<tr><th>Name</th><th>Description</th><th>Default Value</th></tr>
 			<tr>
-				<td class="code">key</td><td><span style="color:red;font-weight:bold">TBD</span></td>
+				<td class="code">key</td><td>Key associated with region or data item. To be used in future.</td>
 				<td>none</td>
 			</tr>
 			<tr>
@@ -173,14 +173,14 @@ int main(void) {
 		
 		// allocate space for Fam_Stat structure.
 		Fam_Stat *info = (Fam_Stat *)calloc(1, sizeof(Fam_Stat));
-		fam_stat(region, info);
+		myFam->fam_stat(region, info);
 		printf("Region_size: %d\n", info->size);
 		
 		// Get a descriptor (created by another PE) via the metadata service
 		Fam_Descriptor *arrayDescriptor = myFam->fam_lookup("myArray", "myOtherRegion");
 		
 		// Get data item info
-		fam_stat(arrayDescriptor, info);
+		myFam->fam_stat(arrayDescriptor, info);
 		printf("array_size: %d\n", info->size);
 		
 	} catch (Fam_Exception &amp;e) {

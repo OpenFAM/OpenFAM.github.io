@@ -165,8 +165,8 @@
 	<h2>Notes</h2>
 	<p>Note that the system may round up the actual size of the region
 		to align memory boundaries. Currently the maximum size of a region is
-		limited to 16 EiB by the API.</p>
-	<p style="color:red;font-weight:bold">Is this (16 EiB) true? Each memory server restricts region size to 1 TiB (see design choices). Can we support that many memory servers?</p>
+		limited to 16 EiB by the API. See <a href="limitations.html">Design Choices</a> for the current design limits within the OpenFAM reference implementation.
+		</p>
 	<p>Fam_Region_Descriptor provides a method to retrieve an opaque read-only data structure called 
 	<code>Fam_Global_Descriptor</code> which represents the region in FAM. <code>Fam_Global_Descriptor</code>
 	can be freely copied, and shared across processing nodes by the program, and is portable

@@ -133,7 +133,7 @@ int main(void) {
 	}
 	
 	// Wait for all PEs to complete allocation
-	fam_barrier_all();
+	myFam->fam_barrier_all();
 	
 	// Continue with the application
 	
