@@ -139,7 +139,7 @@
 		requested size to maintain an implementation dependent byte alignment.
 		The allocated space is zeroed out during allocation. If a name is
 		provided during allocation, it can be used within subsequent calls to
-		fam_lookup() to retrieve the associated descriptor. If a name is not
+		<code>fam_lookup()</code> to retrieve the associated descriptor. If a name is not
 		provided during allocation, then the program itself is responsible for
 		saving and tracking the descriptor if required later, since the data
 		in FAM will be unreachable without the descriptor.</p>
@@ -151,7 +151,7 @@
 // Fam_Global_Descriptor Fam_Descriptor::get_global_descriptor();
 Fam_Global_Descriptor gDescriptor = famDescriptor->get_global_descriptor();
 </pre>
-	<p>Fam_Descriptor can be instantiated from <code>Fam_Global_Descriptor</code> using the following constructor.</p>
+	<p><code>Fam_Descriptor</code> can be instantiated from <code>Fam_Global_Descriptor</code> using the following constructor.</p>
 <pre>
 // Fam_Descriptor::Fam_Descriptor(Fam_Global_Descriptor gDescriptor);
 Fam_Descriptor *dataItem = new Fam_Descriptor(gDescriptor);

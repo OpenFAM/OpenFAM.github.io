@@ -129,7 +129,7 @@
 	</tbody>
 	</table>
 	<h2>Notes</h2>
-	<p>None.</p>
+	<p>Permissions are checked on first descriptor use in a running program. Changed permissions are only applied the next time the program is run, not immediately on next access.</p>
 	<h2>Example</h2>
 <pre>
 #include &lt;string.h>
@@ -154,11 +154,7 @@ int main(void) {
 		// make the item read-only (0400) to prevent further change by
 		// subsequent programs
 		myFam->fam_change_permissions(descriptor, 0400);
-		printf("Successully changed permission from 0600 to 0400\n");
-		
-		// free allocated space in FAM
-		myFam->fam_deallocate(descriptor);
-		printf("Successully de-allocated 50 unnamed integer elements\n");
+		printf("Successully changed permission from 0600 to 0400\n");	
 	} catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
 	}
