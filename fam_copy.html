@@ -197,14 +197,14 @@ int main(void) {
 	// ... Initialization code here
 
 	 try {
-		// look up the descriptor to a previously allocated data item
+		// look up the descriptor to a previously allocated (source) data item.
 		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
 		
-		// descriptor to new copy myItem in FAM
-		Fam_Descriptor *newCopy;
+		// look up the descriptor to a previously allocated (destination) data item.
+		Fam_Descriptor *destCopy = myFam->fam_lookup("myItem2", "myRegion");
 	
 		// create a new copy and returns a waitObject to copy operation.
-		void *waitObj = myFam->fam_copy(descriptor, 0, &amp;newCopy, 0, 10*sizeof(int));
+		void *waitObj = myFam->fam_copy(descriptor, 0, destCopy, 0, 10*sizeof(int));
 	
 		// Wait for copy operation to complete.
 		myFam->fam_copy_wait(waitObj);

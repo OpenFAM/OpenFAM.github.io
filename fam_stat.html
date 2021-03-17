@@ -174,14 +174,14 @@ int main(void) {
 		// allocate space for Fam_Stat structure.
 		Fam_Stat *info = (Fam_Stat *)calloc(1, sizeof(Fam_Stat));
 		myFam->fam_stat(region, info);
-		printf("Region_size: %d\n", info->size);
+		printf("Region_size: %lu\n", info->size);
 		
 		// Get a descriptor (created by another PE) via the metadata service
 		Fam_Descriptor *arrayDescriptor = myFam->fam_lookup("myArray", "myOtherRegion");
 		
 		// Get data item info
 		myFam->fam_stat(arrayDescriptor, info);
-		printf("array_size: %d\n", info->size);
+		printf("array_size: %lu\n", info->size);
 		
 	} catch (Fam_Exception &amp;e) {
 		printf("Fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());

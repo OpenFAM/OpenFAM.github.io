@@ -124,8 +124,8 @@
 	<table>
 	<tbody>
 	<tr><th>Error</th><th>Description</th></tr>
-	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
-	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>Data item name is already present in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
+	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>Data item name is already present in FAM.</td></tr>
 	<tr><td class="code">FAM_ERR_NAME_TOO_LONG</td><td>Data item name too long.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
@@ -142,7 +142,8 @@
 		<code>fam_lookup()</code> to retrieve the associated descriptor. If a name is not
 		provided during allocation, then the program itself is responsible for
 		saving and tracking the descriptor if required later, since the data
-		in FAM will be unreachable without the descriptor.</p>
+		in FAM will be unreachable without the descriptor. Also note that at present maximum data item name
+		length supported is 40 characters.</p>
 	<p><code>Fam_Descriptor</code> provides a method to retrieve an opaque read-only data structure called 
 	<code>Fam_Global_Descriptor</code> which represents both the region and data item in FAM. <code>Fam_Global_Descriptor</code>
 	can be freely copied, and shared across processing nodes by the program, and is portable

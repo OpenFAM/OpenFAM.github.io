@@ -152,8 +152,8 @@
 	<table>
 	<tbody>
 	<tr><th>Error</th><th>Description</th></tr>
-	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
-	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>Region name is already present in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
+	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>Region name is already present in FAM.</td></tr>
 	<tr><td class="code">FAM_ERR_NAME_TOO_LONG</td><td>Region name too long.</td></tr>
 	<tr><td class="code">FAM_ERR_NOT_CREATED</td><td>Region creation in FAM failed.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
@@ -165,7 +165,9 @@
 	<h2>Notes</h2>
 	<p>Note that the system may round up the actual size of the region
 		to align memory boundaries. Currently the maximum size of a region is
-		limited to 16 EiB by the API. See <a href="limitations.html">Design Choices</a> for the current design limits within the OpenFAM reference implementation.
+		limited to 16 EiB by the API. See <a href="limitations.html">Design Choices</a>
+		for the current design limits within the OpenFAM reference implementation.
+		Also note that at present maximum region name length supported is 40 characters.
 		</p>
 	<p><code>Fam_Region_Descriptor</code> provides a method to retrieve an opaque read-only data structure called
 	<code>Fam_Global_Descriptor</code> which represents the region in FAM. <code>Fam_Global_Descriptor</code>

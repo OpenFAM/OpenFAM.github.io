@@ -161,7 +161,7 @@ int main(void) {
 	
 		// Atomically replace a value of first integer element in the array
 		// with the Bitwise XOR of it and a value of 0x444
-		uint32_t oldValue = myFam->fam_fetch_swap(descriptor, 0, 100);
+		uint32_t oldValue = myFam->fam_swap(descriptor, 0, 100);
 
 		// The first integer in FAM is replaced by 100, and the old value is returned
 	
