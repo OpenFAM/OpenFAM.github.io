@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_size.html">fam_size</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+			<h1>Design Choices</h1>
+Table 1 describes the current design limits within the OpenFAM reference implementation.
+Since the maximum FAM size in the reference implementation is bound by the amount of memory available
+at the memory server, these parameters should not pose undue limitations on memory size, while enabling
+developers to build reasonable sized applications using the reference implementation.
+<table>
+<caption>Table 1: Data set limits per memory server in the reference implementation</caption>
+<tbody>
+<tr><th>Item</th><th>Limit</th></tr>
+<tr><td>Maximum FAM size</td><td>128 TB</td></tr>
+<tr><td>Minimum region size</td><td>8 GB</td></tr>
+<tr><td>Maximum region size</td><td>1 TB</td></tr>
+<tr><td>Maximum number of regions</td><td>16 K regions</td></tr>
+<tr><td>Minimum data Item size</td><td>128 bytes</td></tr>
+<tr><td>Maximum data Item size</td><td>512 GB</td></tr>
+<tr><td>Maximum number of data items within a region</td><td>~8 B data Items</td></tr>
+</tbody>
+</table>
+As mentioned in <cite><a href="https://link.springer.com/chapter/10.1007%2F978-3-030-04918-8_5">The OpenFAM API: A Programming Model for Disaggregated Persistent Memory</a></cite>,
+the reference implementation uses libfabric
+to handle the underlying memory traffic. Libfabric uses 64 bit keys to manage memory regions
+and associated access permissions. Within OpenFAM, every data item requires independent access
+permissions, so we map data items to libfabric regions for access from remote PEs. Rather than
+assigning random keys for data items within libfabric, we explicitly construct access keys using
+a combination of OpenFAM region Id, the data item id and OpenFAM permissions using the
+sequence Key = &lt;Region Id >&lt;DataItem Id>&lt;R|RW>. This enables the library to
+dynamically construct the required libfabric keys from data structures maintained 
+within the implementation. Corresponding to the limits shown in Table 1, the field
+widths in the libfabric key are shown in Table 2.
+<table>
+<caption>Table 2: Construction of libfabric access keys</caption>
+<tbody>
+<tr><th>Item</th><th>Limit</th></tr>
+<tr><td>Region Id</td><td>14 bits</td></tr>
+<tr><td>Data Item Id</td><td>33 bits</td></tr>
+<tr><td>Permission</td><td>1 bit (0 = R | 1 = RW)</td></tr>
+<tr><td>Total key length</td><td>48 bits</td></tr>
+<tr><td>Reserved for future use</td><td>16 bits</td></tr>
+</tbody>
+</table>
+The implementation supports the complete API with exceptions highlighted in Table 3.
+<table>
+<caption>Table 3: OpenFAM APIs currently not available in the reference implementation</caption>
+<tbody>
+<tr><th>API</th><th>Memory Server</th><th>Shared Memory</th><th>Comment</th></tr>
+<tr><td class="code">fam_map</td><td>NO</td><td>YES</td><td>Libfabric currently does not support mmap APIs</td></tr>
+<tr><td class="code">fam_unmap</td><td>NO</td><td>YES</td><td>Libfabric currently does not support mmap APIs</td></tr>
+<tr><td class="code">fam_fence</td><td>YES (only with sockets provider)</td><td>NO</td><td>Fence operation is not supported by PSM2 libfabric provider.<br/>Support for other providers and Shared Memory model will be added in future</td></tr>
+</tbody>
+</table>
+Since the underlying hardware does not support 128-bit compare and swap (CAS) operations, they have been implemented
+in software.
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>

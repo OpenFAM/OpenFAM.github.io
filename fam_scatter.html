@@ -14,8 +14,11 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
 			</ul>
 			<hr>
 			Initialization and Finalization
@@ -30,6 +33,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +86,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -92,10 +97,10 @@
 	<p>Copy elements of a data item from local memory to disjoint parts
 		of FAM.</p>
 	<h2>Synopsis</h2>
-	<p class="code">int fam_scatter_blocking(void *local, Fam_Descriptor
+	<p class="code">void fam_scatter_blocking(void *local, Fam_Descriptor
 		*descriptor, uint64_t nElements, uint64_t firstElement, uint64_t
 		stride, uint64_t elementSize);</p>
-	<p class="code">int fam_scatter_blocking(void *local, Fam_Descriptor
+	<p class="code">void fam_scatter_blocking(void *local, Fam_Descriptor
 		*descriptor, uint64_t nElements, uint64_t *elementIndex, uint64_t
 		elementSize);</p>
 	<p class="code">void fam_scatter_nonblocking(void *local, Fam_Descriptor
@@ -119,7 +124,7 @@
 			</tr>
 			<tr>
 				<td class="code">
-					Local
+					local
 				</td>
 				<td>
 					Pointer to appropriately sized area of local memory.
@@ -160,7 +165,7 @@
 			</tr>
 			<tr>
 				<td class="code">
-					Stride
+					stride
 				</td>
 				<td>
 					Stride to use when putting elements.
@@ -177,27 +182,25 @@
 		</tbody>
 	</table>
 	<h2>Return Values</h2>
-	<p>The non-blocking calls do not return a value on success. The
-		blocking calls return an integer value following normal C convention
-		of 0 for successful completion. At return, FAM contains a copy of the
+	<p>These calls do not return a value on success. Upon return, FAM contains a copy of the
 		data elements for the blocking calls. Data in FAM is not guaranteed
-		until successful completion of a subsequent fam_quiet() call for the
-		non-blocking calls. Both non-blocking and blocking call throws an
-		exception on error.</p>
-	<h2>Exceptions</h2>
+		until successful completion of a subsequent <code>fam_quiet()</code> call for the
+		non-blocking calls. Both non-blocking and blocking calls throw
+		<code>Fam_Exception</code> on error.</p>
+	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
-	<tr><th>Exception</th><th>Description</th></tr>
-	<tr><td class="code">Fam_InvalidOption_Exception</td><td>incorrect parameters are passed.</td></tr>
-	<tr><td class="code">Fam_Datapath_Exception</td><td>error occurred during write operation
-		over fabric.</td></tr>
-	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>libfabric error occurred.</td></tr>
-	<tr><td class="code">Fam_Timeout_Exception</td><td>number of libfabric retry count reached the timeout limit.
-	(Only for blocking call)</td></tr>
-	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
-	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>the data item name is already present in FAM</td></tr>
-	<tr><td class="code">FAM_ERR_GRPC</td><td>there is a communication error with memory server</td></tr>
-	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>Memory server initialization failure</td></tr>
+	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Item not found in the region.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
+	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
+	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
+	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
+	<tr><td class="code">FAM_ERR_TIMEOUT</td><td>Number of libfabric retry count reached.</td></tr>
 	</tbody>
 	</table>
 	<h2>Notes</h2>
@@ -237,7 +240,7 @@ int main(void) {
 		myFam->fam_scatter_blocking(local, descriptor, 5L, indexes, sizeof(int));
 	
 		// ... we now have the correct elements in FAM
-		printf("fam_scatter successfull. Correct elements are now in FAM.\n");
+		printf("fam_scatter successful. Correct elements are now in FAM.\n");
 	 } catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
 	 }
@@ -248,7 +251,7 @@ int main(void) {
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+		<h1>OpenFAM 2.0 Services</h1>
+<p> The initial reference implementation of OpenFAM was built using a single memory server.
+OpenFAM version 2.0 contains significant design changes to the memory server.
+<ul>
+<li>The design supports a larger pool of memory by supporting multiple memory servers.</li>
+<li>Regions can now span multiple memory servers, thus reducing performance bottlenecks.</li>
+<li>Memory servers can be addeded to the pool as needed without disturbing previously allocated memory.</li>
+<li>Metadata services have been separated from the memory server, enabling scalability.</li>
+</ul>
+<figure>
+<img src="images/openfam2.0memoryserver.png" width="450px">
+<figcaption>Figure 1: OpenFAM 2.0 Memory server components</figcaption>
+</figure>
+<p> Figure 1 shows the new design. There are three main components in the design.
+<dl>
+<dt>The client interface service (CIS):</dt><dd>All PEs talk to the CIS for memory server operations.</dd>
+<dt>The metadata management service:</dt><dd>Region and data item metadata is hosted by the metadata management service.
+The service can be co-located in the same node as a CIS server or a memory server, or it can be run in dedicated metadata management nodes.</dd>
+<dt>The memory management service:</dt><dd> The actual memory is served from memory servers.
+For data path (<code>get</code>, <code>put</code> and <code>atomic</code>) operations PEs talk to the memory servers directly.
+For memory management and metadata operations, e.g., <code>allocate</code>, <code>lookup</code>, <code>create_region</code>, etc.,
+the CIS communicates with memory servers via an RPC service or via direct functions calls.</dd>
+</dl>
+The services communicate with one another using grpc calls. However, as an optimization, if the components are compiled into the same executable, they bypass grpc and use direct function calls for communication.
+Yaml-based configuration files determine how the services are configured.  
+<p>See configuration and startup of OpenFAM 2.0 services in the <a href="config_files.html">Configuration Files</a> section.</p>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>

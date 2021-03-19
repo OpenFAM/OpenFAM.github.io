@@ -14,8 +14,11 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
 			</ul>
 			<hr>
 			Initialization and Finalization
@@ -30,6 +33,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +86,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -95,27 +100,26 @@
 	<h2>Synopsis</h2>
 	<p class="code">void fam_fence(void);</p>
 	<h2>Description</h2>
-	<p>This method orders FAM operations (put,
-		scatter, atomics, copy) issued by the calling PE thread before the
+	<p>This method orders FAM operations (<code>put</code>,
+		<code>scatter</code>, <code>atomics</code>, <code>copy</code>) issued by the calling PE thread before the
 		fence to be performed before FAM operations issued by the calling PE
 		thread after the fence. This method is non-blocking.</p>
 	<h2>Input Arguments</h2>
 	<p>None.</p>
 	<h2>Return Values</h2>
-	<p>None. Throws an exception on error.</p>
-	<h2>Exceptions</h2>
+	<p>None. Throws <code>Fam_Exception</code> on error.</p>
+	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
-	<tr><th>Exception</th><th>Description</th></tr>
-	<tr><td class="code">Fam_Datapath_Exception</td><td>error occurred during write operation
-		over fabric.</td></tr>
-	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>libfabric error occurred.</td></tr>
+	<tr><th>Error</th><th>Description</th></tr>
+	
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
 	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
 	</tbody>
 	</table>
 	<h2>Notes</h2>
 	<p>Note that this method does NOT order
-		fam_map()-enabled load/store accesses by the processor to FAM.</p>
+		<code>fam_map()</code>-enabled load/store accesses by the processor to FAM.</p>
 	<h2>Example</h2>
 <pre>
 #include &lt;string.h>
@@ -159,7 +163,7 @@ int main(void) {
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

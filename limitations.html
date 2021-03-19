@@ -14,8 +14,11 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>				
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
 			</ul>
 			<hr>
 			Initialization and Finalization
@@ -30,6 +33,7 @@
 				<li><a href="fam_list_options.html">fam_list_options</a></li>
 				<li><a href="fam_get_option.html">fam_get_option</a></li>
 				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
 			</ul>
 			<hr>
 			Memory Allocation
@@ -82,6 +86,7 @@
 			<hr>
 			Ordering
 			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
 			</ul>
@@ -110,8 +115,8 @@ As mentioned in <cite><a href="https://link.springer.com/chapter/10.1007%2F978-3
 the reference implementation uses libfabric
 to handle the underlying memory traffic. Libfabric uses 64 bit keys to manage memory regions
 and associated access permissions. Within OpenFAM, every data item requires independent access
-permissions, so we map data items to libfabric regions for access from remote PEs. Rather than
-assigning random keys for data items within libfabric, we explicitly construct access keys using
+permissions, so OpenFAM data items are mapped to libfabric regions for access from remote PEs. Rather than
+assigning random keys for data items within libfabric, access keys are explicitly constructed using
 a combination of OpenFAM region Id, the data item id and OpenFAM permissions using the
 sequence Key = &lt;Region Id >&lt;DataItem Id>&lt;R|RW>. This enables the library to
 dynamically construct the required libfabric keys from data structures maintained 
@@ -135,15 +140,15 @@ The implementation supports the complete API with exceptions highlighted in Tabl
 <tr><th>API</th><th>Memory Server</th><th>Shared Memory</th><th>Comment</th></tr>
 <tr><td class="code">fam_map</td><td>NO</td><td>YES</td><td>Libfabric currently does not support mmap APIs</td></tr>
 <tr><td class="code">fam_unmap</td><td>NO</td><td>YES</td><td>Libfabric currently does not support mmap APIs</td></tr>
-<tr><td class="code">fam_fence</td><td>YES (only with sockets provider)</td><td>NO</td><td>Fence operation is not supported by PSM2 libfabric provider.<br/>Support for other providers and Shared Memory model will be added in future</td></tr>
+<tr><td class="code">fam_fence</td><td>YES (only with sockets provider)</td><td>NO</td><td>Fence operation is not supported by PSM2 and Verbs libfabric provider.<br/>Support for other providers and Shared Memory model will be added in future</td></tr>
 </tbody>
 </table>
-Since the underlying hardware does not support 128-bit compare and swap (CAS) operations, they have been implemented
+Since the underlying libfabric providers do not support 128-bit compare and swap (CAS) operations, CAS operations have been implemented
 in software.
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2019, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>
