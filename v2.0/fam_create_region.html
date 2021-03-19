@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+		<h1 class="code">openfam::fam::fam_create_region</h1>
+	<p>Create a new region in FAM.</p>
+	<h2>Synopsis</h2>
+	<p class="code">Fam_Region_Descriptor *fam_create_region(char *name, uint64_t
+		size, mode_t permissions, Fam_Redundancy_Level redundancyLevel, ...);</p>
+	<h2>Description</h2>
+	<p>This method creates a region in FAM for subsequent use</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr>
+				<th>
+					Name
+				</th>
+				<th>
+					Description
+				</th>
+			</tr>
+			<tr>
+				<td class="code">
+					name
+				</td>
+				<td>
+					Name of the region to be created.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					size
+				</td>
+				<td>
+					Requested size of the region in bytes.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					permissions
+				</td>
+				<td>
+					Permissions to be associated with this region.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					redundancyLevel
+				</td>
+				<td>
+					Desired redundancy level.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p>&nbsp;</p>
+	<h2>Return Values</h2>
+	<p>Descriptor to the created region. Throws <code>Fam_Exception</code> on error.</p>
+	<h2>Fam error numbers</h2>
+	<table>
+	<tbody>
+	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
+	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>Region name is already present in FAM.</td></tr>
+	<tr><td class="code">FAM_ERR_NAME_TOO_LONG</td><td>Region name too long.</td></tr>
+	<tr><td class="code">FAM_ERR_NOT_CREATED</td><td>Region creation in FAM failed.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
+	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
+	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
+	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
+	</tbody></table>
+	<h2>Notes</h2>
+	<p>Note that the system may round up the actual size of the region
+		to align memory boundaries. Currently the maximum size of a region is
+		limited to 16 EiB by the API. See <a href="limitations.html">Design Choices</a>
+		for the current design limits within the OpenFAM reference implementation.
+		Also note that at present maximum region name length supported is 40 characters.
+		</p>
+	<p><code>Fam_Region_Descriptor</code> provides a method to retrieve an opaque read-only data structure called
+	<code>Fam_Global_Descriptor</code> which represents the region in FAM. <code>Fam_Global_Descriptor</code>
+	can be freely copied, and shared across processing nodes by the program, and is portable
+	across operating system and program instances.</p>
+<pre>
+// Fam_Global_Descriptor Fam_Region_Descriptor::get_global_descriptor();
+Fam_Global_Descriptor gDescriptor = regionDescriptor->get_global_descriptor();
+</pre>
+	<p><code>Fam_Region_Descriptor</code> can be instantiated from <code>Fam_Global_Descriptor</code> using the following constructor.</p>
+<pre>
+// Fam_Region_Descriptor::Fam_Region_Descriptor(Fam_Global_Descriptor gDescriptor);
+Fam_Region_Descriptor *rd = new Fam_Region_Descriptor(gDescriptor);
+</pre>
+	<h2 id="e1">Example</h2>
+<pre>
+#include &lt;stdlib.h>
+#include &lt;stdio.h>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+
+	fam *myFam = new fam();
+	
+	// .. initialization code here
+	
+	try {
+		// create a 10 GB region with 0777 permissions and RAID5 redundancy
+		Fam_Region_Descriptor *rd = myFam->fam_create_region("myRegion", (uint64_t)10000000000, 0777, RAID5);
+		
+		/ use the created region...
+		printf("fam_create_region successful\n");
+		
+		// ... continuation code here
+		
+		// we are finished. Destroy the region and everything in it
+		myFam->fam_destroy_region(rd);
+		printf("fam_destroy_region successful\n");
+	} catch (Fam_Exception &amp;e) {
+		printf("Create/Destroy region failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+	
+	// ... finalization code here
+	
+}
+</pre>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>

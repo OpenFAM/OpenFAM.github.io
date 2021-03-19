@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+			<h1 class="code">openfam::fam::fam_fetch_subtract</h1>
+	<p>Atomically subtracts a value from a value in FAM, and returns the old value.</p>
+	<h2>Synopsis</h2>
+	<p class="code">int32_t fam_fetch_subtract(Fam_Descriptor
+		*descriptor, uint64_t offset, int32_t value);<br>
+	int64_t fam_fetch_subtract(Fam_Descriptor
+		*descriptor, uint64_t offset, int64_t value);<br>
+	uint32_t fam_fetch_subtract(Fam_Descriptor
+		*descriptor, uint64_t offset, uint32_t value);<br>
+	uint64_t fam_fetch_subtract(Fam_Descriptor
+		*descriptor, uint64_t offset, uint64_t value);<br>
+	float fam_fetch_subtract(Fam_Descriptor
+		*descriptor, uint64_t offset, float value);<br>
+	double fam_fetch_subtract(Fam_Descriptor
+		*descriptor, uint64_t offset, double value);</p>
+	<h2>Description</h2>
+	<p>These methods atomically subtract a value from
+		the value in FAM, and return the old value.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr><td class="code">descriptor</td><td>Descriptor associated with the data item.</td></tr>
+			<tr><td class="code">offset</td><td>Offset within the data item in FAM where value is located.</td></tr>
+			<tr><td class="code">value</td><td>Value to be subtracted from the existing value at the given location.</td></tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>The original value from FAM. Throws 
+		<code>Fam_Exception</code> on error.</p>
+	<h2>Fam Error Numbers</h2>
+	<table><tbody>
+	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Item not found in the region.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
+	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
+	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
+	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
+	<tr><td class="code">FAM_ERR_TIMEOUT</td><td>Number of libfabric retry count reached.</td></tr>
+	</tbody></table>
+	<h2>Notes</h2>
+	<p>These methods atomically subtract a value from
+		the existing value in FAM. The old value is returned. Note that the
+		offset argument must point to the correct value for the data type.
+		Availability of these methods is dependent on hardware support for the
+		operations.</p>
+	<h2>Example</h2>
+	<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+
+	// ... Initialization code here
+
+	try {
+		// look up the descriptor to a previously allocated data item
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+	
+		// Atomically subtract 10 from the first integer element in the array
+		// and return the old value
+		uint32_t oldValue = myFam->fam_fetch_subtract(descriptor, 0, 10);
+
+		// The first integer in FAM has 10 subtracted from it, and the old value is returned
+	
+		// ... subsequent code here
+	} catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+	
+	// ... Finalization code follows
+}
+</pre>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>
