@@ -60,12 +60,6 @@
 				<li><a href="fam_scatter.html">fam_scatter</a></li>
 				<li><a href="fam_copy.html">fam_copy</a></li>
 				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
-				<li><a href="fam_backup.html">fam_backup</a></li>
-				<li><a href="fam_backup_wait.html">fam_backup_wait</a></li>
-				<li><a href="fam_restore.html">fam_restore</a></li>
-				<li><a href="fam_restore_wait.html">fam_restore_wait</a></li>
-				<li><a href="fam_delete_backup.html">fam_delete_backup</a></li>
-				<li><a href="fam_delete_backup_wait.html">fam_delete_backup_wait</a></li>
 			</ul>
 			<hr>
 			Atomics
@@ -95,56 +89,88 @@
 				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
-				<li><a href="fam_progress.html">fam_progress</a></li>
-				<li><a href="fam_context_open.html">fam_context_open</a></li>
-				<li><a href="fam_context_close.html">fam_context_close</a></li>
 			</ul>
 			<hr>
 		</nav>
 		<article>
-		<h1>OpenFAM release notes</h1>
-		These notes summarize the different releases of OpenFAM. A more detailed list of list of features, enhancements and bug fixes are added to the source tree in all the released versions,
-		and are provided in the corresponding NEWS.md file. Build and installation instructions are listed in the corresponding README.md file located in the source tree. 
-		<h2>OpenFAM version 3.0 (release v3.0.0)</h2>
-		<p>The current version of OpenFAM is 2.0. It contains the following changes and enhancements over version 2.0:</p>
-		<h2>OpenFAM version 2.0 (release v2.0.0)</h2>
-		<p>The current version of OpenFAM is 2.0. It contains the following changes and enhancements over version 1.0:</p>
-		<ul>
-			<li>Scalability improvements: This version supports a larger pool of memory by allowing multiple memory servers to be used. See <a href="services.html">services</a> for more details. </li>
-			<li>Performance improvements: Memory management and metadata operations have been optimized. 
-				<ul>
-					<li>Background worker threads (unused in OpenFAM 1.0) were disabled from the memory service.</li>
-					<li>Allocation performance was improved by moving the memset operation to zero allocated memory from <code>fam_allocate()</code> to <code>fam_deallocate()</code> path.</li>
-					<li>Regions can span multiple memory servers, thus reducing network bottlenecks when multiple data items within the same region are used.</li>
-				</ul> 
-			</li>
-			<li>OpenFAM APIs changes: 
-				<ul>
-					<li><code>fam_size</code> has been replaced with <code>fam_stat</code>.</li>
-					<li><code>fam_copy</code> has been changed to allow data copies between regions, as well as within a region.</li>
-					<li>The return type was changed from <code>int</code> to <code>void</code> for the following APIs: <code>fam_initialize,
-						fam_resize_region, fam_change_permissions, fam_put_blocking, fam_get_blocking, fam_gather_blocking, fam_scatter_blocking</code>. 
-					<li><code>fam_barrier_all</code> has been added as a supported API.</li>
-				</ul>
-			</li>
-			<li>Exception and error handling was simplified. All OpenFAM APIs returns only one exception type on error, i.e, <code>Fam_Exception</code>.</li>
-		</ul>
-		<h2>OpenFAM version 1.0 (release v0.4.0)</h2>
-		<ul>
-				<li>Initial public release of OpenFAM reference implementation</li>
-				<li>Memory allocator models implemented: "Shared memory model" to be used on scale-up platforms and "Memory server model" to be used on scale-out (cluster) platforms.</li>
-				<li>Memory server model uses libfabric and support sockets, verbs and psm providers. </li>
-		</ul>
-		<h2>Documentation updates</h2>
-		<ul>
-				<li><a href="v3.0/index.html">OpenFAM version 3.0</a></li>
-				<li><a href="v2.0/index.html">OpenFAM version 2.0</a></li>
-				<li><a href="v1.0/index.html">OpenFAM version 1.0</a></li>
-		</ul>
+		<h1 class="code">openfam::fam::fam_fetch_and</h1>
+	<p>Atomically replaces a value in FAM with the
+		Bitwise AND of that value and some given value, and returns the old
+		value.</p>
+	<h2>Synopsis</h2>
+	<p class="code">uint32_t fam_fetch_and(Fam_Descriptor *descriptor, uint64_t offset, uint32_t value);<br>
+	uint64_t fam_fetch_and(Fam_Descriptor *descriptor, uint64_t offset, uint64_t value);</p>
+	<h2>Description</h2>
+	<p>These methods atomically replace a value in
+		FAM with the Bitwise AND of the value given and the existing value.
+		The old value is returned.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr><td class="code">descriptor</td><td>Descriptor associated with the data item.</td></tr>
+			<tr><td class="code">offset</td><td>Offset within the data item in FAM where value is located.</td></tr>
+			<tr><td class="code">value</td><td>Value to be combined with the existing value at the given location.</td></tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>The old value from FAM. Throws <code>Fam_Exception</code> on
+		error.</p>
+	<h2>Fam Error Numbers</h2>
+	<table><tbody>
+	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Item not found in the region.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
+	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
+	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
+	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
+	<tr><td class="code">FAM_ERR_TIMEOUT</td><td>Number of libfabric retry count reached.</td></tr>
+	</tbody></table>
+	<h2>Notes</h2>
+	<p>These methods atomically replace a value in
+		FAM with the Bitwise AND of that value and the value given in the
+		method. The old value is returned. Note that the offset argument must
+		point to the correct value for the data type. Availability of these
+		methods is dependent on hardware support for the operations.</p>
+	<h2>Example</h2>
+<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+
+	// ... Initialization code here
+
+	try {
+		// look up the descriptor to a previously allocated data item
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+	
+		// Atomically replace the first element of the array with
+		// the Bitwise AND of it and a value of 0x444
+		uint32_t oldValue = myFam->fam_fetch_and(descriptor, 0, 0x0444);
+
+		// The first integer in FAM is now bitwise AND with a value of 0x444
+	
+		// ... subsequent code here
+	} catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+	
+	// ... Finalization code follows
+}
+</pre>
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2021-22, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

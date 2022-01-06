@@ -93,109 +93,73 @@
 			<hr>
 		</nav>
 		<article>
-		<h1 class="code">openfam::fam::fam_create_region</h1>
-	<p>Create a new region in FAM.</p>
+			<h1 class="code">openfam::fam::fam_allocate</h1>
+	<p>Allocate a data item in a region of FAM.</p>
 	<h2>Synopsis</h2>
-	<p class="code">Fam_Region_Descriptor *fam_create_region(char *name, uint64_t
-		size, mode_t permissions, Fam_Region_Attributes* regionAttributes);</p>
+	<p class="code">
+		Fam_Descriptor *fam_allocate(char *name, uint64_t nbytes, mode_t
+		accessPermissions, Fam_Region_Descriptor *region);<br>
+		Fam_Descriptor *fam_allocate(uint64_t nbytes, mode_t
+		accessPermissions, Fam_Region_Descriptor *region);
+	</p>
 	<h2>Description</h2>
-	<p>This method creates a region in FAM for subsequent use</p>
+	<p>These methods allocate space for a data item in some region of
+		FAM.</p>
 	<h2>Input Arguments</h2>
 	<table>
 		<tbody>
-			<tr>
-				<th>
-					Name
-				</th>
-				<th>
-					Description
-				</th>
-			</tr>
-			<tr>
-				<td class="code">
-					name
-				</td>
-				<td>
-					Name of the region to be created.
-				</td>
-			</tr>
-			<tr>
-				<td class="code">
-					size
-				</td>
-				<td>
-					Requested size of the region in bytes.
-				</td>
-			</tr>
-			<tr>
-				<td class="code">
-					permissions
-				</td>
-				<td>
-					Permissions to be associated with this region.
-				</td>
-			</tr>
-			<tr>
-				<td class="code">
-					regionAttributes
-				</td>
-				<td>
-					Is a structure that holds region attributes like:
-				
-				<p>					
-					•	<b>redundancyLevel</b> represents the redundancy level for the data items within the region. The supported values for redundancyLevel are: {DEFAULT, NONE, RAID1, RAID5} . The current DEFAULT is NONE.
-				</p>
-				<p>
-					•	<b>memoryType</b> denotes the type of memory the region is created on. The supported values for memoryType are: {DEFAULT, VOLATILE, PERSISTENT}. For GoldenTicket, PERSISTENT regions will be created in SCM, while VOLATILE regions will be created in DRAM. The current DEFAULT is VOLATILE.
-				</p>
-				<p>
-					•	<b>interleaveEnable</b> denotes if data item interleaving is enabled for the region. The supported values are: {DEFAULT, ENABLE, DISABLE}. A value of DISABLE implies that data items within the region are not interleaved across memory servers, and each data item is hosted within a single memory server (subject to redundancyLevel). A value of ENABLE indicates data item interleaving is enabled, and data items are striped across memory servers using a system-defined interleave block size. The current DEFAULT value is DISABLE.
-				</p>			
-				</td>
-			</tr>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr><td class="code">name</td><td>Name of the data item for subsequent references.</td></tr>
+			<tr><td class="code">nbytes</td><td>Requested size of the data item in bytes.</td></tr>
+			<tr><td class="code">accessPermissions</td><td>Access permissions for this data item.</td></tr>
+			<tr><td class="code">region</td><td>
+					Descriptor for the region where the data item is being
+					created.</td></tr>
 		</tbody>
 	</table>
 	<p>&nbsp;</p>
 	<h2>Return Values</h2>
-	<p>Descriptor to the created region. Throws <code>Fam_Exception</code> on error.</p>
-	<h2>Fam error numbers</h2>
+	<p>Descriptor to the allocated data item. Throws <code>Fam_Exception</code> on error.</p>
+	<h2>Fam Error numbers</h2>
 	<table>
 	<tbody>
 	<tr><th>Error</th><th>Description</th></tr>
 	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
-	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>Region name is already present in FAM.</td></tr>
-	<tr><td class="code">FAM_ERR_NAME_TOO_LONG</td><td>Region name too long.</td></tr>
-	<tr><td class="code">FAM_ERR_NOT_CREATED</td><td>Region creation in FAM failed.</td></tr>
+	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>Data item name is already present in FAM.</td></tr>
+	<tr><td class="code">FAM_ERR_NAME_TOO_LONG</td><td>Data item name too long.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
 	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
 	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
 	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
-	</tbody></table>
+	</tbody>
+	</table>
 	<h2>Notes</h2>
-	<p>Note that the system may round up the actual size of the region
-		to align memory boundaries. Currently the maximum size of a region is
-		limited to 16 EiB by the API. See <a href="limitations.html">Design Choices</a>
-		for the current design limits within the OpenFAM reference implementation.
-		Also note that at present maximum region name length supported is 40 characters.
-		</p>
-	<p><code>Fam_Region_Descriptor</code> provides a method to retrieve an opaque read-only data structure called
-	<code>Fam_Global_Descriptor</code> which represents the region in FAM. <code>Fam_Global_Descriptor</code>
+	<p>Note that these methods may allocate space greater than the
+		requested size to maintain an implementation dependent byte alignment.
+		The allocated space is zeroed out during allocation. If a name is
+		provided during allocation, it can be used within subsequent calls to
+		<code>fam_lookup()</code> to retrieve the associated descriptor. If a name is not
+		provided during allocation, then the program itself is responsible for
+		saving and tracking the descriptor if required later, since the data
+		in FAM will be unreachable without the descriptor. Also note that at present maximum data item name
+		length supported is 40 characters.</p>
+	<p><code>Fam_Descriptor</code> provides a method to retrieve an opaque read-only data structure called 
+	<code>Fam_Global_Descriptor</code> which represents both the region and data item in FAM. <code>Fam_Global_Descriptor</code>
 	can be freely copied, and shared across processing nodes by the program, and is portable
 	across operating system and program instances.</p>
 <pre>
-// Fam_Global_Descriptor Fam_Region_Descriptor::get_global_descriptor();
-Fam_Global_Descriptor gDescriptor = regionDescriptor->get_global_descriptor();
+// Fam_Global_Descriptor Fam_Descriptor::get_global_descriptor();
+Fam_Global_Descriptor gDescriptor = famDescriptor->get_global_descriptor();
 </pre>
-	<p><code>Fam_Region_Descriptor</code> can be instantiated from <code>Fam_Global_Descriptor</code> using the following constructor.</p>
+	<p><code>Fam_Descriptor</code> can be instantiated from <code>Fam_Global_Descriptor</code> using the following constructor.</p>
 <pre>
-// Fam_Region_Descriptor::Fam_Region_Descriptor(Fam_Global_Descriptor gDescriptor);
-Fam_Region_Descriptor *rd = new Fam_Region_Descriptor(gDescriptor);
+// Fam_Descriptor::Fam_Descriptor(Fam_Global_Descriptor gDescriptor);
+Fam_Descriptor *dataItem = new Fam_Descriptor(gDescriptor);
 </pre>
+
 	<h2 id="e1">Example</h2>
 <pre>
-#include &lt;stdlib.h>
-#include &lt;stdio.h>
 #include &lt;string.h>
 #include &lt;fam/fam.h>
 #include &lt;fam/fam_exception.h>
@@ -203,36 +167,30 @@ using namespace std;
 using namespace openfam;
 
 int main(void) {
-
 	fam *myFam = new fam();
-	
-	// .. initialization code here
-	
+	// ... Initialization code here
+
 	try {
-	    Fam_Region_Attributes* regionAttributes = (Fam_Region_Attributes*)malloc(sizeof(Fam_Region_Attributes));
-		// create a 10 GB region with 0777 permissions for given region attributes
-		Fam_Region_Descriptor *rd = myFam->fam_create_region("myRegion", (uint64_t)10000000000, 0777, regionAttributes);
-		
-		/ use the created region...
-		printf("fam_create_region successful\n");
-		
-		// ... continuation code here
-		
-		// we are finished. Destroy the region and everything in it
-		myFam->fam_destroy_region(rd);
-		printf("fam_destroy_region successful\n");
+		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		// create 50 element unnamed integer array in FAM with 0600
+		// (read/write by owner) permissions in myRegion
+		Fam_Descriptor *descriptor = myFam->fam_allocate((uint64_t)(50 * sizeof(int)), 0600, region);
+
+		printf("Successully allocated 50 unnamed integer elements\n");
+
+		// free allocated space in FAM
+		myFam->fam_deallocate(descriptor);
+		printf("Successully de-allocated 50 unnamed integer elements\n");
 	} catch (Fam_Exception &amp;e) {
-		printf("Create/Destroy region failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
-	}
-	free(regionAttributes);
-	// ... finalization code here
-	
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	 }
+	 // ... Finalization code here
 }
 </pre>
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2021-22, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

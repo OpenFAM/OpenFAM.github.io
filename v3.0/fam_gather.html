@@ -93,13 +93,22 @@
 			<hr>
 		</nav>
 		<article>
-		<h1 class="code">openfam::fam::fam_create_region</h1>
-	<p>Create a new region in FAM.</p>
+			<h1 class="code">openfam::fam::fam_gather</h1>
+	<p>Copy disjoint elements of a data item from FAM to local memory.</p>
 	<h2>Synopsis</h2>
-	<p class="code">Fam_Region_Descriptor *fam_create_region(char *name, uint64_t
-		size, mode_t permissions, Fam_Region_Attributes* regionAttributes);</p>
+	<p class="code">void fam_gather_blocking(void *local, Fam_Descriptor *descriptor,
+		uint64_t nElements, uint64_t firstElement, uint64_t stride, uint64_t
+		elementSize);</p>
+	<p class="code">void fam_gather_blocking(void *local, Fam_Descriptor *descriptor,
+		uint64_t nElements, uint64_t *elementIndex, uint64_t elementSize);</p>
+	<p class="code">void fam_gather_nonblocking(void *local, Fam_Descriptor
+		*descriptor, uint64_t nElements, uint64_t firstElement, uint64_t
+		stride, uint64_t elementSize);</p>
+	<p class="code">void fam_gather_nonblocking(void *local, Fam_Descriptor
+		*descriptor, uint64_t nElements, uint64_t *elementIndex, uint64_t
+		elementSize);</p>
 	<h2>Description</h2>
-	<p>This method creates a region in FAM for subsequent use</p>
+	<p>Copy elements of a data item from FAM to local memory based on a constant or indexed stride.</p>
 	<h2>Input Arguments</h2>
 	<table>
 		<tbody>
@@ -113,89 +122,95 @@
 			</tr>
 			<tr>
 				<td class="code">
-					name
+					local
 				</td>
 				<td>
-					Name of the region to be created.
+					Pointer to appropriately sized area of local memory.
 				</td>
 			</tr>
 			<tr>
 				<td class="code">
-					size
+					descriptor
 				</td>
 				<td>
-					Requested size of the region in bytes.
+					Descriptor associated with the data item in FAM.
 				</td>
 			</tr>
 			<tr>
 				<td class="code">
-					permissions
+					nElements
 				</td>
 				<td>
-					Permissions to be associated with this region.
+					Number of elements to get.
 				</td>
 			</tr>
 			<tr>
 				<td class="code">
-					regionAttributes
+					firstElement
 				</td>
 				<td>
-					Is a structure that holds region attributes like:
-				
-				<p>					
-					•	<b>redundancyLevel</b> represents the redundancy level for the data items within the region. The supported values for redundancyLevel are: {DEFAULT, NONE, RAID1, RAID5} . The current DEFAULT is NONE.
-				</p>
-				<p>
-					•	<b>memoryType</b> denotes the type of memory the region is created on. The supported values for memoryType are: {DEFAULT, VOLATILE, PERSISTENT}. For GoldenTicket, PERSISTENT regions will be created in SCM, while VOLATILE regions will be created in DRAM. The current DEFAULT is VOLATILE.
-				</p>
-				<p>
-					•	<b>interleaveEnable</b> denotes if data item interleaving is enabled for the region. The supported values are: {DEFAULT, ENABLE, DISABLE}. A value of DISABLE implies that data items within the region are not interleaved across memory servers, and each data item is hosted within a single memory server (subject to redundancyLevel). A value of ENABLE indicates data item interleaving is enabled, and data items are striped across memory servers using a system-defined interleave block size. The current DEFAULT value is DISABLE.
-				</p>			
+					Index (in FAM) of the first element within the data item to
+						get.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					elementIndex
+				</td>
+				<td>
+					An array containing element indexes.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					stride
+				</td>
+				<td>
+					Stride to use when getting elements.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					elementSize
+				</td>
+				<td>
+					Size of each element to gather.
 				</td>
 			</tr>
 		</tbody>
 	</table>
-	<p>&nbsp;</p>
 	<h2>Return Values</h2>
-	<p>Descriptor to the created region. Throws <code>Fam_Exception</code> on error.</p>
-	<h2>Fam error numbers</h2>
+	<p>These calls do not return a value on success. At return, the memory pointed to by
+		local contains a copy of the data elements from FAM for the blocking
+		calls. For non-blocking calls, local memory is not guaranteed to
+		contain data until successful completion of a subsequent <code>fam_quiet()</code>
+		call. Both non-blocking and blocking calls throw <code>Fam_Exception</code> on
+		error.</p>
+	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
 	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
 	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
-	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>Region name is already present in FAM.</td></tr>
-	<tr><td class="code">FAM_ERR_NAME_TOO_LONG</td><td>Region name too long.</td></tr>
-	<tr><td class="code">FAM_ERR_NOT_CREATED</td><td>Region creation in FAM failed.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Item not found in the region.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
 	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
 	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
 	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
-	</tbody></table>
+	<tr><td class="code">FAM_ERR_TIMEOUT</td><td>Number of libfabric retry count reached.</td></tr>
+	</tbody>
+	</table>
 	<h2>Notes</h2>
-	<p>Note that the system may round up the actual size of the region
-		to align memory boundaries. Currently the maximum size of a region is
-		limited to 16 EiB by the API. See <a href="limitations.html">Design Choices</a>
-		for the current design limits within the OpenFAM reference implementation.
-		Also note that at present maximum region name length supported is 40 characters.
-		</p>
-	<p><code>Fam_Region_Descriptor</code> provides a method to retrieve an opaque read-only data structure called
-	<code>Fam_Global_Descriptor</code> which represents the region in FAM. <code>Fam_Global_Descriptor</code>
-	can be freely copied, and shared across processing nodes by the program, and is portable
-	across operating system and program instances.</p>
+	<p>The local memory pointer must point to an area of memory
+		sufficient to accommodate the incoming data. Insufficient allocation
+		of local memory may cause segmentation violations or corrupted data in
+		local memory. This API assumes that the data item contains uniformly
+		sized elements (e.g, a large array).&nbsp; Currently, the API gathers
+		elements from within a single data item.</p>
+	<h2>Example</h2>
 <pre>
-// Fam_Global_Descriptor Fam_Region_Descriptor::get_global_descriptor();
-Fam_Global_Descriptor gDescriptor = regionDescriptor->get_global_descriptor();
-</pre>
-	<p><code>Fam_Region_Descriptor</code> can be instantiated from <code>Fam_Global_Descriptor</code> using the following constructor.</p>
-<pre>
-// Fam_Region_Descriptor::Fam_Region_Descriptor(Fam_Global_Descriptor gDescriptor);
-Fam_Region_Descriptor *rd = new Fam_Region_Descriptor(gDescriptor);
-</pre>
-	<h2 id="e1">Example</h2>
-<pre>
-#include &lt;stdlib.h>
-#include &lt;stdio.h>
 #include &lt;string.h>
 #include &lt;fam/fam.h>
 #include &lt;fam/fam_exception.h>
@@ -203,36 +218,37 @@ using namespace std;
 using namespace openfam;
 
 int main(void) {
-
 	fam *myFam = new fam();
 	
-	// .. initialization code here
-	
+	// ... Initialization code here
+
 	try {
-	    Fam_Region_Attributes* regionAttributes = (Fam_Region_Attributes*)malloc(sizeof(Fam_Region_Attributes));
-		// create a 10 GB region with 0777 permissions for given region attributes
-		Fam_Region_Descriptor *rd = myFam->fam_create_region("myRegion", (uint64_t)10000000000, 0777, regionAttributes);
-		
-		/ use the created region...
-		printf("fam_create_region successful\n");
-		
-		// ... continuation code here
-		
-		// we are finished. Destroy the region and everything in it
-		myFam->fam_destroy_region(rd);
-		printf("fam_destroy_region successful\n");
-	} catch (Fam_Exception &amp;e) {
-		printf("Create/Destroy region failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
-	}
-	free(regionAttributes);
-	// ... finalization code here
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
 	
+		// allocate a 25-element integer array in local memory
+		int *local = (int *) malloc(25 * sizeof(int));
+	
+		// gather all odd elements from myItem into local memory
+		// first element is myItem[1]; collect 25 elements with stride 2
+		myFam->fam_gather_blocking(local, descriptor, 25, (uint64_t) 1, 2, sizeof(int));
+	
+		// gather myItem[1,7,13,15,16]
+		int *indexedLocal = (int *) malloc(5 * sizeof(int));
+		uint64_t indexes[] = {1, 7, 13, 15, 16};
+		myFam->fam_gather_blocking(indexedLocal, descriptor, 5, indexes, sizeof(int));
+	
+		// ... we now have the correct elements in local memory
+	 } catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	 }
+	 // ... Finalization code follows
 }
+	
 </pre>
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2021-22, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

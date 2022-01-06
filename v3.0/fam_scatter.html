@@ -93,13 +93,25 @@
 			<hr>
 		</nav>
 		<article>
-		<h1 class="code">openfam::fam::fam_create_region</h1>
-	<p>Create a new region in FAM.</p>
+			<h1 class="code">openfam::fam::fam_scatter</h1>
+	<p>Copy elements of a data item from local memory to disjoint parts
+		of FAM.</p>
 	<h2>Synopsis</h2>
-	<p class="code">Fam_Region_Descriptor *fam_create_region(char *name, uint64_t
-		size, mode_t permissions, Fam_Region_Attributes* regionAttributes);</p>
+	<p class="code">void fam_scatter_blocking(void *local, Fam_Descriptor
+		*descriptor, uint64_t nElements, uint64_t firstElement, uint64_t
+		stride, uint64_t elementSize);</p>
+	<p class="code">void fam_scatter_blocking(void *local, Fam_Descriptor
+		*descriptor, uint64_t nElements, uint64_t *elementIndex, uint64_t
+		elementSize);</p>
+	<p class="code">void fam_scatter_nonblocking(void *local, Fam_Descriptor
+		*descriptor, uint64_t nElements, uint64_t firstElement, uint64_t
+		stride, uint64_t elementSize);</p>
+	<p class="code">void fam_scatter_nonblocking(void *local, Fam_Descriptor
+		*descriptor, uint64_t nElements, uint64_t *elementIndex, uint64_t
+		elementSize);</p>
 	<h2>Description</h2>
-	<p>This method creates a region in FAM for subsequent use</p>
+	<p>Copy elements of a data item from local memory to FAM based on a
+		constant or indexed stride.</p>
 	<h2>Input Arguments</h2>
 	<table>
 		<tbody>
@@ -108,94 +120,98 @@
 					Name
 				</th>
 				<th>
-					Description
-				</th>
+					Description		</th>
 			</tr>
 			<tr>
 				<td class="code">
-					name
+					local
 				</td>
 				<td>
-					Name of the region to be created.
-				</td>
-			</tr>
-			<tr>
-				<td class="code">
-					size
-				</td>
-				<td>
-					Requested size of the region in bytes.
+					Pointer to appropriately sized area of local memory.
 				</td>
 			</tr>
 			<tr>
 				<td class="code">
-					permissions
+					descriptor
 				</td>
 				<td>
-					Permissions to be associated with this region.
+					Descriptor associated with the data item in FAM.
 				</td>
 			</tr>
 			<tr>
 				<td class="code">
-					regionAttributes
+					nElements
 				</td>
 				<td>
-					Is a structure that holds region attributes like:
-				
-				<p>					
-					•	<b>redundancyLevel</b> represents the redundancy level for the data items within the region. The supported values for redundancyLevel are: {DEFAULT, NONE, RAID1, RAID5} . The current DEFAULT is NONE.
-				</p>
-				<p>
-					•	<b>memoryType</b> denotes the type of memory the region is created on. The supported values for memoryType are: {DEFAULT, VOLATILE, PERSISTENT}. For GoldenTicket, PERSISTENT regions will be created in SCM, while VOLATILE regions will be created in DRAM. The current DEFAULT is VOLATILE.
-				</p>
-				<p>
-					•	<b>interleaveEnable</b> denotes if data item interleaving is enabled for the region. The supported values are: {DEFAULT, ENABLE, DISABLE}. A value of DISABLE implies that data items within the region are not interleaved across memory servers, and each data item is hosted within a single memory server (subject to redundancyLevel). A value of ENABLE indicates data item interleaving is enabled, and data items are striped across memory servers using a system-defined interleave block size. The current DEFAULT value is DISABLE.
-				</p>			
+					Number of elements to put.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					firstElement
+				</td>
+				<td>
+					Index (in FAM) of the first element within the data item to
+						put.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					elementIndex
+				</td>
+				<td>
+					A local array containing element indexes in FAM.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					stride
+				</td>
+				<td>
+					Stride to use when putting elements.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					elementSize
+				</td>
+				<td>
+					Size of each element to scatter.
 				</td>
 			</tr>
 		</tbody>
 	</table>
-	<p>&nbsp;</p>
 	<h2>Return Values</h2>
-	<p>Descriptor to the created region. Throws <code>Fam_Exception</code> on error.</p>
-	<h2>Fam error numbers</h2>
+	<p>These calls do not return a value on success. Upon return, FAM contains a copy of the
+		data elements for the blocking calls. Data in FAM is not guaranteed
+		until successful completion of a subsequent <code>fam_quiet()</code> call for the
+		non-blocking calls. Both non-blocking and blocking calls throw
+		<code>Fam_Exception</code> on error.</p>
+	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
 	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
 	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
-	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>Region name is already present in FAM.</td></tr>
-	<tr><td class="code">FAM_ERR_NAME_TOO_LONG</td><td>Region name too long.</td></tr>
-	<tr><td class="code">FAM_ERR_NOT_CREATED</td><td>Region creation in FAM failed.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Item not found in the region.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
 	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
 	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
 	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
-	</tbody></table>
+	<tr><td class="code">FAM_ERR_TIMEOUT</td><td>Number of libfabric retry count reached.</td></tr>
+	</tbody>
+	</table>
 	<h2>Notes</h2>
-	<p>Note that the system may round up the actual size of the region
-		to align memory boundaries. Currently the maximum size of a region is
-		limited to 16 EiB by the API. See <a href="limitations.html">Design Choices</a>
-		for the current design limits within the OpenFAM reference implementation.
-		Also note that at present maximum region name length supported is 40 characters.
-		</p>
-	<p><code>Fam_Region_Descriptor</code> provides a method to retrieve an opaque read-only data structure called
-	<code>Fam_Global_Descriptor</code> which represents the region in FAM. <code>Fam_Global_Descriptor</code>
-	can be freely copied, and shared across processing nodes by the program, and is portable
-	across operating system and program instances.</p>
-<pre>
-// Fam_Global_Descriptor Fam_Region_Descriptor::get_global_descriptor();
-Fam_Global_Descriptor gDescriptor = regionDescriptor->get_global_descriptor();
-</pre>
-	<p><code>Fam_Region_Descriptor</code> can be instantiated from <code>Fam_Global_Descriptor</code> using the following constructor.</p>
-<pre>
-// Fam_Region_Descriptor::Fam_Region_Descriptor(Fam_Global_Descriptor gDescriptor);
-Fam_Region_Descriptor *rd = new Fam_Region_Descriptor(gDescriptor);
-</pre>
-	<h2 id="e1">Example</h2>
-<pre>
-#include &lt;stdlib.h>
-#include &lt;stdio.h>
+	<p>This API assumes that the data item contains uniformly sized
+		elements (e.g, a large array). Currently, the API scatters
+		elements within a single data item. Note that two versions of each API
+		exist: a strided gather/scatter that assumes a constant stride and an
+		indexed gather/scatter that uses an index array to gather/scatter the
+		elements.</p>
+	<h2>Example</h2>
+<pre>	
 #include &lt;string.h>
 #include &lt;fam/fam.h>
 #include &lt;fam/fam_exception.h>
@@ -203,36 +219,39 @@ using namespace std;
 using namespace openfam;
 
 int main(void) {
-
 	fam *myFam = new fam();
-	
-	// .. initialization code here
-	
+
+	// ... Initialization code here
+
 	try {
-	    Fam_Region_Attributes* regionAttributes = (Fam_Region_Attributes*)malloc(sizeof(Fam_Region_Attributes));
-		// create a 10 GB region with 0777 permissions for given region attributes
-		Fam_Region_Descriptor *rd = myFam->fam_create_region("myRegion", (uint64_t)10000000000, 0777, regionAttributes);
-		
-		/ use the created region...
-		printf("fam_create_region successful\n");
-		
-		// ... continuation code here
-		
-		// we are finished. Destroy the region and everything in it
-		myFam->fam_destroy_region(rd);
-		printf("fam_destroy_region successful\n");
-	} catch (Fam_Exception &amp;e) {
-		printf("Create/Destroy region failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
-	}
-	free(regionAttributes);
-	// ... finalization code here
+		// look up the descriptor to a previously allocated data item
+		// (a 50-element integer array)
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
 	
+		// local data
+		int local[] = {0,1,2,3,4};
+	
+		// scatter the data into myItem[1,3,5,7,9]
+		myFam->fam_scatter_blocking(local, descriptor, 5L, (uint64_t) 1, 2, sizeof(int));
+	
+		// in addition, place them in myItem[10,17,13,15,16] respectively
+		uint64_t indexes[] = {10, 17, 13, 15, 16};
+		
+		myFam->fam_scatter_blocking(local, descriptor, 5L, indexes, sizeof(int));
+	
+		// ... we now have the correct elements in FAM
+		printf("fam_scatter successful. Correct elements are now in FAM.\n");
+	 } catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	 }
+	
+	 // ... Finalization code follows
 }
 </pre>
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2021-22, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

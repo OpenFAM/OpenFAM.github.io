@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+			<h1 class="code">openfam::fam::fam_get_option</h1>
+	<p>Get the value for a pre-defined option in the FAM library.</p>
+	<h2>Synopsis</h2>
+	<p class="code">const void *fam_get_option(char *optionName);</p>
+	<h2>Description</h2>
+	<p>This method can be used to retrieve values of state variables
+		maintained within OpenFAM or set using the options argument to
+		<code>fam_initialize()</code>. The supported names (and returned types) are
+		implementation specific.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr><td class="code">optionName</td><td>Name of the option to be retrieved.</td></tr>
+		</tbody>
+	</table>
+	The following option names are available:
+	<table id="e1">
+		<tbody>
+			<tr><th>Name</th><th>Description</th><th>Return type</th><th>Default Value</th></tr>
+			<tr><td class="code">&quot;VERSION&quot;</td>
+				<td>Version of the current implementation of the OpenFAM API.</td>
+				<td class="code">char*</td>
+				<td class="code">&quot;2.0&quot;</td>
+			</tr>
+			<tr>
+				<td class="code">
+					&quot;DEFAULT_REGION_NAME&quot;
+				</td>
+				<td>
+					The default Region name used with in the program.
+				</td>
+				<td class="code">
+					char*
+				</td>
+				<td class="code">
+					&quot;default&quot;
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					&quot;CIS_SERVER&quot;
+				</td>
+				<td>
+					Client Interface Server set by the application.
+				</td>
+				<td class="code">
+					char*
+				</td>
+				<td class="code">
+					&quot;127.0.0.1&quot;
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					&quot;GRPC_PORT&quot;
+				</td>
+				<td>
+					Grpc port used by Client Interface Server.
+				</td>
+				<td class="code">
+					char*
+				</td>
+				<td class="code">
+					&quot;8787&quot;
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					&quot;LIBFABRIC_PROVIDER&quot;
+				</td>
+				<td>
+					Libfabric provider type set by the application.
+				</td>
+				<td class="code">
+					char*
+				</td>
+				<td class="code">
+					&quot;sockets&quot;
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					&quot;FAM_THREAD_MODEL&quot;
+				</td>
+				<td>
+					Thread model used by the application.
+				</td>
+				<td class="code">
+					char*
+				</td>
+				<td class="code">
+					&quot;FAM_THREAD_SERIALIZE&quot;
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					&quot;OPENFAM_MODEL&quot;
+				</td>
+				<td>
+					OpenFAM allocator model used by the application.
+				</td>
+				<td class="code">
+					char*
+				</td>
+				<td class="code">
+					&quot;memory_server&quot;
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					&quot;FAM_CONTEXT_MODEL&quot;
+				</td>
+				<td>
+					Fam context model used by the application.
+				</td>
+				<td class="code">
+					char*
+				</td>
+				<td class="code">
+					&quot;FAM_CONTEXT_DEFAULT&quot;
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					&quot;PE_COUNT&quot;
+				</td>
+				<td>
+					Number of PEs running the application program.
+				</td>
+				<td class="code">
+					int*
+				</td>
+				<td class="code">
+					1
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					&quot;PE_ID&quot;
+				</td>
+				<td>
+					PE id of the current program.
+				</td>
+				<td class="code">
+					int*
+				</td>
+				<td class="code">
+					0
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					&quot;RUNTIME&quot;
+				</td>
+				<td>
+					Runtime environment used by the application.
+				</td>
+				<td class="code">
+					char*
+				</td>
+				<td class="code">
+					&quot;PMIX&quot;
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					&quot;NUM_CONSUMER&quot;
+				</td>
+				<td>
+					Number of consumer threads running in shared memory
+						allocator.
+				</td>
+				<td class="code">
+					char*
+				</td>
+				<td class="code">
+					&quot;1&quot;
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p>&nbsp;</p>
+	<p>Note: The following options are not supported in current
+		implementation and should not be used, even though they have default values.
+		<code>&quot;DEFAULT_REGION_NAME&quot;</code>, <code>&quot;FAM_THREAD_MODEL&quot;</code> and <code>&quot;FAM_CONTEXT_MODEL&quot;</code></p>
+	<h2>Return Values</h2>
+	<p>A pointer to the value of the option. Throws <code>Fam_Exception</code> on
+		error.</p>
+		<h2>Fam Error Numbers</h2>
+	<table>
+	<tbody>
+	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_INVALID</td><td>If <code>optionName</code> not found.</td></tr>
+	</tbody>
+	</table>
+	<h2>Notes</h2>
+	<p>None.</p>
+	<h2>Example</h2>
+<pre>
+#include &lt;stdlib.h>
+#include &lt;stdio.h>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam(); 
+	
+	// ... initialization code here
+	
+	try {
+		// assume that library version is one of the supported options
+		const char * libraryVersion = (const char *)myFam->fam_get_option(strdup("VERSION"));
+		printf("%s\n", libraryVersion);
+	} catch (Fam_Exception&amp; e) {
+		printf("FAM API failed: %s\n", e.fam_error_msg());
+		myFam->fam_abort(-1); // abort the program
+		return -1;
+	}
+	
+	// ... finalization code here
+
+}
+</pre>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>

@@ -60,12 +60,6 @@
 				<li><a href="fam_scatter.html">fam_scatter</a></li>
 				<li><a href="fam_copy.html">fam_copy</a></li>
 				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
-				<li><a href="fam_backup.html">fam_backup</a></li>
-				<li><a href="fam_backup_wait.html">fam_backup_wait</a></li>
-				<li><a href="fam_restore.html">fam_restore</a></li>
-				<li><a href="fam_restore_wait.html">fam_restore_wait</a></li>
-				<li><a href="fam_delete_backup.html">fam_delete_backup</a></li>
-				<li><a href="fam_delete_backup_wait.html">fam_delete_backup_wait</a></li>
 			</ul>
 			<hr>
 			Atomics
@@ -95,56 +89,68 @@
 				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
-				<li><a href="fam_progress.html">fam_progress</a></li>
-				<li><a href="fam_context_open.html">fam_context_open</a></li>
-				<li><a href="fam_context_close.html">fam_context_close</a></li>
 			</ul>
 			<hr>
 		</nav>
 		<article>
-		<h1>OpenFAM release notes</h1>
-		These notes summarize the different releases of OpenFAM. A more detailed list of list of features, enhancements and bug fixes are added to the source tree in all the released versions,
-		and are provided in the corresponding NEWS.md file. Build and installation instructions are listed in the corresponding README.md file located in the source tree. 
-		<h2>OpenFAM version 3.0 (release v3.0.0)</h2>
-		<p>The current version of OpenFAM is 2.0. It contains the following changes and enhancements over version 2.0:</p>
-		<h2>OpenFAM version 2.0 (release v2.0.0)</h2>
-		<p>The current version of OpenFAM is 2.0. It contains the following changes and enhancements over version 1.0:</p>
-		<ul>
-			<li>Scalability improvements: This version supports a larger pool of memory by allowing multiple memory servers to be used. See <a href="services.html">services</a> for more details. </li>
-			<li>Performance improvements: Memory management and metadata operations have been optimized. 
-				<ul>
-					<li>Background worker threads (unused in OpenFAM 1.0) were disabled from the memory service.</li>
-					<li>Allocation performance was improved by moving the memset operation to zero allocated memory from <code>fam_allocate()</code> to <code>fam_deallocate()</code> path.</li>
-					<li>Regions can span multiple memory servers, thus reducing network bottlenecks when multiple data items within the same region are used.</li>
-				</ul> 
-			</li>
-			<li>OpenFAM APIs changes: 
-				<ul>
-					<li><code>fam_size</code> has been replaced with <code>fam_stat</code>.</li>
-					<li><code>fam_copy</code> has been changed to allow data copies between regions, as well as within a region.</li>
-					<li>The return type was changed from <code>int</code> to <code>void</code> for the following APIs: <code>fam_initialize,
-						fam_resize_region, fam_change_permissions, fam_put_blocking, fam_get_blocking, fam_gather_blocking, fam_scatter_blocking</code>. 
-					<li><code>fam_barrier_all</code> has been added as a supported API.</li>
-				</ul>
-			</li>
-			<li>Exception and error handling was simplified. All OpenFAM APIs returns only one exception type on error, i.e, <code>Fam_Exception</code>.</li>
-		</ul>
-		<h2>OpenFAM version 1.0 (release v0.4.0)</h2>
-		<ul>
-				<li>Initial public release of OpenFAM reference implementation</li>
-				<li>Memory allocator models implemented: "Shared memory model" to be used on scale-up platforms and "Memory server model" to be used on scale-out (cluster) platforms.</li>
-				<li>Memory server model uses libfabric and support sockets, verbs and psm providers. </li>
-		</ul>
-		<h2>Documentation updates</h2>
-		<ul>
-				<li><a href="v3.0/index.html">OpenFAM version 3.0</a></li>
-				<li><a href="v2.0/index.html">OpenFAM version 2.0</a></li>
-				<li><a href="v1.0/index.html">OpenFAM version 1.0</a></li>
-		</ul>
+		<h1 class="code">openfam::fam::fam_barrier_all</h1>
+			<p>Suspends the execution of the calling PE until all other PEs issue a call to this 
+			particular fam_barrier_all() statement.</p>
+	<h2>Synopsis</h2>
+	<p class="code">void fam_barrier_all(void);</p>
+	<h2>Description</h2>
+	<p>This method is used to suspend the execution of the calling PE until all other PEs issue
+	 a call to a corresponding <code>fam_barrier_all()</code> statement.
+	</p>
+	<h2>Input Arguments</h2>
+	<p>None.</p>
+	<h2>Return Values</h2>
+	<p>None.</p>
+	<h2>Notes</h2>
+	<p>The OpenFAM library suspends the execution of calling PE until all other
+		cooperating PEs issue a call to this function. This call should be preceded by a <code>fam_quiet()</code> if non-blocking calls are pending since it does not wait for pending non-blocking calls to complete.</p>
+	<h2>Example</h2>
+	<pre>
+#include &lt;string.h>
+#include &lt;fam/fam.h>
+#include &lt;fam/fam_exception.h>
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+	// ... Initialization code here
+
+	try {
+		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		// create 50 element unnamed integer array in FAM with 0600
+		// (read/write by owner) permissions in myRegion
+		Fam_Descriptor *descriptor = myFam->fam_allocate((uint64_t)(50 * sizeof(int)), 0600, region);
+
+		printf("Successully allocated 50 unnamed integer elements\n");
+	} catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+	
+	// Wait for all PEs to complete allocation
+	myFam->fam_barrier_all();
+	
+	// Continue with the application
+	
+	try{
+		// free allocated space in FAM
+		myFam->fam_deallocate(descriptor);
+		printf("Successully de-allocated 50 unnamed integer elements\n");
+	} catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	 }
+	 // ... Finalization code here
+}
+</pre>
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2021-22, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>
