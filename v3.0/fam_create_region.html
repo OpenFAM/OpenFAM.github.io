@@ -60,6 +60,12 @@
 				<li><a href="fam_scatter.html">fam_scatter</a></li>
 				<li><a href="fam_copy.html">fam_copy</a></li>
 				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+                                <li><a href="fam_backup.html">fam_backup</a></li>
+                                <li><a href="fam_backup_wait.html">fam_backup_wait</a></li>
+                                <li><a href="fam_restore.html">fam_restore</a></li>
+                                <li><a href="fam_restore_wait.html">fam_restore_wait</a></li>
+                                <li><a href="fam_delete_backup.html">fam_delete_backup</a></li>
+                                <li><a href="fam_delete_backup_wait.html">fam_delete_backup_wait</a></li>
 			</ul>
 			<hr>
 			Atomics
@@ -89,6 +95,9 @@
 				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
+                                <li><a href="fam_progress.html">fam_progress</a></li>
+                                <li><a href="fam_context_open.html">fam_context_open</a></li>
+                                <li><a href="fam_context_close.html">fam_context_close</a></li>
 			</ul>
 			<hr>
 		</nav>
@@ -97,7 +106,7 @@
 	<p>Create a new region in FAM.</p>
 	<h2>Synopsis</h2>
 	<p class="code">Fam_Region_Descriptor *fam_create_region(char *name, uint64_t
-		size, mode_t permissions, Fam_Redundancy_Level redundancyLevel, ...);</p>
+		size, mode_t permissions, Fam_Region_Attributes* regionAttributes);</p>
 	<h2>Description</h2>
 	<p>This method creates a region in FAM for subsequent use</p>
 	<h2>Input Arguments</h2>
@@ -137,10 +146,20 @@
 			</tr>
 			<tr>
 				<td class="code">
-					redundancyLevel
+					regionAttributes
 				</td>
 				<td>
-					Desired redundancy level.
+					Is a structure that holds region attributes like:
+				
+				<p>					
+					•	<b>redundancyLevel</b> represents the redundancy level for the data items within the region. The supported values for redundancyLevel are: {DEFAULT, NONE, RAID1, RAID5} . The current DEFAULT is NONE.
+				</p>
+				<p>
+					•	<b>memoryType</b> denotes the type of memory the region is created on. The supported values for memoryType are: {DEFAULT, VOLATILE, PERSISTENT}. For GoldenTicket, PERSISTENT regions will be created in SCM, while VOLATILE regions will be created in DRAM. The current DEFAULT is VOLATILE.
+				</p>
+				<p>
+					•	<b>interleaveEnable</b> denotes if data item interleaving is enabled for the region. The supported values are: {DEFAULT, ENABLE, DISABLE}. A value of DISABLE implies that data items within the region are not interleaved across memory servers, and each data item is hosted within a single memory server (subject to redundancyLevel). A value of ENABLE indicates data item interleaving is enabled, and data items are striped across memory servers using a system-defined interleave block size. The current DEFAULT value is DISABLE.
+				</p>			
 				</td>
 			</tr>
 		</tbody>
@@ -199,8 +218,9 @@ int main(void) {
 	// .. initialization code here
 	
 	try {
-		// create a 10 GB region with 0777 permissions and RAID5 redundancy
-		Fam_Region_Descriptor *rd = myFam->fam_create_region("myRegion", (uint64_t)10000000000, 0777, RAID5);
+	    Fam_Region_Attributes* regionAttributes = (Fam_Region_Attributes*)malloc(sizeof(Fam_Region_Attributes));
+		// create a 10 GB region with 0777 permissions for given region attributes
+		Fam_Region_Descriptor *rd = myFam->fam_create_region("myRegion", (uint64_t)10000000000, 0777, regionAttributes);
 		
 		/ use the created region...
 		printf("fam_create_region successful\n");
@@ -213,7 +233,7 @@ int main(void) {
 	} catch (Fam_Exception &amp;e) {
 		printf("Create/Destroy region failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
 	}
-	
+	free(regionAttributes);
 	// ... finalization code here
 	
 }
@@ -221,7 +241,7 @@ int main(void) {
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021-22, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

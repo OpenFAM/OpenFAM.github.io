@@ -60,6 +60,12 @@
 				<li><a href="fam_scatter.html">fam_scatter</a></li>
 				<li><a href="fam_copy.html">fam_copy</a></li>
 				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+				<li><a href="fam_backup.html">fam_backup</a></li>
+				<li><a href="fam_backup_wait.html">fam_backup_wait</a></li>
+				<li><a href="fam_restore.html">fam_restore</a></li>
+				<li><a href="fam_restore_wait.html">fam_restore_wait</a></li>
+				<li><a href="fam_delete_backup.html">fam_delete_backup</a></li>
+				<li><a href="fam_delete_backup_wait.html">fam_delete_backup_wait</a></li>
 			</ul>
 			<hr>
 			Atomics
@@ -89,6 +95,9 @@
 				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
 				<li><a href="fam_quiet.html">fam_quiet</a></li>
+				<li><a href="fam_progress.html">fam_progress</a></li>
+				<li><a href="fam_context_open.html">fam_context_open</a></li>
+				<li><a href="fam_context_close.html">fam_context_close</a></li>
 			</ul>
 			<hr>
 		</nav>
@@ -96,16 +105,39 @@
 		<h1>OpenFAM release notes</h1>
 		These notes summarize the different releases of OpenFAM. A more detailed list of list of features, enhancements and bug fixes are added to the source tree in all the released versions,
 		and are provided in the corresponding NEWS.md file. Build and installation instructions are listed in the corresponding README.md file located in the source tree. 
+		<h2>OpenFAM version 3.0 (release v3.0.0)</h2>
+		<p>The current version of OpenFAM is 3.0. It contains the following changes and enhancements over version 2.0:</p>
+		<ul>
+			<li>Scalability improvements:This version has added support for volatile and persistent memory types.</li>
+			<li>Multi-threaded support has been added that enables OpenFAM to be used with multi-threaded applications.</li>
+		<ul>
+
+		<li>Performance improvements: 
+			Data item interleaving feature has been added in which a given data item will span across multiple memory servers. This has been done to uniformly distribute the load across multiple memory memory servers, thus reducing the network bottlenecks, and thereby improving the overall performance.</li>
+		</ul>
+		<ul>
+
+		<li>OpenFAM APIs changes:
+		<li>			
+fam_create_region API has been modified wherein the input argument redundancyLevel is replaced with a structure that holds attributes for a region namely - redundancyLevel, memoryType and flags to indicate if data item interleaving needs to be 
+enabled or not.</li>
+		<li>Two new APIs have been added to support multiple contexts namely <code>fam_context_open()</code> and <code>fam_context_close()</code>.
+		These APIs provide the flexibility to threads to invoke datapath operations parallelly. </li>
+		<li>A new API <code>fam_progress</code> has been provided that returns the count of pending datapath operations.</li>
+		<li>Few APIs have been added to enable backing up and restoring of data items namely - <code>fam_backup()</code> and <code>fam_restore()</code>. An API has been provided to delete the unused backup in the memory server.</li>
+</li>
+</li>
+		</ul>
 		<h2>OpenFAM version 2.0 (release v2.0.0)</h2>
 		<p>The current version of OpenFAM is 2.0. It contains the following changes and enhancements over version 1.0:</p>
 		<ul>
-			<li>Scalability improvements: This version supports a larger pool of memory by allowing multiple memory servers to be used. See <a href="services.html">services</a> for more details. </li>
-			<li>Performance improvements: Memory management and metadata operations have been optimized. 
-				<ul>
-					<li>Background worker threads (unused in OpenFAM 1.0) were disabled from the memory service.</li>
-					<li>Allocation performance was improved by moving the memset operation to zero allocated memory from <code>fam_allocate()</code> to <code>fam_deallocate()</code> path.</li>
-					<li>Regions can span multiple memory servers, thus reducing network bottlenecks when multiple data items within the same region are used.</li>
-				</ul> 
+		<li>Scalability improvements: This version supports a larger pool of memory by allowing multiple memory servers to be used. See <a href="services.html">services</a> for more details. </li>
+		<li>Performance improvements: Memory management and metadata operations have been optimized. 
+		<ul>
+		<li>Background worker threads (unused in OpenFAM 1.0) were disabled from the memory service.</li>
+		<li>Allocation performance was improved by moving the memset operation to zero allocated memory from <code>fam_allocate()</code> to <code>fam_deallocate()</code> path.</li>
+		<li>Regions can span multiple memory servers, thus reducing network bottlenecks when multiple data items within the same region are used.</li>
+		</ul> 
 			</li>
 			<li>OpenFAM APIs changes: 
 				<ul>
@@ -126,13 +158,14 @@
 		</ul>
 		<h2>Documentation updates</h2>
 		<ul>
-				<li><a href="index.html">OpenFAM version 2.0</a></li>
-				<li><a href="../v1.0/index.html">OpenFAM version 1.0</a></li>
+				<li><a href="v3.0/index.html">OpenFAM version 3.0</a></li>
+				<li><a href="v2.0/index.html">OpenFAM version 2.0</a></li>
+				<li><a href="v1.0/index.html">OpenFAM version 1.0</a></li>
 		</ul>
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021-22, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>

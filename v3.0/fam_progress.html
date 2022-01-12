@@ -66,7 +66,6 @@
                                 <li><a href="fam_restore_wait.html">fam_restore_wait</a></li>
                                 <li><a href="fam_delete_backup.html">fam_delete_backup</a></li>
                                 <li><a href="fam_delete_backup_wait.html">fam_delete_backup_wait</a></li>
-
 			</ul>
 			<hr>
 			Atomics
@@ -95,7 +94,7 @@
 			<ul>
 				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
 				<li><a href="fam_fence.html">fam_fence</a></li>
-				<li><a href="fam_quiet.html">fam_quiet</a></li>
+                                <li><a href="fam_quiet.html">fam_quiet</a></li>
                                 <li><a href="fam_progress.html">fam_progress</a></li>
                                 <li><a href="fam_context_open.html">fam_context_open</a></li>
                                 <li><a href="fam_context_close.html">fam_context_close</a></li>
@@ -104,104 +103,82 @@
 			<hr>
 		</nav>
 		<article>
-			<h1 class="code">openfam::fam::fam_allocate</h1>
-	<p>Allocate a data item in a region of FAM.</p>
+			<h1 class="code">openfam::fam::fam_progress</h1>
+	<p>Returns the total count of pending I/O operations within the context./p>
 	<h2>Synopsis</h2>
-	<p class="code">
-		Fam_Descriptor *fam_allocate(char *name, uint64_t nbytes, mode_t
-		accessPermissions, Fam_Region_Descriptor *region);<br>
-		Fam_Descriptor *fam_allocate(uint64_t nbytes, mode_t
-		accessPermissions, Fam_Region_Descriptor *region);
-	</p>
+	<p class="code">uint64_t fam_progress(void);</p>
 	<h2>Description</h2>
-	<p>These methods allocate space for a data item in some region of
-		FAM.</p>
+	<p>This method returns the total count of pending FAM  operations that includes put/get, scatter/gather, atomic and copy operations.</p>
 	<h2>Input Arguments</h2>
-	<table>
-		<tbody>
-			<tr><th>Name</th><th>Description</th></tr>
-			<tr><td class="code">name</td><td>Name of the data item for subsequent references.</td></tr>
-			<tr><td class="code">nbytes</td><td>Requested size of the data item in bytes.</td></tr>
-			<tr><td class="code">accessPermissions</td><td>Access permissions for this data item.</td></tr>
-			<tr><td class="code">region</td><td>
-					Descriptor for the region where the data item is being
-					created.</td></tr>
-		</tbody>
-	</table>
-	<p>&nbsp;</p>
+	<p>None.</p>
 	<h2>Return Values</h2>
-	<p>Descriptor to the allocated data item. Throws <code>Fam_Exception</code> on error.</p>
-	<h2>Fam Error numbers</h2>
+	<p>Count of number of Pending I/O operations. Throws <code>Fam_Exception</code> on error.</p>
+	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
 	<tr><th>Error</th><th>Description</th></tr>
-	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights.</td></tr>
-	<tr><td class="code">FAM_ERR_ALREADYEXIST</td><td>Data item name is already present in FAM.</td></tr>
-	<tr><td class="code">FAM_ERR_NAME_TOO_LONG</td><td>Data item name too long.</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
-	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
-	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
-	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
+	<tr><td class="code">FAM_ERR_TIMEOUT</td><td>Number of libfabric retry count reached.</td></tr>
 	</tbody>
 	</table>
+	
 	<h2>Notes</h2>
-	<p>Note that these methods may allocate space greater than the
-		requested size to maintain an implementation dependent byte alignment.
-		The allocated space is zeroed out during allocation. If a name is
-		provided during allocation, it can be used within subsequent calls to
-		<code>fam_lookup()</code> to retrieve the associated descriptor. If a name is not
-		provided during allocation, then the program itself is responsible for
-		saving and tracking the descriptor if required later, since the data
-		in FAM will be unreachable without the descriptor. Also note that at present maximum data item name
-		length supported is 40 characters.</p>
-	<p><code>Fam_Descriptor</code> provides a method to retrieve an opaque read-only data structure called 
-	<code>Fam_Global_Descriptor</code> which represents both the region and data item in FAM. <code>Fam_Global_Descriptor</code>
-	can be freely copied, and shared across processing nodes by the program, and is portable
-	across operating system and program instances.</p>
-<pre>
-// Fam_Global_Descriptor Fam_Descriptor::get_global_descriptor();
-Fam_Global_Descriptor gDescriptor = famDescriptor->get_global_descriptor();
-</pre>
-	<p><code>Fam_Descriptor</code> can be instantiated from <code>Fam_Global_Descriptor</code> using the following constructor.</p>
-<pre>
-// Fam_Descriptor::Fam_Descriptor(Fam_Global_Descriptor gDescriptor);
-Fam_Descriptor *dataItem = new Fam_Descriptor(gDescriptor);
-</pre>
-
-	<h2 id="e1">Example</h2>
+	<p>Note that this method is used only with Libfabric based I/O Operations and cannot be used with <code>fam_map()</code>-enabled load/store accesses by the
+		processor to FAM.</p>
+	<h2>Example</h2>
 <pre>
 #include &lt;string.h>
 #include &lt;fam/fam.h>
 #include &lt;fam/fam_exception.h>
 using namespace std;
 using namespace openfam;
-
+ 
 int main(void) {
 	fam *myFam = new fam();
 	// ... Initialization code here
-
 	try {
-		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
-		// create 50 element unnamed integer array in FAM with 0600
-		// (read/write by owner) permissions in myRegion
-		Fam_Descriptor *descriptor = myFam->fam_allocate((uint64_t)(50 * sizeof(int)), 0600, region);
-
-		printf("Successully allocated 50 unnamed integer elements\n");
-
-		// free allocated space in FAM
-		myFam->fam_deallocate(descriptor);
-		printf("Successully de-allocated 50 unnamed integer elements\n");
+		// look up the descriptor to a previously allocated data item
+		// (a 50-element integer array)
+		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		
+		// local data
+		int local[] = {0,1,2,3,4};
+		uint64_t indexes[] = {10, 17, 13, 15, 16};
+		
+		// scatter local data in myItem[10,17,13,15,16] respectively
+		myFam->fam_scatter_nonblocking(local, descriptor, 5, indexes, sizeof(int));
+		
+		// check the number of pending I/O operations.
+		uint64_t pending_io = myFam->fam_progress();
+	        myFam->fam_quiet();	
+		// look up the descriptor to a previously allocated completion flag
+		Fam_Descriptor *flagDescriptor = myFam->fam_lookup("completionFlag", "myRegion");
+		
+		// atomically set the completion flag in FAM
+		myFam->fam_set(flagDescriptor, 0, 1);
+		
+		// check the number of pending atomic operations.
+		uint64_t pending_atomic = myFam->fam_progress();
+	        myFam->fam_quiet();	
+		
+		// we now have the correct items in FAM, and the completion flag has been set
+		
+		// ... subsequent code here
 	} catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
-	 }
-	 // ... Finalization code here
+	}
+		
+	// ... Finalization code follows
 }
 </pre>
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2021-22, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2022, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>
+

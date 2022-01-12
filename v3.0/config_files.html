@@ -145,10 +145,6 @@ These configuration files contain the following options.
 		Other supported options are "psm2" and "verbs".
 		</td>
 	</tr>
-	<tr><td class="code">libfabric_port</td>
-		<td>Libfabric port to be used for data path operations.
-		</td>
-	</tr>
 	<tr><td class="code">delayed_free_threads</td>
 		<td>Number of threads used for delayed free.
 		</td>
@@ -166,10 +162,40 @@ These configuration files contain the following options.
 		Default data size is 1024.		
 		</td>
 	</tr>
+	<tr><td class="code">fam_backup_path</td>
+		<td> Absolute path used by the memory server to store archives.
+		Default value is config file location.		
+		</td>
+	</tr>
+	<tr><td class="code">type</td>
+		<td> Type of memory used by the memory server to host FAM.
+		Options are "volatile" or "persistent".
+		Default value is "volatile".		
+		</td>
+	</tr>
 	<tr><td class="code">fam_path</td>
 		<td> Absolute path to the NVMM data files used by the memory server.
 		Default value is an empty string.		
 		</td>
+	</tr>
+	<tr><td class="code">rpc_interface</td>
+		<td> IP address/hostname of memory server, followed by port number.
+		Default value is an "127.0.0.1:8789".		
+		</td>
+	</tr>
+	<tr><td class="code">fam_path</td>
+		<td> Absolute path to the NVMM data files used by the memory server.
+		Default value is an empty string.		
+		</td>
+	</tr>
+	<tr><td class="code">libfabric_port</td>
+		<td>Libfabric port to be used for data path operations.
+		</td>
+	<tr><td class="code">if_device</td>
+		<td>NIC name to be used with memory server.
+		    Default value is "eth0".
+		</td>
+	</tr>
 	</tr>
 </tbody>
 </table>
@@ -257,7 +283,7 @@ the options present in the respective configuration files.</p>
 over the options present in <code>fam_pe_config.yaml</code> configuration file. </article>
 	</section>
 	<footer>
-		<p>Copyright 2021, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021-22, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>
