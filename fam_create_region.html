@@ -158,7 +158,7 @@
 					•	<b>memoryType</b> denotes the type of memory the region is created on. The supported values for memoryType are: {DEFAULT, VOLATILE, PERSISTENT}. For GoldenTicket, PERSISTENT regions will be created in SCM, while VOLATILE regions will be created in DRAM. The current DEFAULT is VOLATILE.
 				</p>
 				<p>
-					•	<b>interleaveEnable</b> denotes if data item interleaving is enabled for the region. The supported values are: {DEFAULT, ENABLE, DISABLE}. A value of DISABLE implies that data items within the region are not interleaved across memory servers, and each data item is hosted within a single memory server (subject to redundancyLevel). A value of ENABLE indicates data item interleaving is enabled, and data items are striped across memory servers using a system-defined interleave block size. The current DEFAULT value is DISABLE.
+					•	<b>interleaveEnable</b> denotes if data item interleaving is enabled for the region. The supported values are: {DEFAULT, ENABLE, DISABLE}. A value of DISABLE implies that data items within the region are not interleaved across memory servers, and each data item is hosted within a single memory server (subject to redundancyLevel). A value of ENABLE indicates data item interleaving is enabled, and data items are striped across memory servers using a system-defined interleave block size. The current DEFAULT value is ENABLE.
 				</p>			
 				</td>
 			</tr>
@@ -194,7 +194,7 @@
 	across operating system and program instances.</p>
 <pre>
 // Fam_Global_Descriptor Fam_Region_Descriptor::get_global_descriptor();
-Fam_Global_Descriptor gDescriptor = regionDescriptor->get_global_descriptor();
+Fam_Global_Descriptor gDescriptor = regionDescriptor-&lt;get_global_descriptor();
 </pre>
 	<p><code>Fam_Region_Descriptor</code> can be instantiated from <code>Fam_Global_Descriptor</code> using the following constructor.</p>
 <pre>
@@ -203,11 +203,11 @@ Fam_Region_Descriptor *rd = new Fam_Region_Descriptor(gDescriptor);
 </pre>
 	<h2 id="e1">Example</h2>
 <pre>
-#include &lt;stdlib.h>
-#include &lt;stdio.h>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;stdlib.h&lt;
+#include &lt;stdio.h&lt;
+#include &lt;string.h&lt;
+#include &lt;fam/fam.h&lt;
+#include &lt;fam/fam_exception.h&lt;
 using namespace std;
 using namespace openfam;
 
@@ -219,8 +219,9 @@ int main(void) {
 	
 	try {
 	    Fam_Region_Attributes* regionAttributes = (Fam_Region_Attributes*)malloc(sizeof(Fam_Region_Attributes));
+	    regionAttributes-&lt;memoryType = "volatile";
 		// create a 10 GB region with 0777 permissions for given region attributes
-		Fam_Region_Descriptor *rd = myFam->fam_create_region("myRegion", (uint64_t)10000000000, 0777, regionAttributes);
+		Fam_Region_Descriptor *rd = myFam-&lt;fam_create_region("myRegion", (uint64_t)10000000000, 0777, regionAttributes);
 		
 		/ use the created region...
 		printf("fam_create_region successful\n");
@@ -228,7 +229,7 @@ int main(void) {
 		// ... continuation code here
 		
 		// we are finished. Destroy the region and everything in it
-		myFam->fam_destroy_region(rd);
+		myFam-&lt;fam_destroy_region(rd);
 		printf("fam_destroy_region successful\n");
 	} catch (Fam_Exception &amp;e) {
 		printf("Create/Destroy region failed: %d: %s\n", e.fam_error(), e.fam_error_msg());

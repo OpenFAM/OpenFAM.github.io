@@ -103,20 +103,21 @@
 			<hr>
 		</nav>
 		<article>
-		<h1>OpenFAM 2.0 Services</h1>
-<p> The initial reference implementation of OpenFAM was built using a single memory server.
-OpenFAM version 2.0 contains significant design changes to the memory server.
+		<h1>OpenFAM 3.0 Services</h1>
+<p> OpenFAM version 2.0 introduced the concept of supporitng large pool of memory using multiple memory servers.
+OpenFAM version 3.0 contains significant design changes to increase scalability and improve performance.
 <ul>
-<li>The design supports a larger pool of memory by supporting multiple memory servers.</li>
-<li>Regions can now span multiple memory servers, thus reducing performance bottlenecks.</li>
-<li>Memory servers can be addeded to the pool as needed without disturbing previously allocated memory.</li>
-<li>Metadata services have been separated from the memory server, enabling scalability.</li>
+<li>The design supports a larger pool of memory by supporting multiple memory servers. This memory pool can be either volatile or persistent.</li>
+<li>Data can be interleaved as dataitems can now span across multiple memory servers, thus reducing performance bottlenecks.</li>
+<li>Datapath operations can now be partitioned into multiple contexts.</li>
+<li>Multi-threaded datapath and atomic operations are supported.</li>
+<li>Additional APIs have been addeded to the facilitate data movement between memory pool and archival storage.</li>
 </ul>
 <figure>
-<img src="images/openfam2.0memoryserver.png" width="450px">
-<figcaption>Figure 1: OpenFAM 2.0 Memory server components</figcaption>
+<img src="images/openfam3.0memoryserver.png" width="450px">
+<figcaption>Figure 1: OpenFAM  Memory server components</figcaption>
 </figure>
-<p> Figure 1 shows the new design. There are three main components in the design.
+<p> Figure 1 shows the three main components in the design.
 <dl>
 <dt>The client interface service (CIS):</dt><dd>All PEs talk to the CIS for memory server operations.</dd>
 <dt>The metadata management service:</dt><dd>Region and data item metadata is hosted by the metadata management service.
@@ -128,7 +129,7 @@ the CIS communicates with memory servers via an RPC service or via direct functi
 </dl>
 The services communicate with one another using grpc calls. However, as an optimization, if the components are compiled into the same executable, they bypass grpc and use direct function calls for communication.
 Yaml-based configuration files determine how the services are configured.  
-<p>See configuration and startup of OpenFAM 2.0 services in the <a href="config_files.html">Configuration Files</a> section.</p>
+<p>See configuration and startup of OpenFAM 3.0 services in the <a href="config_files.html">Configuration Files</a> section.</p>
 		</article>
 	</section>
 	<footer>

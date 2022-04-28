@@ -124,25 +124,41 @@
 	 the information associated with region or data item descriptor. </p>
 	<pre>
 typedef struct {
-    uint64_t key;
     uint64_t size;
     mode_t perm;
-    char *name;
+    uint32_t uid;
+    uint32_t gid;
+    char *name;    
+    Fam_Region_Attributes region_attributes;
+    int num_memservers;
+    int interleaveSize;
+    int *memory_servers;
+
 } Fam_Stat;
 	</pre>
 		<table>
 		<tbody>
 			<tr><th>Name</th><th>Description</th><th>Default Value</th></tr>
 			<tr>
-				<td class="code">key</td><td>Key associated with region or data item. To be used in future.</td>
-				<td>none</td>
-			</tr>
-			<tr>
 				<td class="code">size</td><td>Size of the region or data item in bytes</td>
 				<td>none</td>
 			</tr>
 			<tr><td class="code">perm</td><td>permissions associated with the region or data item</td><td>none</td></tr>
+			<tr><td class="code">uid</td><td>uid associated with the region or data item</td><td>none</td></tr>
+			<tr><td class="code">gid</td><td>gid associated with the region or data item</td><td>none</td></tr>
 			<tr><td class="code">name</td><td>Name of the region or data item.</td>
+				<td>none</td>
+			</tr>
+			<tr><td class="code">region_attributes</td><td>Region-specific attributes like redundancy level, MemoryType, InterleaveDisabled/Enabled .</td>
+				<td>0</td>
+			</tr>
+			<tr><td class="code">num_memservers</td><td>Number of memory servers used for a region or data item.</td>
+				<td>none</td>
+			</tr>
+			<tr><td class="code">interleaveSize</td><td>data item interleaving size used for a given region.</td>
+				<td>none</td>
+			</tr>
+			<tr><td class="code">memory_servers</td><td>List of memory servers used for a given data item.</td>
 				<td>none</td>
 			</tr>
 		</tbody>

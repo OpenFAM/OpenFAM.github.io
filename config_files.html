@@ -142,7 +142,7 @@ These configuration files contain the following options.
 	<tr><th>Configuration Name</th><th>Description</th></tr>
 	<tr><td class="code">provider</td>
 		<td>Libfabric provider to be used by OpenFAM libfabric data path operations. Default value is "sockets".
-		Other supported options are "psm2" and "verbs".
+		Other supported options are "cxi", "psm2" and "verbs".
 		</td>
 	</tr>
 	<tr><td class="code">delayed_free_threads</td>
@@ -233,7 +233,7 @@ These configuration files contain the following options.
 	</tr>
 	<tr><td class="code">provider</td>
 		<td> Libfabric provider to be used by OpenFAM libfabric data path operations. Default value is "sockets".
-		Other supported options are "psm2" and "verbs".
+		Other supported options are "cxi", "psm2" and "verbs".
 		</td>
 	</tr>
 	<tr><td class="code">runtime</td>
@@ -260,18 +260,13 @@ The details of available command line options can be found using <code>-h</code>
 For Example:</p>
 <pre>#./memory_server -h
 Usage :
-        ./memory_server &lt;options>
+        ./memory_server &lt;options&lt;
 
 Options :
-        -a/--address        : Address of the memory server (default value is localhost)
 
-        -r/--rpcport        : RPC port (default value is 8789)
+        -f/--fam_path       : Location of FAM (default value is /dev/shm/&lt;username&lt;)
 
-        -l/--libfabricport  : Libfabric port (default value is 7500)
-
-        -p/--provider       : Libfabric provider (default value is sockets)
-
-        -f/--fam_path       : Location of FAM (default value is /dev/shm/&lt;username>)
+	-m/--memserver_id   : MemoryServer Id (default value is 0)
 
         -v/--version        : Display memory server version
 
