@@ -111,7 +111,7 @@
 	only enforces completion of all operations invoked from that context.
 	Applications can use both fam_ctx object and fam objects;
 	However, OpenFAM APIs invoked from these objects are tracked separately, 
-	and unlike the fam object, context objects only support the data path APIs in OpenFAM.</p>
+	and unlike the fam object, context objects only support the data path, atomic and few ordering APIs in OpenFAM.</p>
 	<h2>Input Arguments</h2>
 	<p>None.</p>
 	<h2>Return Values</h2>
@@ -129,7 +129,30 @@
 	</table>
 	
 	<h2>Notes</h2>
-	<p>An application can invoke only data path APIs using the fam_ctx object returned by fam_context_open API.</p>
+	<p>An application can invoke data path, atomic and few ordering APIs using the fam_ctx object returned by fam_context_open API.</p>
+	
+	<p>List of APIs supported by context objects are as follows:</p>
+	<ul>
+		<li><b>DataPath Operations</b>
+		<ul>	
+		<li>fam_put/fam_get (blocking and non-blocking calls).</li>
+		<li>fam_scatter/fam_gather (blocking and non-blocking calls).</li>
+		</li></br>
+		</ul>
+		<li><b>Atomic Operations</b>
+		<ul>	
+			<li> Fetch based operations like fam_fetch_and, fam_fetch_or, fam_fetch_xor, fam_fetch_add, fam_fetch_subtract, fam_fetch_min, fam_fetch_max, fam_compare_swap, fam_fetch_TYPE where TYPE may be int32_t/uint32_t/int64_t/uint64_t/float/double/int128_t. </li>
+
+			<li> Non-fetch based operations like fam_set, fam_and, fam_or, fam_xor, fam_add, fam_subtract, fam_min, fam_max, fam_swap</li>
+		</li></br>
+		</ul>
+		<li><b>Ordering Operations</b>
+		<ul>	
+			<li>fam_quiet</li>			
+
+			<li>fam_progress</li>
+	</li>
+	</ul>
 	<h2>Example</h2>
 <pre>
 #include &lt;string.h>
