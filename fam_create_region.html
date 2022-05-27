@@ -155,7 +155,7 @@
 					•	<b>redundancyLevel</b> represents the redundancy level for the data items within the region. The supported values for redundancyLevel are: {DEFAULT, NONE, RAID1, RAID5} . The current DEFAULT is NONE.
 				</p>
 				<p>
-					•	<b>memoryType</b> denotes the type of memory the region is created on. The supported values for memoryType are: {DEFAULT, VOLATILE, PERSISTENT}. For GoldenTicket, PERSISTENT regions will be created in SCM, while VOLATILE regions will be created in DRAM. The current DEFAULT is VOLATILE.
+					•	<b>memoryType</b> denotes the type of memory the region is created on. The supported values for memoryType are: {DEFAULT, VOLATILE, PERSISTENT}. PERSISTENT regions will be created in persistent memory, while VOLATILE regions will be created in DRAM. The current DEFAULT is VOLATILE.
 				</p>
 				<p>
 					•	<b>interleaveEnable</b> denotes if data item interleaving is enabled for the region. The supported values are: {DEFAULT, ENABLE, DISABLE}. A value of DISABLE implies that data items within the region are not interleaved across memory servers, and each data item is hosted within a single memory server (subject to redundancyLevel). A value of ENABLE indicates data item interleaving is enabled, and data items are striped across memory servers using a system-defined interleave block size. The current DEFAULT value is ENABLE.
@@ -194,7 +194,7 @@
 	across operating system and program instances.</p>
 <pre>
 // Fam_Global_Descriptor Fam_Region_Descriptor::get_global_descriptor();
-Fam_Global_Descriptor gDescriptor = regionDescriptor-&lt;get_global_descriptor();
+Fam_Global_Descriptor gDescriptor = regionDescriptor-&gt;get_global_descriptor();
 </pre>
 	<p><code>Fam_Region_Descriptor</code> can be instantiated from <code>Fam_Global_Descriptor</code> using the following constructor.</p>
 <pre>
