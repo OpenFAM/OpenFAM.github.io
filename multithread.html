@@ -14,7 +14,7 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
-				<li><a href="release_notes.html">Release Notes</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>				
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
 				<li><a href="services.html">Services</a></li>
@@ -60,7 +60,7 @@
 				<li><a href="fam_scatter.html">fam_scatter</a></li>
 				<li><a href="fam_copy.html">fam_copy</a></li>
 				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
-				<li><a href="fam_backup.html">fam_backup</a></li>
+                                <li><a href="fam_backup.html">fam_backup</a></li>
 				<li><a href="fam_backup_wait.html">fam_backup_wait</a></li>
 				<li><a href="fam_restore.html">fam_restore</a></li>
 				<li><a href="fam_restore_wait.html">fam_restore_wait</a></li>
@@ -103,33 +103,31 @@
 			<hr>
 		</nav>
 		<article>
-		<h1>OpenFAM 3.0 Services</h1>
-<p> OpenFAM version 2.0 introduced the concept of supporitng large pool of memory using multiple memory servers.
-OpenFAM version 3.0 contains significant design changes to increase scalability and improve performance.
-<ul>
-<li>The design supports a larger pool of memory by supporting multiple memory servers. This memory pool can be either volatile or persistent.</li>
-<li>Data can be interleaved as dataitems can now span across multiple memory servers, thus reducing performance bottlenecks.</li>
-<li>Datapath operations can now be partitioned into multiple contexts.</li>
-<li>Multi-threaded datapath and atomic operations are supported.</li>
-<li>Additional APIs have been addeded to the facilitate data movement between memory pool and archival storage.</li>
+<h1>OPENFAM MULTI-THREADED & CONTEXT MODEL</h1>
+OpenFAM 2.0 provides a basic threading and context framework for invoking the datapath APIs. All the data path APIs use a single communication context there by restricting the grouping of I/O operation to a single context group. Hence fam_quiet invoked by the application will enforce completion of all the operations invoked from the fam object. Though application may be multi-threaded and share the fam object across multiple threads, it is the applications responsibility to serialize all the OpenFAM APIs from different threads. This thread model does not allow application to optimally utilize cpu and network resources available on the compute node.
+In order to address these issues to an extent, a concept of user-specific thread model has been added in OpenFAM 3.0.
+<br>
+Now OpenFAM supports following threading models:
+<li><b>FAM_THREAD_SERIALIZE</b>
+<ul>	
+<li>	Program may be multi-threaded</li>
+<li>	No concurrent invocation of OpenFAM APIs by multiple threads</li>
+<li>	Quiet will enforce completion of all the operations invoked from all the threads.</li>
 </ul>
-<figure>
-<img src="images/openfam2.0memoryserver.png" width="450px">
-<figcaption>Figure 1: OpenFAM  Memory server components</figcaption>
-</figure>
-<p> Figure 1 shows the three main components in the design.
-<dl>
-<dt>The client interface service (CIS):</dt><dd>All PEs talk to the CIS for memory server operations.</dd>
-<dt>The metadata management service:</dt><dd>Region and data item metadata is hosted by the metadata management service.
-The service can be co-located in the same node as a CIS server or a memory server, or it can be run in dedicated metadata management nodes.</dd>
-<dt>The memory management service:</dt><dd> The actual memory is served from memory servers.
-For data path (<code>get</code>, <code>put</code> and <code>atomic</code>) operations PEs talk to the memory servers directly.
-For memory management and metadata operations, e.g., <code>allocate</code>, <code>lookup</code>, <code>create_region</code>, etc.,
-the CIS communicates with memory servers via an RPC service or via direct functions calls.</dd>
-</dl>
-The services communicate with one another using grpc calls. However, as an optimization, if the components are compiled into the same executable, they bypass grpc and use direct function calls for communication.
-Yaml-based configuration files determine how the services are configured.  
-<p>See configuration and startup of OpenFAM 3.0 services in the <a href="config_files.html">Configuration Files</a> section.</p>
+<li><b>FAM_THREAD_MULTIPLE</b>
+<ul>	
+<li>	Program may be multi-threaded</li>
+<li>	Any thread may invoke OpenFAM APIs</li>
+<li>	Quiet will enforce completion of all the operations invoked from all thread.</li>
+</ul>
+<br>
+To open and close of user specific contexts two new API’s - fam_context_open and fam_context_close has been added.
+<ul>
+	<li><i>	fam_ctx* fam->fam_context_open()</i></li>
+        <li><i> void fam->fam_context_close(fam_ctx*)</i></li>
+</ul>	
+fam_context_open returns a user specific FAM context object. OpenFAM API’s can be invoked from the fam_context object too. All OpenFAM API invoked from this FAM context object will be grouped together for completion. Quiet invoked from a FAM context object will enforce completion of all operations invoked from the FAM context object. Application can use both FAM context object and FAM object in the application, however OpenFAM APIs invoked from these objects are tracked using separate contexts. Only data path APIs can be invoked from FAM context object
+<br>
 		</article>
 	</section>
 	<footer>

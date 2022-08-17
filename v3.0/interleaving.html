@@ -14,7 +14,7 @@
 		<nav>
 			<ul>
 				<li><a href="index.html">Home</a></li>
-				<li><a href="release_notes.html">Release Notes</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>				
 				<li><a href="limitations.html">Design Choices</a></li>
 				<li><a href="errors.html">Exceptions and Error Codes</a></li>
 				<li><a href="services.html">Services</a></li>
@@ -60,7 +60,7 @@
 				<li><a href="fam_scatter.html">fam_scatter</a></li>
 				<li><a href="fam_copy.html">fam_copy</a></li>
 				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
-				<li><a href="fam_backup.html">fam_backup</a></li>
+                                <li><a href="fam_backup.html">fam_backup</a></li>
 				<li><a href="fam_backup_wait.html">fam_backup_wait</a></li>
 				<li><a href="fam_restore.html">fam_restore</a></li>
 				<li><a href="fam_restore_wait.html">fam_restore_wait</a></li>
@@ -103,33 +103,28 @@
 			<hr>
 		</nav>
 		<article>
-		<h1>OpenFAM 3.0 Services</h1>
-<p> OpenFAM version 2.0 introduced the concept of supporitng large pool of memory using multiple memory servers.
-OpenFAM version 3.0 contains significant design changes to increase scalability and improve performance.
-<ul>
-<li>The design supports a larger pool of memory by supporting multiple memory servers. This memory pool can be either volatile or persistent.</li>
-<li>Data can be interleaved as dataitems can now span across multiple memory servers, thus reducing performance bottlenecks.</li>
-<li>Datapath operations can now be partitioned into multiple contexts.</li>
-<li>Multi-threaded datapath and atomic operations are supported.</li>
-<li>Additional APIs have been addeded to the facilitate data movement between memory pool and archival storage.</li>
-</ul>
+<h1>Data Item Interleaving</h1>
+In earlier implementation of OpenFAM, the region created by a user could span across more than one memory server. However memory for any given data item was allocated only on a single memory server. Hence the region spanning feature was not being effectively utilized.For single-program, multiple-data (SPMD) applications, data items are typically large, and multiple PEs concurrently access different parts of the data item. For such data items, the network interface at the memory server becomes a bottleneck.
+During benchmark runs, it was observed that random access benchmarks caused network bottlenecks and in-cast at the memory servers.
+In OpenFAM 3.0 implementation, the concept of data-item interleaving is introduced to improve scalability.
+Data interleaving refers to interspersing portions of the data across the memory servers in some specified order or other arrangement.
+As an example, consider an arrangement with 4 memory servers (memory servers 1 to 4) as shown in Figure 1.
+<br>
 <figure>
-<img src="images/openfam2.0memoryserver.png" width="450px">
-<figcaption>Figure 1: OpenFAM  Memory server components</figcaption>
+<img src="images/interleave.png" width="850px">
+<figcaption>Figure 1: Allocating data item across memory servers in OpenFAM</figcaption>
 </figure>
-<p> Figure 1 shows the three main components in the design.
-<dl>
-<dt>The client interface service (CIS):</dt><dd>All PEs talk to the CIS for memory server operations.</dd>
-<dt>The metadata management service:</dt><dd>Region and data item metadata is hosted by the metadata management service.
-The service can be co-located in the same node as a CIS server or a memory server, or it can be run in dedicated metadata management nodes.</dd>
-<dt>The memory management service:</dt><dd> The actual memory is served from memory servers.
-For data path (<code>get</code>, <code>put</code> and <code>atomic</code>) operations PEs talk to the memory servers directly.
-For memory management and metadata operations, e.g., <code>allocate</code>, <code>lookup</code>, <code>create_region</code>, etc.,
-the CIS communicates with memory servers via an RPC service or via direct functions calls.</dd>
-</dl>
-The services communicate with one another using grpc calls. However, as an optimization, if the components are compiled into the same executable, they bypass grpc and use direct function calls for communication.
-Yaml-based configuration files determine how the services are configured.  
-<p>See configuration and startup of OpenFAM 3.0 services in the <a href="config_files.html">Configuration Files</a> section.</p>
+In the above mentioned figure , Region A spans 4 memory servers, numbered 1 to 4. The stripes corresponding to Dataitem1 and Dataitem2 are allocated across the 4 memory servers. In this example, these allocations are converted into 4 separate allocations across the memory servers. Each block (with size defined by the interleave size) is distributed to memory servers in a round-robin fashion. Note that the starting blocks for the two data items reside in two different memory servers. 
+<br>
+<img src="images/interleave_4K.png" width="850px">
+<figcaption>Figure 2: Data Item interleaving with interleave size of 4KiB</figcaption>
+</figure>
+
+<br>
+Figure 2 illustrates the concept of interleaving using the interleaving size to be 4096. With interleaving size of 4KiB, the interleaving logic places data portion 0 at memory server 1, places data portion 1 at memory server 2, places data portion 2 at memory server 3, places data portion 3 at memory server 4, places data portion 4 at memory server 1, places data portion 5 at memory server 2, places data portion 6 at memory server 3, and so forth. Such an interleaving arrangement can be referred to as a round robin interleaving arrangement in which sequential data portions are successively placed in memory servers according to an order of the memory servers (starting at a beginning memory server and proceeding to a last memory server in a sequence), and when the last memory server is reached in the sequence, the next data portion is placed in the beginning memory server in the sequence and the process continues until the end of the data portions is reached.  Placing a data portion at a given memory server refers to writing the data portion in the main memory of the memory server.
+<br>
+<b>Note:</b>Our performance benchmark runs indicate that 64KiB is an interleaving size that offers better throughput and latency results for the data sets of different sizes.
+
 		</article>
 	</section>
 	<footer>

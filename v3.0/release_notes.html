@@ -108,9 +108,9 @@
 		<h2>OpenFAM version 3.0 (release v3.0.0)</h2>
 		<p>The current version of OpenFAM is 3.0. It contains the following changes and enhancements over version 2.0:</p>
 		<ul>
-			<li>Scalability improvements:This version has added support for volatile and persistent memory types.</li><li>Multi-threaded support has been added that enables OpenFAM to be used with multi-threaded applications.</li>
+			<li>Scalability improvements:This version has added support for volatile and persistent memory types.</li><li>Multi-threaded support has been added that enables OpenFAM to be used with multi-threaded applications. See <a href="multithread.html">multi-threaded environment</a> for more details.</li>
 			<li>		Performance improvements: 
-				Data item interleaving feature has been added in which a given data item will span across multiple memory servers. This has been done to uniformly distribute the load across multiple memory memory servers, thus reducing the network bottlenecks, and thereby improving the overall performance. Data item interleaving is enabled by default.</li>
+				Data item interleaving feature has been added in which a given data item will span across multiple memory servers. This has been done to uniformly distribute the load across multiple memory memory servers, thus reducing the network bottlenecks, and thereby improving the overall performance. Data item interleaving is enabled by default. See  <a href="interleaving.html">Data Item Interleaving </a> for more details.</li>
 			<li>		OpenFAM APIs changes:
 		<ul>
 		<li>fam_create_region API has been modified wherein the input argument redundancyLevel is replaced with a structure that holds attributes for a region namely - redundancyLevel, memoryType and flags to indicate if data item interleaving needs to be enabled or not.</li>
