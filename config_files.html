@@ -255,7 +255,12 @@ These configuration files contain the following options.
 <h1>Starting Services</h1>
 <p> All the services and the PE read the respective configuration file from "config" directory placed at the path mentioned
 by <code>OPENFAM_ROOT</code> environment variable or <code>/opt/hpe/OpenFAM</code>.</p>
-<p> A tool by name openfam_adm has been introduced which helps to perform the basic tasks useful to an OpenFAM user such as creating configuraion files, starting OpenFAM services, terminating OpenFAM services,  running tests and cleanup FAM and metadata. The detailed description and available options are given below.
+<p> A tool by name openfam_adm has been introduced which helps to perform the basic tasks useful to an OpenFAM user such as creating configuraion files, starting OpenFAM services, terminating OpenFAM services,  running tests and cleanup FAM and metadata.
+To access the tool, the openfam module must be loaded. That can be done using following command:
+
+module load openfam
+
+The detailed description and available options are given below.
 The details of available command line options can be found using <code>-h</code> option of each of the service executable.
 For Example:</p>
 <pre>#openfam_adm -h
@@ -265,10 +270,10 @@ Usage :
                                     [--config_file_path] [--launcher]
                                     [--global_launcher_options] [--cisinterface]
                                     [--memserverinterface] [--metaserverinterface]
-                                    [--cisserver]
+                                    [--cisserver id:{comma separated attributes}]
                                     [--memservers  id:{comma seperated attributes}]
                                     [--metaservers  id:{comma seperated attributes}]
-                                    [--test_args] [--model] [--thrdmodel]
+                                    [--test_args] [--model] [--thrdmodel] [--provider]
                                     [--provider] [--runtime] [--kvstype]
                                     [--libfabricport] [--metapath] [--fampath]
                                     [--fam_backup_path] [--atlthreads] [--atlqsize]
