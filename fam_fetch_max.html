@@ -151,9 +151,9 @@
 		hardware support for the operations.</p>
 	<h2>Example</h2>
 		<pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -164,11 +164,11 @@ int main(void) {
 
 	try {
 		// look up the descriptor to a previously allocated data item
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 	
 		// Atomically replace the first element of the array with the larger of the current
 		// value and 10, and return the old value
-		uint32_t oldValue = myFam->fam_fetch_max(descriptor, 0, 10);
+		uint32_t oldValue = myFam-&gt;fam_fetch_max(descriptor, 0, 10);
 
 		// The first integer in FAM is the larger of 10 and the previous value, and the old value is returned
 	

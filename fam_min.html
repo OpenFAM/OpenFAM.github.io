@@ -154,9 +154,9 @@
 	<p>Successful completion of a subsequent <code>fam_quiet()</code> call ensures the completion of this atomic operation.</p> 
 	<h2>Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -166,13 +166,13 @@ int main(void) {
 	 try {
 		// look up the descriptor to a previously allocated data item
 		// (an integer array with at least 10 elements)
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 	
 		//Atomically set the minimum value for the first integer element in the array
-		myFam->fam_min(descriptor, 0, 100);
+		myFam-&gt;fam_min(descriptor, 0, 100);
 	
 		// ensure that the min operation is complete
-		myFam->fam_quiet();
+		myFam-&gt;fam_quiet();
 	
 		// The first integer in FAM is now the minimum of its previous value and 100
 	 } catch (Fam_Exception &amp;e) {

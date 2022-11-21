@@ -133,9 +133,9 @@
 		<code>fam_map()</code>-enabled load/store accesses by the processor to FAM.</p>
 	<h2>Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -145,23 +145,23 @@ int main(void) {
 	try {
 		// look up the descriptor to a previously allocated data item
 		// (a 50-element integer array)
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem","myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem","myRegion");
 		
 		// local data
 		int local[] = {0,1,2,3,4};
 		uint64_t indexes[] = {0, 7, 3, 5, 6};
 			
 		// scatter local data in myItem[0,7,3,5,6] respectively
-		myFam->fam_scatter_nonblocking(local, descriptor, 5, indexes, sizeof(int));
+		myFam-&gt;fam_scatter_nonblocking(local, descriptor, 5, indexes, sizeof(int));
 		
 		// ensure that the scatter is performed before subsequent FAM updates
-		myFam->fam_fence();
+		myFam-&gt;fam_fence();
 		
 		// now update later elements of the array in FAM
 		int newLocal[] = {0,1,2,3,4,5,6,7,8,9};
 		
 		// update elements 11 - 20 in FAM using values in local memory
-		myFam->fam_put_nonblocking(newLocal, descriptor, 10*sizeof(int), sizeof(local));
+		myFam-&gt;fam_put_nonblocking(newLocal, descriptor, 10*sizeof(int), sizeof(local));
 		
 		// ... subsequent code here
 	} catch (Fam_Exception &amp;e) {

@@ -147,6 +147,7 @@
 	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
 	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
 	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
+	<tr><td class="code">FAM_BACKUP_NOTFOUND</td><td>Backup not available.</td></tr>
 	</tbody>
 	</table>
 	<h2>Notes</h2>
@@ -155,9 +156,9 @@
 	</p>
 	<h2 id="e1">Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 	
@@ -173,10 +174,10 @@ int main(void) {
 		sprintf(backupName, "%s.%s", "myRegion", "myItem");
 		
 		// delete given backupName from archival storage and returns a waitObject to delete operation.
-		void *waitObj = myFam->fam_delete_backup(backupName);
+		void *waitObj = myFam-&gt;fam_delete_backup(backupName);
 	
 		// Wait for delete operation to complete.
-		myFam->fam_delete_backup_wait(waitObj);
+		myFam-&gt;fam_delete_backup_wait(waitObj);
 		printf("deletion of backup is successful\n");
 	 } catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());

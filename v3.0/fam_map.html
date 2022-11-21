@@ -153,9 +153,9 @@
 	<p><code>fam_map()</code> and <code>fam_unmap()</code>are currently only supported in the scale-up (shared memory) configuration of the OpenFAM reference implementation.</p>
 	<h2 id="e1">Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -168,10 +168,10 @@ int main(void) {
 		// look up the descriptor to a previously allocated data item
 		// (an integer array with at least 10 elements)
 	
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 
 		// map it into our local address space
-		int *fam_array = (int *) myFam->fam_map(descriptor);
+		int *fam_array = (int *) myFam-&gt;fam_map(descriptor);
 
 		// now we can directly manipulate the data in FAM
 		for(int i = 0; i &lt; 10; i++){
@@ -180,7 +180,7 @@ int main(void) {
 		}
 
 		// unmap it
-		myFam->fam_unmap(fam_array, descriptor); // we are done...
+		myFam-&gt;fam_unmap(fam_array, descriptor); // we are done...
 	} catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
 	}

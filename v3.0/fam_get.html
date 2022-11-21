@@ -181,9 +181,9 @@
 	<h2>Examples</h2>
 <pre>
 // Example of blocking get
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -196,13 +196,13 @@ int main(void) {
 		// look up the descriptor to a previously allocated data item
 		// (a 50 element integer array)
 
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 	
 		// allocate local memory to receive 10 elements
 		int *local = (int *)malloc(10 * sizeof(int));
 	
 		// copy elements 6-15 from FAM into elements 0-9 in local memory
-		myFam->fam_get_blocking(local, descriptor, 6*sizeof(int), 10*sizeof(int));
+		myFam-&gt;fam_get_blocking(local, descriptor, 6*sizeof(int), 10*sizeof(int));
 	
 		// ... we now have a copy in local memory to work with
 		printf("fam_get_blocking success. Data now in local memory\n");
@@ -213,9 +213,9 @@ int main(void) {
 }
 	
 // Example of non-blocking get
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -226,7 +226,7 @@ int main(void) {
 	 try {
 	 	// look up the descriptor to a previously allocated data item
 		// (a 50 element integer array)
-		Fam_Descriptor *descriptor1 = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor1 = myFam-&gt;fam_lookup("myItem", "myRegion");
 
 		// allocate local memory to receive 10 elements from different offsets
 		// within the data item
@@ -234,13 +234,13 @@ int main(void) {
 		int *local2 = (int *) malloc(10 * sizeof(int));
 		// copy elements 6-15 from FAM into local1 elements 0-9 in local memory
 	
-		myFam->fam_get_nonblocking(local1, descriptor1, 6*sizeof(int), 10*sizeof(int));
+		myFam-&gt;fam_get_nonblocking(local1, descriptor1, 6*sizeof(int), 10*sizeof(int));
 		// copy elements 26-35 from FAM into local2 elements 0-9 in local memory
 	
-		myFam->fam_get_nonblocking(local2, descriptor1, 26*sizeof(int), 10*sizeof(int));
+		myFam-&gt;fam_get_nonblocking(local2, descriptor1, 26*sizeof(int), 10*sizeof(int));
 
 		// wait for previously issued non-blocking operations to complete
-		myFam->fam_quiet();
+		myFam-&gt;fam_quiet();
 
 		// ... we now have copies in local memory to work with
 

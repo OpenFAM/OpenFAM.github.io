@@ -171,9 +171,9 @@ Fam_Descriptor *dataItem = new Fam_Descriptor(gDescriptor);
 
 	<h2 id="e1">Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -182,15 +182,15 @@ int main(void) {
 	// ... Initialization code here
 
 	try {
-		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		Fam_Region_Descriptor *region = myFam-&gt;fam_lookup_region("myRegion");
 		// create 50 element unnamed integer array in FAM with 0600
 		// (read/write by owner) permissions in myRegion
-		Fam_Descriptor *descriptor = myFam->fam_allocate((uint64_t)(50 * sizeof(int)), 0600, region);
+		Fam_Descriptor *descriptor = myFam-&gt;fam_allocate((uint64_t)(50 * sizeof(int)), 0600, region);
 
 		printf("Successully allocated 50 unnamed integer elements\n");
 
 		// free allocated space in FAM
-		myFam->fam_deallocate(descriptor);
+		myFam-&gt;fam_deallocate(descriptor);
 		printf("Successully de-allocated 50 unnamed integer elements\n");
 	} catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());

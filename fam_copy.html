@@ -196,9 +196,9 @@
 		coordinating PE activity during the copy.</p>
 	<h2 id="e1">Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 	
@@ -209,16 +209,16 @@ int main(void) {
 
 	 try {
 		// look up the descriptor to a previously allocated (source) data item.
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 		
 		// look up the descriptor to a previously allocated (destination) data item.
-		Fam_Descriptor *destCopy = myFam->fam_lookup("myItem2", "myRegion");
+		Fam_Descriptor *destCopy = myFam-&gt;fam_lookup("myItem2", "myRegion");
 	
 		// create a new copy and returns a waitObject to copy operation.
-		void *waitObj = myFam->fam_copy(descriptor, 0, destCopy, 0, 10*sizeof(int));
+		void *waitObj = myFam-&gt;fam_copy(descriptor, 0, destCopy, 0, 10*sizeof(int));
 	
 		// Wait for copy operation to complete.
-		myFam->fam_copy_wait(waitObj);
+		myFam-&gt;fam_copy_wait(waitObj);
 		printf("Copy to new location in FAM successful\n");
 	 } catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());

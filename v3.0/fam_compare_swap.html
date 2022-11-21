@@ -206,9 +206,9 @@ TYPE cas(TYPE *p, TYPE oldValue, TYPE newValue){
 		<code>fam.h</code>.</p>
 	<h2>Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 	
@@ -218,11 +218,11 @@ int main(void) {
 	// ... Initialization code here
 	try {
 		// look up the descriptor to a previously allocated data item
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 
 		// Atomically compare and replaces the first integer element in FAM with 0
 		// only if it contains 100; It returns the old value
-		int32_t oldValue = myFam->fam_compare_swap(descriptor, 0, 100, 0);
+		int32_t oldValue = myFam-&gt;fam_compare_swap(descriptor, 0, 100, 0);
 
 		// The first integer in FAM is replaced with 0 only if it contains 100;
 		// Old value is returned

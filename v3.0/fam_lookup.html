@@ -136,11 +136,11 @@
 	<p>See the <code><a href="fam_create_region.html">fam_create_region()</a></code> and <code><a href="fam_allocate.html">fam_allocate()</a></code> APIs for discussion of regions and data items.</p>
 	<h2>Example</h2>
 <pre>
-#include &lt;stdlib.h>
-#include &lt;stdio.h>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -151,10 +151,10 @@ int main(void) {
 	
 	try {
 		// get a region descriptor from the metadata service
-		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		Fam_Region_Descriptor *region = myFam-&gt;fam_lookup_region("myRegion");
 		
 		// Get a descriptor (created by another PE) via the metadata service
-		Fam_Descriptor *arrayDescriptor = myFam->fam_lookup("myArray", "myOtherRegion");
+		Fam_Descriptor *arrayDescriptor = myFam-&gt;fam_lookup("myArray", "myOtherRegion");
 		
 	} catch (Fam_Exception &amp;e) {
 		printf("Look up failed: %d: %s\n", e.fam_error(), e.fam_error_msg());

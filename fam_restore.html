@@ -192,16 +192,16 @@
 	<p>Note that the method is non-blocking: it returns after the restore
 		has been initiated, and does not wait for completion of the transfer.
 		Also note that <code>fam_restore()</code> performs an inconsistent restore, in that the
-		copied data may reflect updates that are performed concurrently with
-		the restore operation, rather than a point-in-time snapshot of the source
+		restored data may reflect updates that are performed concurrently with
+		the restore operation, rather than a point-in-time snapshot of the destination
 		data item that is consistent as of the beginning of restore operation. If
 		the application desires a consistent restore, it is responsible for
-		coordinating PE activity during the restore.</p>
+		coordinating PE activity during the restore operation.</p>
 	<h2 id="e1">Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 	
@@ -212,17 +212,17 @@ int main(void) {
 
 	 try {
 		// look up the descriptor to a previously allocated (source) data item.
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 		
 		// name of restore for given data item.
 		char *backupName = (char *)malloc(FILE_MAX_LEN);
 		sprintf(backupName, "%s.%s", "myRegion", "myItem");
 
 		// initiates restore APIs and returns a waitObject to restore operation.
-		void *waitObj = myFam->fam_restore(backupName, descriptor);
+		void *waitObj = myFam-&gt;fam_restore(backupName, descriptor);
 	
 		// Wait for restore operation to complete.
-		myFam->fam_restore_wait(waitObj);
+		myFam-&gt;fam_restore_wait(waitObj);
 		printf("restore of data item is successful\n");
 	 } catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
@@ -233,9 +233,9 @@ int main(void) {
 
 OR
 
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 	
@@ -245,17 +245,17 @@ int main(void) {
 	// ... Initialization code here
 
 	 try {
-        Fam_Region_Descriptor *desc = myFam->fam_lookup("myRegion");
+        Fam_Region_Descriptor *desc = myFam-&gt;fam_lookup("myRegion");
 	 
 		// name of restore for given data item.
 		char *backupName = (char *)malloc(FILE_MAX_LEN);
 		sprintf(backupName, "%s.%s", "myRegion", "myItem");
 
 		// initiates restore APIs and returns a waitObject to restore operation.
-		void *waitObj = myFam->fam_restore(backupName, desc, "secondDI", perm,descriptor);
+		void *waitObj = myFam-&gt;fam_restore(backupName, desc, "secondDI", perm,descriptor);
 	
 		// Wait for restore operation to complete.
-		myFam->fam_restore_wait(waitObj);
+		myFam-&gt;fam_restore_wait(waitObj);
 		printf("restore of data item is successful\n");
 	 } catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());

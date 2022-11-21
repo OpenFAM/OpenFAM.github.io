@@ -308,7 +308,7 @@
 					char*
 				</td>
 				<td class="code">
-					&quot;1&quot;
+					&quot;VOLATILE&quot;
 				</td>
 			</tr>
 			<tr>
@@ -322,7 +322,7 @@
 					char*
 				</td>
 				<td class="code">
-					&quot;1&quot;
+					&quot;cxi0&quot; for cxi devices and &quot;ib0&quot; for Infiniband devices.
 				</td>
 			</tr>
 		</tbody>
@@ -345,11 +345,11 @@
 	<p>None.</p>
 	<h2>Example</h2>
 <pre>
-#include &lt;stdlib.h>
-#include &lt;stdio.h>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -360,11 +360,11 @@ int main(void) {
 	
 	try {
 		// assume that library version is one of the supported options
-		const char * libraryVersion = (const char *)myFam->fam_get_option(strdup("VERSION"));
+		const char * libraryVersion = (const char *)myFam-&gt;fam_get_option(strdup("VERSION"));
 		printf("%s\n", libraryVersion);
 	} catch (Fam_Exception&amp; e) {
 		printf("FAM API failed: %s\n", e.fam_error_msg());
-		myFam->fam_abort(-1); // abort the program
+		myFam-&gt;fam_abort(-1); // abort the program
 		return -1;
 	}
 	

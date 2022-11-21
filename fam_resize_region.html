@@ -141,11 +141,11 @@
 		implementation dependent.</p>
 	<h2>Example</h2>
 <pre>
-#include &lt;stdlib.h>
-#include &lt;stdio.h>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -154,26 +154,33 @@ int main(void) {
 
 	// .. initialization code here
 	
+
+            Fam_Region_Attributes* regionAttributes = (Fam_Region_Attributes*)calloc(1, sizeof(Fam_Region_Attributes));
+        try {
+                regionAttributes-&gt;memoryType = VOLATILE;
+
+	
 	try {
 		// create a 10 GB region with 0777 permissions and RAID5 redundancy
-		Fam_Region_Descriptor *rd =	myFam->fam_create_region("myRegion", (uint64_t)10000000000, 0777, RAID5);
+                Fam_Region_Descriptor *rd = myFam-&gt;fam_create_region("myRegion", (uint64_t)10000000000, 0777, regionAttributes);
 			
 		// use the created region...
 		printf("fam_create_region successful\n");
 			
 		// resize the region to 20 GB
-		myFam->fam_resize_region(rd, (uint64_t)20000000000);
+		myFam-&gt;fam_resize_region(rd, (uint64_t)20000000000);
 			
 		// use the re-sized region
 		printf("fam_resize_region successful\n");
 		// ... continuation code here
 			
 		// we are finished. Destroy the region and everything in it
-		myFam->fam_destroy_region(rd);
+		myFam-&gt;fam_destroy_region(rd);
 		printf("fam_destroy_region successful\n");
 	} catch (Fam_Exception &amp;e) {
 		printf("Create/Destroy region failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
 	}
+	free(regionAttributes);
 	// ... finalization code here
 }
 </pre>

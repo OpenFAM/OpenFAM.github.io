@@ -117,11 +117,11 @@
 		option values.</p>
 	<h2>Example</h2>
 <pre>
-#include &lt;stdlib.h>
-#include &lt;stdio.h>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace openfam;
 using namespace std;
 
@@ -132,20 +132,20 @@ int main(void) {
 	
 	// assume that no specific options are needed by the implementation
 	try {
-		myFam->fam_initialize("myApplication", fm);
+		myFam-&gt;fam_initialize("myApplication", fm);
 		printf("FAM initialized\n");
 	} catch (Fam_Exception&amp; e) {
 		printf("FAM Initialization failed: %s\n", e.fam_error_msg());
-		myFam->fam_abort(-1); // abort the program
+		myFam-&gt;fam_abort(-1); // abort the program
 		return -1;
 	}
 	
-	const char **optionName = myFam->fam_list_options();
+	const char **optionName = myFam-&gt;fam_list_options();
 	while(*optionName != NULL){     // while we have more names
 		printf("%s\n", *optionName);    // print the name
 		optionName++;
 	}
-	myFam->fam_finalize("myApplication");
+	myFam-&gt;fam_finalize("myApplication");
 	printf("FAM finalized\n");
 }
 </pre>

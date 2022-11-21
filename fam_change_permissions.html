@@ -142,9 +142,9 @@
 	<p>Permissions are checked on first descriptor use in a running program. Changed permissions are only applied the next time the program is run, not immediately on next access.</p>
 	<h2>Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -153,17 +153,17 @@ int main(void) {
 
 	// ... Initialization code here
 	try {
-		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		Fam_Region_Descriptor *region = myFam-&gt;fam_lookup_region("myRegion");
 		// create 50 element named integer array in FAM with 0600
 		// (read/write by owner) permissions in myRegion
-		Fam_Descriptor *descriptor = myFam->fam_allocate("myItem", 50*sizeof(int), 0600, region);
+		Fam_Descriptor *descriptor = myFam-&gt;fam_allocate("myItem", 50*sizeof(int), 0600, region);
 			
 		printf("Successfully allocated 50 unnamed integer elements\n");
 		// initialize the allocated space here with meaningful values
 			
 		// make the item read-only (0400) to prevent further change by
 		// subsequent programs
-		myFam->fam_change_permissions(descriptor, 0400);
+		myFam-&gt;fam_change_permissions(descriptor, 0400);
 		printf("Successully changed permission from 0600 to 0400\n");	
 	} catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());

@@ -180,11 +180,11 @@ typedef struct {
 	
 	<h2>Example</h2>
 <pre>
-#include &lt;stdlib.h>
-#include &lt;stdio.h>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -195,19 +195,19 @@ int main(void) {
 	
 	try {
 		// get a region descriptor from the metadata service
-		Fam_Region_Descriptor *region = myFam->fam_lookup_region("myRegion");
+		Fam_Region_Descriptor *region = myFam-&gt;fam_lookup_region("myRegion");
 		
 		// allocate space for Fam_Stat structure.
 		Fam_Stat *info = (Fam_Stat *)calloc(1, sizeof(Fam_Stat));
-		myFam->fam_stat(region, info);
-		printf("Region_size: %lu\n", info->size);
+		myFam-&gt;fam_stat(region, info);
+		printf("Region_size: %lu\n", info-&gt;size);
 		
 		// Get a descriptor (created by another PE) via the metadata service
-		Fam_Descriptor *arrayDescriptor = myFam->fam_lookup("myArray", "myOtherRegion");
+		Fam_Descriptor *arrayDescriptor = myFam-&gt;fam_lookup("myArray", "myOtherRegion");
 		
 		// Get data item info
-		myFam->fam_stat(arrayDescriptor, info);
-		printf("array_size: %lu\n", info->size);
+		myFam-&gt;fam_stat(arrayDescriptor, info);
+		printf("array_size: %lu\n", info-&gt;size);
 		
 	} catch (Fam_Exception &amp;e) {
 		printf("Fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());

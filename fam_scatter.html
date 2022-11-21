@@ -222,9 +222,9 @@
 		elements.</p>
 	<h2>Example</h2>
 <pre>	
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -236,18 +236,18 @@ int main(void) {
 	try {
 		// look up the descriptor to a previously allocated data item
 		// (a 50-element integer array)
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 	
 		// local data
 		int local[] = {0,1,2,3,4};
 	
 		// scatter the data into myItem[1,3,5,7,9]
-		myFam->fam_scatter_blocking(local, descriptor, 5L, (uint64_t) 1, 2, sizeof(int));
+		myFam-&gt;fam_scatter_blocking(local, descriptor, 5L, (uint64_t) 1, 2, sizeof(int));
 	
 		// in addition, place them in myItem[10,17,13,15,16] respectively
 		uint64_t indexes[] = {10, 17, 13, 15, 16};
 		
-		myFam->fam_scatter_blocking(local, descriptor, 5L, indexes, sizeof(int));
+		myFam-&gt;fam_scatter_blocking(local, descriptor, 5L, indexes, sizeof(int));
 	
 		// ... we now have the correct elements in FAM
 		printf("fam_scatter successful. Correct elements are now in FAM.\n");

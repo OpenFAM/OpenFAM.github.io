@@ -172,16 +172,16 @@
 	<p>Note that the method is non-blocking: it returns after the backup
 		has been initiated, and does not wait for completion of the transfer.
 		Also note that <code>fam_backup()</code> performs an inconsistent backup, in that the
-		copied data may reflect updates that are performed concurrently with
+		backed up data may reflect updates that are performed concurrently with
 		the backup operation, rather than a point-in-time snapshot of the source
 		data item that is consistent as of the beginning of backup operation. If
 		the application desires a consistent backup, it is responsible for
-		coordinating PE activity during the backup.</p>
+		coordinating PE activity during the backup operation.</p>
 	<h2 id="e1">Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 	
@@ -192,7 +192,7 @@ int main(void) {
 
 	 try {
 		// look up the descriptor to a previously allocated (source) data item.
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 		
 		// name of backup for given data item.
 		char *backupName = (char *)malloc(FILE_MAX_LEN);
@@ -204,10 +204,10 @@ int main(void) {
 		
 
 		// Initiates backup of given data item and returns a waitObject to backup operation.
-		void *waitObj = myFam->fam_backup(descriptor, backupName, backupOptions);
+		void *waitObj = myFam-&gt;fam_backup(descriptor, backupName, backupOptions);
 	
 		// Wait for backup operation to complete.
-		myFam->fam_backup_wait(waitObj);
+		myFam-&gt;fam_backup_wait(waitObj);
 		printf("Backup of data item is successful\n");
 	 } catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());

@@ -130,9 +130,9 @@
 		processor to FAM.</p>
 	<h2>Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
  
@@ -142,27 +142,27 @@ int main(void) {
 	try {
 		// look up the descriptor to a previously allocated data item
 		// (a 50-element integer array)
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 		
 		// local data
 		int local[] = {0,1,2,3,4};
 		uint64_t indexes[] = {10, 17, 13, 15, 16};
 		
 		// scatter local data in myItem[10,17,13,15,16] respectively
-		myFam->fam_scatter_nonblocking(local, descriptor, 5, indexes, sizeof(int));
+		myFam-&gt;fam_scatter_nonblocking(local, descriptor, 5, indexes, sizeof(int));
 		
 		// check the number of pending I/O operations.
-		uint64_t pending_io = myFam->fam_progress();
-	        myFam->fam_quiet();	
+		uint64_t pending_io = myFam-&gt;fam_progress();
+	        myFam-&gt;fam_quiet();	
 		// look up the descriptor to a previously allocated completion flag
-		Fam_Descriptor *flagDescriptor = myFam->fam_lookup("completionFlag", "myRegion");
+		Fam_Descriptor *flagDescriptor = myFam-&gt;fam_lookup("completionFlag", "myRegion");
 		
 		// atomically set the completion flag in FAM
-		myFam->fam_set(flagDescriptor, 0, 1);
+		myFam-&gt;fam_set(flagDescriptor, 0, 1);
 		
 		// check the number of pending atomic operations.
-		uint64_t pending_atomic = myFam->fam_progress();
-	        myFam->fam_quiet();	
+		uint64_t pending_atomic = myFam-&gt;fam_progress();
+	        myFam-&gt;fam_quiet();	
 		
 		// we now have the correct items in FAM, and the completion flag has been set
 		

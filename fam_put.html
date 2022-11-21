@@ -182,9 +182,9 @@
 	<p>See notes for <a href="fam_get.html#e1">fam_get</a>.</p>
 	<h2>Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -194,14 +194,14 @@ int main(void) {
 	try {
 		// look up the descriptor to a previously allocated data item
 		// (a 50 element integer array)
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 		
 		// allocate an integer array and initialize it
 		int local[] = {0,1,2,3,4,5,6,7,8,9};
 		
 		// replace elements 6-15 of the data item in FAM with values in local memory
 
-		myFam->fam_put_blocking(local, descriptor, 6*sizeof(int), 10*sizeof(int));
+		myFam-&gt;fam_put_blocking(local, descriptor, 6*sizeof(int), 10*sizeof(int));
 
 		// ... we now have completed a copy from local memory to FAM
 		printf("Completed a copy from local memory to FAM\n");

@@ -138,9 +138,9 @@
 		methods is dependent on hardware support for the operations.</p>
 	<h2>Example</h2>
 <pre>
-	#include &lt;string.h>
-	#include &lt;fam/fam.h>
-	#include &lt;fam/fam_exception.h>
+	#include &lt;string.h&gt;
+	#include &lt;fam/fam.h&gt;
+	#include &lt;fam/fam_exception.h&gt;
 	using namespace std;
 	using namespace openfam;
 	
@@ -151,12 +151,12 @@
 		try {
 			// look up the descriptor to a previously allocated data item
 			// (an integer array with at least 10 elements)
-			Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+			Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 			
 			// Atomically replace a value of first integer element in the array
 			// with the Bitwise XOR of it and a value of 0x444
 			uint32_t value = 0x444;
-			uint32_t oldValue = myFam->fam_fetch_xor(descriptor, 0, value);
+			uint32_t oldValue = myFam-&gt;fam_fetch_xor(descriptor, 0, value);
 			
 			// The first integer in FAM is now bitwise XOR with a value of 0x444
 			printf("Old value of first integer element in FAM: %d\n", oldValue);

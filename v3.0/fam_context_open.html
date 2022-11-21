@@ -159,9 +159,9 @@
 	        </ul>
 	<h2>Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
  
@@ -171,27 +171,27 @@ int main(void) {
 	try {
 		// look up the descriptor to a previously allocated data item
 		// (a 50-element integer array)
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 		
 		// local data
 		uint64_t *local;
 		uint64_t *local2;
 
 		// look up the descriptor to a previously allocated completion flag
-		Fam_Descriptor *descriptor = myFam->fam_lookup("fam_context", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("fam_context", "myRegion");
 		
 		// Create a fam_context to enable separate tracking of completion for non-blocking calls. 
-		fam_context  *myFamCtx = myFam->fam_context_open();	
+		fam_context  *myFamCtx = myFam-&gt;fam_context_open();	
 		
-		myFamCtx->fam_get_nonblocking(local, descriptor, 6*sizeof(int),10*sizeof(int));
-		myFamCtx->fam_get_nonblocking(local2, descriptor, 26*sizeof(int),10*sizeof(int));
+		myFamCtx-&gt;fam_get_nonblocking(local, descriptor, 6*sizeof(int),10*sizeof(int));
+		myFamCtx-&gt;fam_get_nonblocking(local2, descriptor, 26*sizeof(int),10*sizeof(int));
        
 		// The quiet call on myFamCtx only waits for completion of calls from that context, 
 		// but not others made using the myFam object.
-		myFamCtx->fam_quiet();
+		myFamCtx-&gt;fam_quiet();
 		
 		// Close fam_context now to free resources underneath.
-		myFam->fam_context_close(myFamCtx);
+		myFam-&gt;fam_context_close(myFamCtx);
 
 		// ... subsequent code here
 	} catch (Fam_Exception &amp;e) {

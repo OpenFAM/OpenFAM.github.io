@@ -222,9 +222,9 @@
 		elements from within a single data item.</p>
 	<h2>Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -234,19 +234,19 @@ int main(void) {
 	// ... Initialization code here
 
 	try {
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 	
 		// allocate a 25-element integer array in local memory
 		int *local = (int *) malloc(25 * sizeof(int));
 	
 		// gather all odd elements from myItem into local memory
 		// first element is myItem[1]; collect 25 elements with stride 2
-		myFam->fam_gather_blocking(local, descriptor, 25, (uint64_t) 1, 2, sizeof(int));
+		myFam-&gt;fam_gather_blocking(local, descriptor, 25, (uint64_t) 1, 2, sizeof(int));
 	
 		// gather myItem[1,7,13,15,16]
 		int *indexedLocal = (int *) malloc(5 * sizeof(int));
 		uint64_t indexes[] = {1, 7, 13, 15, 16};
-		myFam->fam_gather_blocking(indexedLocal, descriptor, 5, indexes, sizeof(int));
+		myFam-&gt;fam_gather_blocking(indexedLocal, descriptor, 5, indexes, sizeof(int));
 	
 		// ... we now have the correct elements in local memory
 	 } catch (Fam_Exception &amp;e) {

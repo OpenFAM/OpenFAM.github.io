@@ -182,9 +182,9 @@
 	<p>Successful completion of a subsequent <code>fam_quiet()</code> call ensures the completion of this atomic operation.</p> 
 	<h2>Example</h2>
 <pre>
-#include &lt;string.h>
-#include &lt;fam/fam.h>
-#include &lt;fam/fam_exception.h>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
 using namespace std;
 using namespace openfam;
 
@@ -196,13 +196,13 @@ fam *myFam = new fam();
 	try {
 		// look up the descriptor to a previously allocated data item
 		// (an integer array with at least 10 elements)
-		Fam_Descriptor *descriptor = myFam->fam_lookup("myItem", "myRegion");
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 	
 		//Atomically set the value of first integer element in the array
-		myFam->fam_set(descriptor, 0, 10);
+		myFam-&gt;fam_set(descriptor, 0, 10);
 	
 		// ensure that the set operation is complete
-		myFam->fam_quiet();
+		myFam-&gt;fam_quiet();
 	
 		// we now have the set the first integer in FAM to value of 10
 	
