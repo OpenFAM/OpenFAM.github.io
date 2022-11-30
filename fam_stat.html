@@ -158,7 +158,7 @@ typedef struct {
 			<tr><td class="code">interleaveSize</td><td>data item interleaving size used for a given region.</td>
 				<td>none</td>
 			</tr>
-			<tr><td class="code">memory_servers</td><td>List of memory servers used for a given data item allocation. The list is ordered such that data item offset will be obtained as a multiple of list_element_index and interleaveSize. If  the dataitem goes beyond available memory servers, the allocation is done again from the beginning of list. In that case dataitem offset calculation on any memory server can be obtained as a multiple of (list_element_index * intereleaveSize) % num_memservers, added with (num_memservers * interleaveSize), each time we rollback to the beginning of list. </td>
+			<tr><td class="code">memory_servers</td><td>List of memory servers used for a given data item allocation. The list is ordered such that data item offset will be obtained as a multiple of list_element_index and interleaveSize. If  the data item goes beyond available memory servers, the allocation is done again from the beginning of list. In that case data item offset calculation on any memory server can be obtained as a multiple of (list_element_index * intereleaveSize) % num_memservers, added with (num_memservers * interleaveSize), each time we rollback to the beginning of list. </td>
 				<td>none</td>
 			</tr>
 		</tbody>

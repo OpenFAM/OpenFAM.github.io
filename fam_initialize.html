@@ -152,7 +152,7 @@ typedef struct {
 				<td>"127.0.0.1"</td>
 			</tr>
 			<tr><td class="code">grpcPort</td><td>Port to be used by OpenFam client interface service operations.</td><td>"8787"</td></tr>
-			<tr><td class="code">libfabricProvider</td><td>Libfabric provider to be used by OpenFam libfabric datapath
+			<tr><td class="code">libfabricProvider</td><td>Libfabric provider to be used by OpenFam libfabric data path
 						operations. The supported options are "sockets", "verbs;ofi_rxm" and "psm2".</td>
 				<td>"sockets"</td>
 			</tr>
@@ -257,7 +257,7 @@ typedef struct {
 		the runtime via environment variables.</p>
 	<p>The following options are not supported in current
 		implementation and should always be set to zero to use the default
-		values.<div class="code"> defaultRegionName, famThreadModel and famContextModel</div>.
+		values.<div class="code"> defaultRegionName and famContextModel</div>.
 	<p>Alternatively, the application can pass these options using configuration files. See <a href="config_files.html">Configuration Files</a> for details.
 		However, <code>fam_initialize()</code> routine will give precedence to the options passed as <code>Fam_Options</code> argument over the options present in configuration files. </p>
 	<h2 id="e1">Example</h2>
