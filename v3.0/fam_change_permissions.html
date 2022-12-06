@@ -164,7 +164,7 @@ int main(void) {
 		// make the item read-only (0400) to prevent further change by
 		// subsequent programs
 		myFam-&gt;fam_change_permissions(descriptor, 0400);
-		printf("Successully changed permission from 0600 to 0400\n");	
+		printf("Successfully changed permission from 0600 to 0400\n");	
 	} catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
 	}

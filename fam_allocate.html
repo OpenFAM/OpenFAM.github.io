@@ -187,11 +187,11 @@ int main(void) {
 		// (read/write by owner) permissions in myRegion
 		Fam_Descriptor *descriptor = myFam-&gt;fam_allocate((uint64_t)(50 * sizeof(int)), 0600, region);
 
-		printf("Successully allocated 50 unnamed integer elements\n");
+		printf("Successfully allocated 50 unnamed integer elements\n");
 
 		// free allocated space in FAM
 		myFam-&gt;fam_deallocate(descriptor);
-		printf("Successully de-allocated 50 unnamed integer elements\n");
+		printf("Successfully de-allocated 50 unnamed integer elements\n");
 	} catch (Fam_Exception &amp;e) {
 		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
 	 }
