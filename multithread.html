@@ -107,7 +107,9 @@
 OpenFAM 2.0 provides a basic threading and context framework for invoking the data path APIs. All the data path APIs use a single communication context there by restricting the grouping of I/O operation to a single context group. Hence fam_quiet invoked by the application will enforce completion of all the operations invoked from the fam object. Though application may be multi-threaded and share the fam object across multiple threads, it is the applications responsibility to serialize all the OpenFAM APIs from different threads. This thread model does not allow application to optimally utilize cpu and network resources available on the compute node.
 In order to address these issues to an extent, a concept of user-specific thread model has been added in OpenFAM 3.0.
 <br>
+<br>
 Now OpenFAM supports following threading models:
+<br>
 <li><b>FAM_THREAD_SERIALIZE</b>
 <ul>	
 <li>	Program may be multi-threaded</li>
