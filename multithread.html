@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>				
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+                                <li><a href="fam_backup.html">fam_backup</a></li>
+				<li><a href="fam_backup_wait.html">fam_backup_wait</a></li>
+				<li><a href="fam_restore.html">fam_restore</a></li>
+				<li><a href="fam_restore_wait.html">fam_restore_wait</a></li>
+				<li><a href="fam_delete_backup.html">fam_delete_backup</a></li>
+				<li><a href="fam_delete_backup_wait.html">fam_delete_backup_wait</a></li>
+
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+				<li><a href="fam_progress.html">fam_progress</a></li>
+				<li><a href="fam_context_open.html">fam_context_open</a></li>
+				<li><a href="fam_context_close.html">fam_context_close</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+<h1>OPENFAM MULTI-THREADED & CONTEXT MODEL</h1>
+OpenFAM 2.0 provides a basic threading and context framework for invoking the data path APIs. All the data path APIs use a single communication context there by restricting the grouping of I/O operation to a single context group. Hence fam_quiet invoked by the application will enforce completion of all the operations invoked from the fam object. Though application may be multi-threaded and share the fam object across multiple threads, it is the applications responsibility to serialize all the OpenFAM APIs from different threads. This thread model does not allow application to optimally utilize cpu and network resources available on the compute node.
+In order to address these issues to an extent, a concept of user-specific thread model has been added in OpenFAM 3.0.
+<br>
+<br>
+Now OpenFAM supports following threading models:
+<br>
+<li><b>FAM_THREAD_SERIALIZE</b>
+<ul>	
+<li>	Program may be multi-threaded</li>
+<li>	No concurrent invocation of OpenFAM APIs by multiple threads</li>
+<li>	Quiet will enforce completion of all the operations invoked from all the threads.</li>
+</ul>
+<li><b>FAM_THREAD_MULTIPLE</b>
+<ul>	
+<li>	Program may be multi-threaded</li>
+<li>	Any thread may invoke OpenFAM APIs</li>
+<li>	Quiet will enforce completion of all the operations invoked from all thread.</li>
+</ul>
+<br>
+To open and close of user specific contexts two new API’s - fam_context_open and fam_context_close has been added.
+<ul>
+	<li><i>	fam_ctx* fam->fam_context_open()</i></li>
+        <li><i> void fam->fam_context_close(fam_ctx*)</i></li>
+</ul>	
+fam_context_open returns a user specific FAM context object. OpenFAM API’s can be invoked from the fam_context object too. All OpenFAM API invoked from this FAM context object will be grouped together for completion. Quiet invoked from a FAM context object will enforce completion of all operations invoked from the FAM context object. Application can use both FAM context object and FAM object in the application, however OpenFAM APIs invoked from these objects are tracked using separate contexts. Only data path APIs can be invoked from FAM context object
+<br>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2021-22, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+                                <li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+                                <li><a href="fam_backup.html">fam_backup</a></li>
+                                <li><a href="fam_backup_wait.html">fam_backup_wait</a></li>
+				<li><a href="fam_restore.html">fam_restore</a></li>
+				<li><a href="fam_restore_wait.html">fam_restore_wait</a></li>
+                                <li><a href="fam_delete_backup.html">fam_delete_backup</a></li>
+                                <li><a href="fam_delete_backup_wait.html">fam_delete_backup_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+                                <li><a href="fam_progress.html">fam_progress</a></li>
+                                <li><a href="fam_context_open.html">fam_context_open</a></li>
+                                <li><a href="fam_context_close.html">fam_context_close</a></li>
+			</ul>
+			<hr>
+		</nav>
+		<article>
+			<h1 class="code">openfam::fam::fam_restore</h1>
+	<p>restore data from archival storage to a FAM-resident data item .</p>
+	<h2>Synopsis</h2>
+	<p class="code">void *fam_restore(const char *BackupName, Fam_Descriptor *dest);</p>	
+	<p class="code"> OR </p>
+	<p class="code">void *fam_restore(const char *BackupName, Fam_Region_Descriptor *destRegion,
+                      const char *dataitemName, mode_t accessPermissions,
+                      Fam_Descriptor **dest);</p>
+	<h2>Description</h2>
+	<p>Initiates a restore operation of data from an archival storage to a FAM-resident data item.
+	User can either specify the data item in which the data has to be restored using 1st Option or 
+	can request for creation of data item of a given name in a given region, for given set of 
+	permissions as in 2nd Option.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr>
+				<th>
+					Name
+				</th>
+				<th>
+					Description
+				</th>
+			</tr>
+			<tr>
+				<td class="code">
+					BackupName
+				</td>
+				<td>
+					Name of the backup.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					dest
+				</td>
+				<td>
+					Descriptor associated with the destination data item in FAM.
+				</td>
+			</tr>				
+			<tr>
+				<td class="code">
+					destRegion
+				</td>
+				<td>
+					Region where the destination data item has to be created.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					dataitemName
+				</td>				
+				<td>
+					Name of the destination data item to be created in FAM in which data has to be restored.
+				</td>
+			</tr>			
+			<tr>
+				<td class="code">
+					accessPermissions
+				</td>				
+				<td>
+					access permissions of the destination data item to be created in FAM in which data has to be restored.
+				</td>
+			</tr>			
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>Returns a pointer to the wait object for the restore operation.
+		This object can be used to wait for the completion of the restore operation.
+		Throws <code>Fam_Exception</code> on error.</p>
+	<h2>Fam Error Numbers</h2>
+	<table>
+	<tbody>
+	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_OUTOFRANGE</td><td>Data access out of range.</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
+	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
+	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
+	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
+	<tr><td class="code">FAM_BACKUP_NOTFOUND</td><td>Given BackupName does not exist or cannot be opened due to insufficient permissions.</td></tr>
+	</tbody>
+	</table>
+	<h2>Notes</h2>
+	<p>Note that the method is non-blocking: it returns after the restore
+		has been initiated, and does not wait for completion of the transfer.
+		Also note that <code>fam_restore()</code> performs an inconsistent restore, in that the
+		restored data may reflect updates that are performed concurrently with
+		the restore operation, rather than a point-in-time snapshot of the destination
+		data item that is consistent as of the beginning of restore operation. If
+		the application desires a consistent restore, it is responsible for
+		coordinating PE activity during the restore operation.</p>
+	<h2 id="e1">Example</h2>
+<pre>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
+using namespace std;
+using namespace openfam;
+	
+int main(void) {
+	fam *myFam = new fam();
+	
+	// ... Initialization code here
+
+	 try {
+		// look up the descriptor to a previously allocated (source) data item.
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
+		
+		// name of restore for given data item.
+		char *backupName = (char *)malloc(FILE_MAX_LEN);
+		sprintf(backupName, "%s.%s", "myRegion", "myItem");
+
+		// initiates restore APIs and returns a waitObject to restore operation.
+		void *waitObj = myFam-&gt;fam_restore(backupName, descriptor);
+	
+		// Wait for restore operation to complete.
+		myFam-&gt;fam_restore_wait(waitObj);
+		printf("restore of data item is successful\n");
+	 } catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	 }
+	
+	 // ... subsequent code here
+}
+
+OR
+
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
+using namespace std;
+using namespace openfam;
+	
+int main(void) {
+	fam *myFam = new fam();
+	perm_t perm = 0777;
+	// ... Initialization code here
+
+	 try {
+        Fam_Region_Descriptor *desc = myFam-&gt;fam_lookup("myRegion");
+	 
+		// name of restore for given data item.
+		char *backupName = (char *)malloc(FILE_MAX_LEN);
+		sprintf(backupName, "%s.%s", "myRegion", "myItem");
+
+		// initiates restore APIs and returns a waitObject to restore operation.
+		void *waitObj = myFam-&gt;fam_restore(backupName, desc, "secondDI", perm,descriptor);
+	
+		// Wait for restore operation to complete.
+		myFam-&gt;fam_restore_wait(waitObj);
+		printf("restore of data item is successful\n");
+	 } catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	 }
+	
+	 // ... subsequent code here
+}
+
+</pre>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2022, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>
