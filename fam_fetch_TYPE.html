@@ -188,8 +188,7 @@ int main(void) {
 		// look up the descriptor to a previously allocated data item
 		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 	
-		// Atomically replace a value of first integer element in the array
-		// with the Bitwise XOR of it and a value of 0x444
+		// Fetching int32 value from offset 0 using FAM descriptor 
 		uint32_t value = myFam-&gt;fam_fetch_int32(descriptor, 0);
 
 		// The first integer in FAM is in local variable value
