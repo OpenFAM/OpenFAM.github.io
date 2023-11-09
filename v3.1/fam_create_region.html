@@ -150,7 +150,7 @@
 					regionAttributes
 				</td>
 				<td>
-					Is a structure that holds region attributes like:
+					Is a structure that holds region attributes such as:
 				
 				<p>					
 					•	<b>redundancyLevel</b> represents the redundancy level for the data items within the region. The supported values for redundancyLevel are: {DEFAULT, NONE, RAID1, RAID5} . The current DEFAULT is NONE.
@@ -162,7 +162,7 @@
 					•	<b>interleaveEnable</b> denotes if data item interleaving is enabled for the region. The supported values are: {DEFAULT, ENABLE, DISABLE}. A value of DISABLE implies that data items within the region are not interleaved across memory servers, and each data item is hosted within a single memory server (subject to redundancyLevel). A value of ENABLE indicates data item interleaving is enabled, and data items are striped across memory servers using a system-defined interleave block size. The current DEFAULT value is ENABLE.
 				</p>			
 				<p>
-					•	<b>permissionLevel</b> attribute signifies the permission level of the data items allocated in the region. The supported values are: {DEFAULT, REGION, DATAITEM}. A value of REGION implies that the data items allocated within the region inherit the permission from the region. A value of DATAITEM indicates that the data items allocated within the region can have different permission to that of the region. permissionLevel attribute is also tied with the underlying memory registration strategy. If permissionLevel is REGION, the entire region memory is registered for RMA operation during region creation. But, if the value is DATAITEM, individual data item memory is registered at the time of allocation of that data item. The current DEFAULT value is REGION. 
+					•	<b>permissionLevel</b> attribute signifies the permission level of the data items allocated in the region. The supported values are: {DEFAULT, REGION, DATAITEM}. A value of REGION implies that the data items allocated within the region inherit the permission from the region. A value of DATAITEM indicates that the data items allocated within the region can have different permission than that of the region. permissionLevel attribute is also tied with the underlying memory registration strategy. If permissionLevel is REGION, the entire region memory is registered for RMA operation during region creation. But, if the value is DATAITEM, individual data item memory is registered at the time of allocation of that data item. The current DEFAULT value is REGION. 
 				</p>			
 				</td>
 			</tr>

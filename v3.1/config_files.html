@@ -124,6 +124,10 @@ These configuration files contain the following options.
 		<td>Metadata server interface type used by OpenFAM. Default value is "direct". Other option is "rpc".
 		</td>
 	</tr>
+	<tr><td class="code">rpc_interface</td>
+		<td> IP address/hostname of Client Interface Service, followed by port number.
+		</td>
+	</tr>
 	<tr><td class="code">memsrv_list</td>
 		<td>List of memory servers. Applicable only if memsrv_interface_type is rpc. Each list entry is given
 		in this format:<p> &lt;memsrv_id&gt;:&lt;host_address&gt;:&lt;port_no&gt;
@@ -135,11 +139,11 @@ These configuration files contain the following options.
 		</td>
 	</tr>
 	<tr><td class="code">rpc_framework_type</td>
-		<td> Since OpenFAM 3.1, the control path operations can also leverage thallium libraries instead of grpc. Default value is "grpc". other option is "thallium".
+		<td> The control path operations can leverage thallium libraries instead of grpc. Default value is "grpc". Other option is "thallium".
 		</td>
 	</tr>
 	<tr><td class="code">provider</td>
-		<td> Since OpenFAM 3.1, the control path operations can also leverage thallium libraries instead of grpc. If "thallium" option is chosen for rpc_frameowrk_type, it is essential to provide provider details. Default value is "cxi". Other option is "sockets".
+		<td> If "thallium" option is chosen for rpc_framework_type, it is essential to provide details of provider. Default value is "cxi". Other option is "sockets".
 		</td>
 	</tr>
 </tbody>
@@ -175,7 +179,7 @@ These configuration files contain the following options.
 		Default value is config file location.		
 		</td>
 	</tr>
-	<tr><td class="code">type</td>
+	<tr><td class="code">memory_type</td>
 		<td> Type of memory used by the memory server to host FAM.
 		Options are "volatile" or "persistent".
 		Default value is "volatile".		
@@ -191,9 +195,9 @@ These configuration files contain the following options.
 		Default value is an "127.0.0.1:8789".		
 		</td>
 	</tr>
-	<tr><td class="code">fam_path</td>
-		<td> Absolute path to the NVMM data files used by the memory server.
-		Default value is an empty string.		
+	<tr><td class="code">resource_release</td>
+		<td> This option is to enable or disable resource relinquishment in FAM.
+		Default value is "enable".		
 		</td>
 	</tr>
 	<tr><td class="code">libfabric_port</td>
@@ -205,11 +209,11 @@ These configuration files contain the following options.
 		</td>
 	</tr>
 	<tr><td class="code">rpc_framework_type</td>
-		<td> Since OpenFAM 3.1, the control path operations can also leverage thallium libraries instead of grpc. Default value is "grpc". other option is "thallium".
+		<td> The control path operations can leverage thallium libraries instead of grpc. Default value is "grpc". Other option is "thallium".
 		</td>
 	</tr>
 	<tr><td class="code">provider</td>
-		<td> Since OpenFAM 3.1, the control path operations can also leverage thallium libraries instead of grpc. If "thallium" option is chosen for rpc_frameowrk_type, it is essential to provide provider details. Default value is "cxi". Other option is "sockets".
+		<td> The control path operations can leverage thallium libraries instead of grpc. If "thallium" option is chosen for rpc_framework_type, it is essential to provide provider details. Default value is "cxi". Other option is "sockets".
 		</td>
 	</tr>
 	</tr>
@@ -235,6 +239,17 @@ These configuration files contain the following options.
 	<tr><td class="code">region_span_size_per_memoryserver</td>
 		<td> Region size per memory server (Bytes). Used only if region spanning is enabled.
 		Default value is 1073741824.
+		</td>
+	</tr>
+	<tr><td class="code">dataitem_interleave_size</td>
+		<td>  Data interleaving refers to interspersing portions of the data across the memory servers in some specified order or other arrangement. dataitem_interleave_size decides the number of bytes after which data item needs to be striped so that it gets distributed across several memory servers. Default value is "1048576".</td>
+	</tr>
+	<tr><td class="code">rpc_framework_type</td>
+		<td> The control path operations can leverage thallium libraries instead of grpc. Default value is "grpc". other option is "thallium".
+		</td>
+	</tr>
+	<tr><td class="code">provider</td>
+		<td> If "thallium" option is chosen for rpc_framework_type, it is essential to provide provider details. Default value is "cxi". Other option is "sockets".
 		</td>
 	</tr>
 </tbody>
@@ -266,11 +281,15 @@ These configuration files contain the following options.
 		</td>
 	</tr>
 	<tr><td class="code">rpc_framework_type</td>
-		<td> Since OpenFAM 3.1, the control path operations can also leverage thallium libraries instead of grpc. Default value is "grpc". other option is "thallium".
+		<td> The control path operations can also leverage thallium libraries instead of grpc. Default value is "grpc". other option is "thallium".
 		</td>
 	</tr>
-	<tr><td class="code">provider</td>
-		<td> Since OpenFAM 3.1, the control path operations can also leverage thallium libraries instead of grpc. If "thallium" option is chosen for rpc_frameowrk_type, it is essential to provide provider details. Default value is "cxi". Other option is "sockets".
+	<tr><td class="code">openfam_model</td>
+		<td> Openfam_model specifies if memory servers are resident in same nodes as clients (shared_memory mode) or distributed across nodes other than client. Default value is "memory_server". Other option is "shared_memory".
+		</td>
+	</tr>
+	<tr><td class="code">resource_release</td>
+		<td> This option is to enable or disable resource relinquishment in FAM. Default value is "enable". Other option is "disable".
 		</td>
 	</tr>
 </tbody>
@@ -283,9 +302,9 @@ by <code>OPENFAM_ROOT</code> environment variable.</p>
 <p> User needs to update this environment variable to select config folder created by them.</p>
 <p> A tool by name <code>openfam_adm</code> has been introduced which helps to perform the basic tasks useful to an OpenFAM user such as </p>
 <ol>
-<li>creating configuration files, </li>
-<li>starting OpenFAM services, </li>
-<li>terminating OpenFAM services,</li>
+<li>creating configuration files </li>
+<li>starting OpenFAM services </li>
+<li>terminating OpenFAM services</li>
 <li>running tests and </li>
 <li>cleanup FAM and metadata. </li>
 </ol>
