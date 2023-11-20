@@ -138,6 +138,8 @@ typedef struct {
 	char *runtime;
 	char *fam_default_memory_type;
 	char *if_device;
+        void *local_buf_addr;
+        uint64_t local_buf_size;
 } Fam_Options;
 	</pre>
 	<table>
@@ -231,6 +233,27 @@ typedef struct {
 				<td>
 					"ib0" for infiniband,  "cxi0" for cxi device.
 				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					local_buf_addr	
+				</td>
+				<td>
+					Local buffer address to be registered via client for better performance.	
+				</td>
+				<td>
+					NA
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					local_buf_size
+				</td>
+				<td>
+					Local buffer size is the size of local buffer to be registered via client.	
+				</td>
+				<td>
+				        NA					</td>
 			</tr>
 		</tbody>
 	</table>
