@@ -44,7 +44,6 @@
 				<li><a href="fam_allocate.html">fam_allocate</a></li>
 				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
 				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
-				<li><a href="fam_close.html">fam_close</a></li>
 			</ul>
 			<hr>
 			Memory Map
@@ -61,12 +60,13 @@
 				<li><a href="fam_scatter.html">fam_scatter</a></li>
                                 <li><a href="fam_copy.html">fam_copy</a></li>
                                 <li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
-                                <li><a href="fam_backup.html">fam_backup</a></li>
-                                <li><a href="fam_backup_wait.html">fam_backup_wait</a></li>
+				<li><a href="fam_backup.html">fam_backup</a></li>
+				<li><a href="fam_backup_wait.html">fam_backup_wait</a></li>
                                 <li><a href="fam_restore.html">fam_restore</a></li>
                                 <li><a href="fam_restore_wait.html">fam_restore_wait</a></li>
-				<li><a href="fam_delete_backup.html">fam_delete_backup</a></li>
-				<li><a href="fam_delete_backup_wait.html">fam_delete_backup_wait</a></li>
+                                <li><a href="fam_delete_backup.html">fam_delete_backup</a></li>
+                                <li><a href="fam_delete_backup_wait.html">fam_delete_backup_wait</a></li>
+
 			</ul>
 			<hr>
 			Atomics
@@ -99,16 +99,18 @@
                                 <li><a href="fam_progress.html">fam_progress</a></li>
                                 <li><a href="fam_context_open.html">fam_context_open</a></li>
                                 <li><a href="fam_context_close.html">fam_context_close</a></li>
+
 			</ul>
 			<hr>
 		</nav>
 		<article>
-			<h1 class="code">openfam::fam::fam_delete_backup_wait</h1>
-	<p>Wait for the delete of backup to be completed.</p>
+			<h1 class="code">openfam::fam::fam_backup</h1>
+	<p>backup data from one FAM-resident data item to another FAM-resident data item.</p>
 	<h2>Synopsis</h2>
-	<p class="code">void fam_delete_backup_wait(void *waitObj);</p>
+	<p class="code">void *fam_backup(Fam_Descriptor *src, const char *BackupName,
+                     Fam_Backup_Options *backupOptions);</p>
 	<h2>Description</h2>
-	<p>The method blocks until the backup deletion associated with the wait object is completed.</p>
+	<p>Initiates a backup operation of data from a FAM-resident data item to an archival storage.</p>
 	<h2>Input Arguments</h2>
 	<table>
 		<tbody>
@@ -116,42 +118,108 @@
 				<th>
 					Name
 				</th>
-				<td>
+				<th>
 					Description
+				</th>
+			</tr>
+			<tr>
+				<td class="code">
+					src
+				</td>
+				<td>
+					Descriptor associated with the source data item in FAM.
 				</td>
 			</tr>
 			<tr>
 				<td class="code">
-					waitObj
+					BackupName
 				</td>
 				<td>
-					A pointer to the wait object associated with the delete_backup
-						operation
+					Name of the backup.
+				</td>
+			</tr>
+			<tr>
+				<td class="code">
+					backupOptions
+				</td>
+				<td>
+					backup related info like retention period, etc.
 				</td>
 			</tr>
 		</tbody>
 	</table>
 	<h2>Return Values</h2>
-	<p>None. Throws <code>Fam_Exception</code> on error.</p>
-	<h2>Fam error numbers</h2>
+	<p>Returns a pointer to the wait object for the backup operation.
+		This object can be used to wait for the completion of the backup operation.
+		Throws <code>Fam_Exception</code> on error.</p>
+	<h2>Fam Error Numbers</h2>
 	<table>
 	<tbody>
 	<tr><th>Error</th><th>Description</th></tr>
 	<tr><td class="code">FAM_ERR_INVALID</td><td>API called with incorrect parameters.</td></tr>
 	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_OUTOFRANGE</td><td>Data access out of range.</td></tr>
 	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
 	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
+	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
+	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
+	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
+	<tr><td class="code">FAM_BACKUP_NOT_CREATED</td><td>Backup creation failed.</td></tr>
 	</tbody>
 	</table>
 	<h2>Notes</h2>
-	<p>None.</p>
-	<h2>Example</h2>
-	<p>See <a href="fam_delete_backup.html#e1">fam_delete_backup</a></p>
+	<p>Note that the method is non-blocking: it returns after the backup
+		has been initiated, and does not wait for completion of the transfer.
+		Also note that <code>fam_backup()</code> performs an inconsistent backup, in that the
+		backed up data may reflect updates that are performed concurrently with
+		the backup operation, rather than a point-in-time snapshot of the source
+		data item that is consistent as of the beginning of backup operation. If
+		the application desires a consistent backup, it is responsible for
+		coordinating PE activity during the backup operation.</p>
+	<h2 id="e1">Example</h2>
+<pre>
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
+using namespace std;
+using namespace openfam;
+	
+int main(void) {
+	fam *myFam = new fam();
+	
+	// ... Initialization code here
+
+	 try {
+		// look up the descriptor to a previously allocated (source) data item.
+		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
+		
+		// name of backup for given data item.
+		char *backupName = (char *)malloc(FILE_MAX_LEN);
+		sprintf(backupName, "%s.%s", "myRegion", "myItem");
+		
+		// Backup options, if any, can be provided here.
+		Fam_Backup_Options *backupOptions =
+		(Fam_Backup_Options *)malloc(sizeof(Fam_Backup_Options));
+		
+
+		// Initiates backup of given data item and returns a waitObject to backup operation.
+		void *waitObj = myFam-&gt;fam_backup(descriptor, backupName, backupOptions);
+	
+		// Wait for backup operation to complete.
+		myFam-&gt;fam_backup_wait(waitObj);
+		printf("Backup of data item is successful\n");
+	 } catch (Fam_Exception &amp;e) {
+		printf("fam API failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	 }
+	
+	 // ... subsequent code here
+}
+</pre>
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2022-23, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2022, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>
