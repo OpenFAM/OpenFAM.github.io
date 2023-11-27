@@ -44,6 +44,7 @@
 				<li><a href="fam_allocate.html">fam_allocate</a></li>
 				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
 				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+				<li><a href="fam_close.html">fam_close</a></li>
 			</ul>
 			<hr>
 			Memory Map
@@ -119,8 +120,8 @@ The current version of OpenFAM is 3.1. It contains the following changes and enh
 <li>
 OpenFAM APIs changes:
 <ul>
-<li>fam_create_region API has been modified. A new region specific attribute called permissionLevel has been added to a structure called Fam_Region_Attributes. See fam_create_region.html API for more details.</li>
-<li>A new API by name fam_close has been added. This API reduces the reference count of the region within which the data item represented by the descriptor is allocated. OpenFAM internally uses this reference count for optimal usage of resources. This API helps to release unused resources back to the system. See fam_close API for more details.</li>
+<li>fam_create_region API has been modified. A new region specific attribute called permissionLevel has been added to a structure called Fam_Region_Attributes. See  <a href="fam_create_region.html"> fam_create_region</a> API for more details.</li>
+<li>A new API by name fam_close has been added. This API reduces the reference count of the region within which the data item represented by the descriptor is allocated. OpenFAM internally uses this reference count for optimal usage of resources. This API helps to release unused resources back to the system. See  <a href="fam_close.html"> fam_close</a> API for more details.</li>
 </ul>
 </ul>
 OpenFAM version 3.0 (release v3.0.0)

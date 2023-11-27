@@ -130,7 +130,153 @@ the CIS communicates with memory servers via an RPC service or via direct functi
 </dl>
 The services communicate with one another using grpc calls. However, as an optimization, if the components are compiled into the same executable, they bypass grpc and use direct function calls for communication.
 Yaml-based configuration files determine how the services are configured.  
-<p>See configuration and startup of OpenFAM 3.1 services in the <a href="config_files.html">Configuration Files</a> section.</p>
+<h1>Starting Services</h1>
+<p> All the services and the PE read the respective configuration file from "config" directory placed at the path mentioned
+by <code>OPENFAM_ROOT</code> environment variable.</p>
+<p> Or by default, <code>OPENFAM_ROOT</code> will be <code>/opt/hpe/OpenFAM</code>.</p>
+<p> User needs to update this environment variable to select config folder created by them.</p>
+<p> A tool by name <code>openfam_adm</code> has been introduced which helps to perform the basic tasks useful to an OpenFAM user such as </p>
+<ol>
+<li>creating configuration files </li>
+<li>starting OpenFAM services </li>
+<li>terminating OpenFAM services</li>
+<li>running tests and </li>
+<li>cleanup FAM and metadata. </li>
+</ol>
+<p>To access the tool, the openfam module must be loaded. That can be done using following command: </p>
+
+<code>module load openfam</code>
+
+<p>The detailed description and available options are given below.</p>
+<p>The details of available command line options can be found using <code>-h</code> option of each of the service executable.
+For Example:</p>
+<pre>#<text style="background-color:LightGrey;">openfam_adm -h</text>
+Usage :
+       openfam_adm [-h] [--create_config_files] [--start_service]
+                                    [--stop_service] [--clean] [--install_path]
+                                    [--config_file_path] [--launcher]
+                                    [--global_launcher_options] [--cisinterface]
+                                    [--memserverinterface] [--metaserverinterface]
+                                    [--cisserver id:{comma separated attributes}]
+                                    [--memservers  id:{comma seperated attributes}]
+                                    [--metaservers  id:{comma seperated attributes}]
+                                    [--test_args] [--model] [--thrdmodel] [--provider]
+                                    [--provider] [--runtime] [--kvstype]
+                                    [--libfabricport] [--metapath] [--fampath]
+                                    [--fam_backup_path] [--atlthreads] [--atlqsize]
+                                    [--atldatasize] [--disableregionspanning]
+                                    [--regionspanningsize] [--interleaveblocksize]
+                                    [--runtests] [--sleep] [--rpc_framework]
+                                    [--disable_resource_release]
+
+Options :
+       optional arguments:
+         -h, --help            show this help message and exit
+         --create_config_files
+                               Generates all configuration files
+         --start_service       Start all OpenFAM services
+         --stop_service        Stop all OpenFAM services
+         --clean               Clean all FAMs and Metadata
+         --install_path        Path to OpenFAM installation dir
+         --config_file_path    Path to create configuration files
+         --launcher            Launcher to be used to launch processes(mpi/slurm)
+         --global_launcher_options
+                               Launcher command options which can be used commonly
+                               across all services. Specify all options within
+                               quotes(") eg : --global_launcher_options="-N" "1" "--
+                               mpi=pmix"
+         --cisinterface        CIS interface type(rpc/direct)
+         --memserverinterface
+                               Memory Service interface type(rpc/direct)
+         --metaserverinterface
+                               Metadata Service interface type(rpc/direct)
+         --cisserver           CIS parameters, eg : ,0:{rpc_interface:127.0.0.1,rpc_p
+                               ort:8795,launcher_options: "-n" "1"}. Note : Specify
+                               all launcher options within quotes(") eg :
+                               launcher_options:"-N" "1" "--mpi=pmix"
+         --memservers  id:{comma seperated attributes}
+                               Add a new memory server, eg : 0:{memory_type:volatile,
+                               fam_path:/dev/shm/vol/,rpc_interface:127.0.0.1,rpc_por
+                               t:8795,libfabric_port:7500,if_device:eth0,launcher_opt
+                               ions: '-n' '1'}. Note : Specify all launcher options
+                               within quotes(") eg : launcher_options: "-N" "1" "--
+                               mpi=pmix"
+         --metaservers  id:{comma seperated attributes}
+                               Add a metadata server, eg : 0:{rpc_interface:127.0.0.1
+                               ,rpc_port:8795,launcher_options: '-n' '1'}. Note :
+                               Specify all launcher options within quotes(") eg :
+                               launcher_options: "-N" "1" "--mpi=pmix"
+         --test_args           Test configuration parameters, eg :
+                               ,0:{num_pes:1,launcher_options: '-n' '1'}. Note :
+                               Specify all launcher options within quotes(") eg :
+                               launcher_options: "-N" "1" "--mpi=pmix"
+         --model               OpenFAM model(memory_server/shared_memory)
+         --thrdmodel           Thread model(single/multiple)
+         --provider            Libfabric provider to be used for data path operations
+         --runtime             Runtime process management interface(PMI) to be used
+         --kvstype             Type of key value store to be used for metadata
+                               management
+         --libfabricport       Libafabric port for data path operation
+         --metapath            path to store metadata
+         --fampath             path where data is stored
+         --fam_backup_path     path where data backup is stored(on shared filesystem)
+         --atlthreads          Atomic library threads count
+         --atlqsize            ATL queue size
+         --atldatasize         ATL data size per thread(MiB)
+         --disableregionspanning
+                               Disable region spanning
+         --regionspanningsize
+                               Region spanning size
+         --interleaveblocksize
+                               Dataitem interleave block size
+         --runtests            Run regression and unit tests
+         --sleep               Number of seconds to sleep
+         --rpc_framework       RPC Framework type(grpc/thallium)
+         --disable_resource_release
+                               Disable the resource relinquishment in FAM
+
+
+For Example, following commands are primarily used to create configuration files, start/stop OpenFAM services and cleanup the FAM and metadata:
+
+       - Generate Configuration Files (Only one time step)
+
+       $openfam_adm @arg_file --create_config_files --config_file_path=/path/to/generate/config/files
+
+       Content of sample "arg_file" :
+         --launcher=slurm
+         --model=memory_server
+         --cisinterface=rpc
+         --memserverinterface=rpc
+         --metaserverinterface=rpc
+         --provider=cxi
+         --cisserver={rpc_interface:node1,rpc_port:8787}
+         --memservers=0:{memory_type:volatile,fam_path:/dev/shm/vol,rpc_interface:node2,rpc_port:8793,libfab-
+       ric_port:7500,if_device:eth0}
+         --metaservers=0:{rpc_interface:node3,rpc_port:8788}
+         --global_launcher_options="-p" "nodes" "--mpi=pmix"
+
+       - Export path of config files dir
+
+       $export OPENFAM_ROOT=/path/to/generate/config/files
+
+       - Start/Stop OpenFAM Services
+
+       $openfam_adm --start_service
+
+       - Stop OpenFAM Services
+
+       $openfam_adm --stop_service
+
+       - Cleanup
+
+       $openfam_adm --clean
+
+
+</pre>
+<p>The configuration options passed to the services using command line arguments take precedence over
+the options present in the respective configuration files.</p>
+<p>Similarly, for the PE, configuration options passed using <code>Fam_Options</code> argument of <a href="fam_initialize.html">fam_initialize</a> API take precedence
+over the options present in <code>fam_pe_config.yaml</code> configuration file. 
 		</article>
 	</section>
 	<footer>
