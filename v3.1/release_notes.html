@@ -110,12 +110,11 @@
 <p>
 The current version of OpenFAM is 3.1. It contains the following changes and enhancements over version 3.0:
 <ul>
-<li>Added thallium as an alternate RPC framework for control path operations. Thallium can be used as RPC framework by passing --rpc_framework=thallium to openfam_adm script (or in the arg file). To fall back to grpc, --rpc_framework=grpc can be used by application developers. The default option is grpc.</li>
+<li>Added thallium as an alternate RPC framework for control path operations. Thallium can be used as RPC framework by passing --rpc_framework=thallium to openfam_adm script (or in the arg file). Steps for thallium installation can be found <a href="https://mochi.readthedocs.io/en/latest/installing.html">here</a>. To fall back to grpc, --rpc_framework=grpc can be used by application developers. The default option is grpc.</li>
 <li>Improvements to memory registrations: OpenFAM 3.0 registered each data item separately with libfabric, leading to excessive memory registrations as the number of data items increases. As a result, scalability suffers because the underlying memory registration caches become inefficient. OpenFAM 3.1 introduces an alternative approach to register entire region in place of registering data items, thereby reducing the number of memory registrations needed.</li>
-<li>Small I/O Performance improvements:
+<li>Performance improvements for slingshot interconnect:
 <ul>
-<li>Added support for huge pages, using which application can improve performance of random scatter/gather from multiple PEs.</li>
-<li>Added support for hybrid MR, applications can use it through new fam_options field. Hybrid MR improves the performance of multi-threaded applications or when large number of local buffers are used for FAM operations.</li>
+<li>Few performance improvements have been done while using OpenFAM with slingshot inteconnect. More details can be found <a href="release_notes_internal.html"> here.</a></li>
 </ul>
 <li>
 OpenFAM APIs changes:
