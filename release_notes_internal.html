@@ -123,8 +123,14 @@ OpenFAM APIs changes:
 <li>fam_create_region API has been modified. A new region specific attribute called permissionLevel has been added to a structure called Fam_Region_Attributes. See  <a href="fam_create_region.html"> fam_create_region</a> API for more details.</li>
 <li>A new API by name fam_close has been added. This API reduces the reference count of the region within which the data item represented by the descriptor is allocated. OpenFAM internally uses this reference count for optimal usage of resources. This API helps to release unused resources back to the system. See  <a href="fam_close.html"> fam_close</a> API for more details.</li>
 </ul>
+<li>
+Known Issues:
+<ul>
+If a region is destroyed without opening any data items within it, or if a region is destroyed without closing all the opened data items, i    t may result in unpredictable and undesirable outcomes.
 </ul>
-OpenFAM version 3.0 (release v3.0.0)
+</li>
+
+</ul>
 		<h2>OpenFAM version 3.0 (release v3.0.0)</h2>
 		<p>The current version of OpenFAM is 3.0. It contains the following changes and enhancements over version 2.0:</p>
 		<ul>
