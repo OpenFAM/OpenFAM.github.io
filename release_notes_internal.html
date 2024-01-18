@@ -127,13 +127,13 @@ OpenFAM APIs changes:
 <li>
 Known Issues:
 <ul>
-If a region is destroyed without opening any data items within it, or if a region is destroyed without closing all the opened data items, it may result in unpredictable and undesirable outcomes.
+If a region is destroyed without opening any data items within it, or if a region is destroyed without closing all the opened data items,  the registered memory might be stranded. 
 </ul>
 </li>
 
 </ul>
 		<h2>OpenFAM version 3.0 (release v3.0.0)</h2>
-		<p>The current version of OpenFAM is 3.0. It contains the following changes and enhancements over version 2.0:</p>
+		<p>OpenFAM 3.0 It contains the following changes and enhancements over version 2.0:</p>
 		<ul>
 			<li>Added support for volatile and persistent memory types.</li>
 			<li>Multi-threaded support has been added that enables OpenFAM to be used with multi-threaded applications. See <a href="multithread.html">multi-threaded environment</a> for more details.</li>
