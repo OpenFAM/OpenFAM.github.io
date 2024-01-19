@@ -169,8 +169,7 @@ int main(void) {
 		// look up the descriptor to a previously allocated data item
 		Fam_Descriptor *descriptor = myFam-&gt;fam_lookup("myItem", "myRegion");
 	
-		// Atomically replace a value of first integer element in the array
-		// with the Bitwise XOR of it and a value of 0x444
+		// Performing a FAM swap operation of element at offset 0 with value 100
 		uint32_t oldValue = myFam-&gt;fam_swap(descriptor, 0, 100);
 
 		// The first integer in FAM is replaced by 100, and the old value is returned
@@ -186,7 +185,7 @@ int main(void) {
 		</article>
 	</section>
 	<footer>
-		<p>Copyright 2021-22, Hewlett Packard Enterprise Development Co, LLP</p>
+		<p>Copyright 2021-23, Hewlett Packard Enterprise Development Co, LLP</p>
 	</footer>
 </body>
 </html>
