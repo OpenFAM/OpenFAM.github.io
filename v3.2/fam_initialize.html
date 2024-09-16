@@ -138,9 +138,9 @@ typedef struct {
 	char *runtime;
 	char *fam_default_memory_type;
 	char *if_device;
-        void *local_buf_addr;
-        uint64_t local_buf_size;
 } Fam_Options;
+<br>Two additional fields have been added in Fam_Options to achieve better performance with Slingshot interconnect. 
+<br>More details can be found <a href="fam_initialize_internal.html">here</a>.
 	</pre>
 	<table>
 		<tbody>
@@ -234,28 +234,6 @@ typedef struct {
 					"ib0" for infiniband,  "cxi0" for cxi device.
 				</td>
 			</tr>
-			<tr>
-				<td class="code">
-					local_buf_addr
-				</td>
-				<td>
-					Local buffer address to be registered via client for better performance.
-				</td>
-				<td>
-					NULL
-				</td>
-			</tr>
-			<tr>
-				<td class="code">
-					local_buf_size	
-				</td>
-				<td>
-					Local buffer size is the size of local buffer to be registered via client.
-				</td>
-				<td>
-					"0"
-				</td>
-			</tr>
 		</tbody>
 	</table>
 	<p>&nbsp;</p>
@@ -299,9 +277,6 @@ int main(void) {
 	fam *myFam = new fam();
 	Fam_Options *fm = (Fam_Options*)malloc(sizeof(Fam_Options));
 	memset((void *)fm, 0, sizeof(Fam_Options));
-        char *addr = (char *)malloc(100);
-        fm-&gt;local_buf_addr = addr;
-	fm-&gt;local_buf_size = 100;
 	// Set specific options that are needed by the implementation
 	fm-&gt;cisServer = strdup("10.0.0.25");
 	fm-&gt;libfabricProvider = strdup("sockets");
@@ -317,8 +292,6 @@ int main(void) {
 	}
 	myFam-&gt;fam_finalize("myApplication");
 	printf("FAM finalized\n");
-        free(addr);
-	free(fm);
 	return 0;
 }
 </pre>

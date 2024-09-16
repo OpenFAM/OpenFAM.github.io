@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="styles/style.css">
+<title>OpenFAM: A library for programming Fabric-Attached Memory</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header>
+		<h1>OpenFAM Reference Implementation</h1>
+	</header>
+	<section>
+		<nav>
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="release_notes.html">Release Notes</a></li>
+				<li><a href="limitations.html">Design Choices</a></li>
+				<li><a href="errors.html">Exceptions and Error Codes</a></li>
+				<li><a href="services.html">Services</a></li>
+				<li><a href="config_files.html">Configuration Files</a></li>
+			</ul>
+			<hr>
+			Initialization and Finalization
+			<ul>
+				<li><a href="fam_initialize.html">fam_initialize</a></li>
+				<li><a href="fam_finalize.html">fam_finalize</a></li>
+				<li><a href="fam_abort.html">fam_abort</a></li>
+			</ul>
+			<hr>
+			Options &amp; Query
+			<ul>
+				<li><a href="fam_list_options.html">fam_list_options</a></li>
+				<li><a href="fam_get_option.html">fam_get_option</a></li>
+				<li><a href="fam_lookup.html">fam_lookup</a></li>
+				<li><a href="fam_stat.html">fam_stat</a></li>
+			</ul>
+			<hr>
+			Memory Allocation
+			<ul>
+				<li><a href="fam_create_region.html">fam_create_region</a></li>
+				<li><a href="fam_destroy_region.html">fam_destroy_region</a></li>
+				<li><a href="fam_resize_region.html">fam_resize_region</a></li>
+				<li><a href="fam_allocate.html">fam_allocate</a></li>
+				<li><a href="fam_deallocate.html">fam_deallocate</a></li>
+				<li><a href="fam_change_permissions.html">fam_change_permissions</a></li>
+				<li><a href="fam_close.html">fam_close</a></li>
+			</ul>
+			<hr>
+			Memory Map
+			<ul>
+				<li><a href="fam_map.html">fam_map</a></li>
+				<li><a href="fam_unmap.html">fam_unmap</a></li>
+			</ul>
+			<hr>
+			Data Path Operations
+			<ul>
+				<li><a href="fam_get.html">fam_get</a></li>
+				<li><a href="fam_put.html">fam_put</a></li>
+				<li><a href="fam_gather.html">fam_gather</a></li>
+				<li><a href="fam_scatter.html">fam_scatter</a></li>
+				<li><a href="fam_copy.html">fam_copy</a></li>
+				<li><a href="fam_copy_wait.html">fam_copy_wait</a></li>
+                                <li><a href="fam_backup.html">fam_backup</a></li>
+                                <li><a href="fam_backup_wait.html">fam_backup_wait</a></li>
+                                <li><a href="fam_restore.html">fam_restore</a></li>
+                                <li><a href="fam_restore_wait.html">fam_restore_wait</a></li>
+                                <li><a href="fam_delete_backup.html">fam_delete_backup</a></li>
+                                <li><a href="fam_delete_backup_wait.html">fam_delete_backup_wait</a></li>
+			</ul>
+			<hr>
+			Atomics
+			<ul>
+				<li><a href="fam_set.html">fam_set</a></li>
+				<li><a href="fam_add.html">fam_add</a></li>
+				<li><a href="fam_subtract.html">fam_subtract</a></li>
+				<li><a href="fam_min.html">fam_min</a></li>
+				<li><a href="fam_max.html">fam_max</a></li>
+				<li><a href="fam_and.html">fam_and</a></li>
+				<li><a href="fam_or.html">fam_or</a></li>
+				<li><a href="fam_xor.html">fam_xor</a></li>
+				<li><a href="fam_fetch_TYPE.html">fam_fetch_TYPE</a></li>
+				<li><a href="fam_swap.html">fam_swap</a></li>
+				<li><a href="fam_compare_swap.html">fam_compare_swap</a></li>
+				<li><a href="fam_fetch_add.html">fam_fetch_add</a></li>
+				<li><a href="fam_fetch_subtract.html">fam_fetch_subtract</a></li>
+				<li><a href="fam_fetch_min.html">fam_fetch_min</a></li>
+				<li><a href="fam_fetch_and.html">fam_fetch_and</a></li>
+				<li><a href="fam_fetch_max.html">fam_fetch_max</a></li>
+				<li><a href="fam_fetch_or.html">fam_fetch_or</a></li>
+				<li><a href="fam_fetch_xor.html">fam_fetch_xor</a></li>
+			</ul>
+			<hr>
+			Ordering
+			<ul>
+				<li><a href="fam_barrier_all.html">fam_barrier_all</a></li>
+				<li><a href="fam_fence.html">fam_fence</a></li>
+				<li><a href="fam_quiet.html">fam_quiet</a></li>
+                                <li><a href="fam_progress.html">fam_progress</a></li>
+                                <li><a href="fam_context_open.html">fam_context_open</a></li>
+                                <li><a href="fam_context_close.html">fam_context_close</a></li>
+
+			</ul>
+			<hr>
+		</nav>
+		<article>
+			<h1 class="code">openfam::fam::fam_resize_region</h1>
+	<p>Resize an existing region in FAM</p>
+	<h2>Synopsis</h2>
+	<p class="code">void fam_resize_region(Fam_Region_Descriptor *descriptor,
+		uint64_t nbytes);</p>
+	<h2>Description</h2>
+	<p>This method resizes a region in FAM.</p>
+	<h2>Input Arguments</h2>
+	<table>
+		<tbody>
+			<tr><th>Name</th><th>Description</th></tr>
+			<tr><td class="code">descriptor</td><td>Descriptor of the region to be resized.</td></tr>
+			<tr><td class="code">nbytes</td><td>New requested size of the region.</td></tr>
+		</tbody>
+	</table>
+	<h2>Return Values</h2>
+	<p>None. Throws <code>Fam_Exception</code> on error.</p>
+	<h2>Fam Error Numbers</h2>
+	<table>
+	<tbody>
+	<tr><th>Error</th><th>Description</th></tr>
+	<tr><td class="code">FAM_ERR_NOPERM</td><td>Caller does not have access rights</td></tr>
+	<tr><td class="code">FAM_ERR_NOTFOUND</td><td>Region name is not present in FAM</td></tr>
+	<tr><td class="code">FAM_ERR_LIBFABRIC</td><td>Libfabric error occurred.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC</td><td>Communication error from grpc layer.</td></tr>
+	<tr><td class="code">FAM_ERR_RPC_CLIENT_NOTFOUND</td><td>RPC service not available.</td></tr>
+	<tr><td class="code">FAM_ERR_METADATA</td><td>Metadata service error.</td></tr>
+	<tr><td class="code">FAM_ERR_MEMORY</td><td>Memory service error.</td></tr>
+	<tr><td class="code">FAM_ERR_RESOURCE</td><td>Resource not available.</td></tr>
+	</tbody></table>
+	<h2>Notes</h2>
+	<p>Regions may safely be increased in size (subject to system-wide
+		limits). Reducing the region size (although allowed) implies that any
+		data items in the truncated part of the region will be lost. The
+		behavior of the library if those items are accessed later is
+		implementation dependent.</p>
+	<h2>Example</h2>
+<pre>
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fam/fam.h&gt;
+#include &lt;fam/fam_exception.h&gt;
+using namespace std;
+using namespace openfam;
+
+int main(void) {
+	fam *myFam = new fam();
+
+	// .. initialization code here
+	
+
+            Fam_Region_Attributes* regionAttributes = (Fam_Region_Attributes*)calloc(1, sizeof(Fam_Region_Attributes));
+        try {
+                regionAttributes-&gt;memoryType = VOLATILE;
+
+	
+	try {
+		// create a 10 GB region with 0777 permissions and RAID5 redundancy
+                Fam_Region_Descriptor *rd = myFam-&gt;fam_create_region("myRegion", (uint64_t)10000000000, 0777, regionAttributes);
+			
+		// use the created region...
+		printf("fam_create_region successful\n");
+			
+		// resize the region to 20 GB
+		myFam-&gt;fam_resize_region(rd, (uint64_t)20000000000);
+			
+		// use the re-sized region
+		printf("fam_resize_region successful\n");
+		// ... continuation code here
+			
+		// we are finished. Destroy the region and everything in it
+		myFam-&gt;fam_destroy_region(rd);
+		printf("fam_destroy_region successful\n");
+	} catch (Fam_Exception &amp;e) {
+		printf("Create/Destroy region failed: %d: %s\n", e.fam_error(), e.fam_error_msg());
+	}
+	free(regionAttributes);
+	// ... finalization code here
+}
+</pre>
+		</article>
+	</section>
+	<footer>
+		<p>Copyright 2021-23, Hewlett Packard Enterprise Development Co, LLP</p>
+	</footer>
+</body>
+</html>
